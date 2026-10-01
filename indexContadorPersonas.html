@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contador de Personas | Control de Aforo Profesional</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              emerald: '#10B981',
+              cyan: '#06B6D4',
+              rose: '#F43F5E',
+              dark: '#070D1B',
+            }
+          },
+          animation: {
+            'pulse-subtle': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom CSS Styling -->
+<style data-purpose="glassmorphism-and-effects">
+    .glass-card {
+      background: rgba(13, 22, 41, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.65), 0 0 1px 1px rgba(255, 255, 255, 0.05) inset;
+    }
+
+    .glass-header {
+      background: rgba(8, 15, 30, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-inner {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .number-display {
+      text-shadow: 0 0 25px rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-press:active {
+      transform: scale(0.96);
+    }
+  </style>
+<!-- END: Custom CSS Styling -->
+</head>
+<body class="min-h-full font-sans text-slate-100 bg-brand-dark antialiased relative selection:bg-emerald-500 selection:text-white flex flex-col justify-between overflow-x-hidden">
+<!-- BEGIN: Background Layer -->
+<!-- Architectural background with dark translucent gradient overlay -->
+<div class="fixed inset-0 z-0 pointer-events-none overflow-hidden" data-purpose="atmosphere-background">
+<img alt="Auditorio arquitectónico moderno con público difuminado e iluminación nocturna sutil" class="w-full h-full object-cover object-center filter brightness-[0.75] contrast-[1.05]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjzX6DK6MGelvKwvbI38BVn49eHU2_TGF_YlE1eKJT7iDgNuZ7nOKg9HXgb03EsE1nL-TzbvHKiA0s_iNzUXWljCZnKO5PFDtQvAifKuHj7qCoKw83cFVVfQb1cNhlD4BQAfOL0eaOBxIJQ1wuF31jVgott8iRj38mrp_2I6aihLUIysjm-yDkSy5jXb40Sp7Dth0flVPQaEzTDJ1TZhivTurDkjaHfGBIdMTV46ELEw6vp46mFPfjtA"/>
+<div class="absolute inset-0 bg-gradient-to-tr from-[#050B17]/95 via-[#0A1326]/85 to-[#061024]/90 backdrop-blur-[2px]"></div>
+</div>
+<!-- END: Background Layer -->
+<!-- BEGIN: Header Navigation -->
+<header class="glass-header sticky top-0 z-40 w-full px-4 sm:px-8 py-3.5" data-purpose="top-navigation-bar">
+<div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+<!-- Brand & Project Title -->
+<div class="flex items-center space-x-3.5">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 ring-1 ring-white/20">
+<!-- Stylized people group icon -->
+<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            Contador de Personas
+            <span class="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-slate-800/80 border border-slate-700 text-slate-300">DI v2.4</span>
+</h1>
+<p class="text-xs text-slate-400 font-medium">Control Inteligente de Aforo &amp; Flujo</p>
+</div>
+</div>
+<!-- Live Status & Capacity Badges -->
+<div class="flex items-center space-x-3">
+<!-- Live Indicator Badge -->
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 text-xs font-medium">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+<span class="tracking-wide">EN DIRECTO</span>
+</div>
+<!-- Venue Capacity Tag -->
+<div class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/60 border border-white/10 text-xs font-medium text-slate-300">
+<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Capacidad Máx: <strong class="text-white font-bold" id="maxCapacityLabel">150</strong></span>
+</div>
+<!-- Reset Button -->
+<button class="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 hover:border-rose-500/50 text-rose-300 hover:text-rose-200 text-xs font-semibold transition-all duration-200" id="btnReset" title="Reiniciar aforo a cero" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Reset</span>
+</button>
+</div>
+</div>
+</header>
+<!-- END: Header Navigation -->
+<!-- BEGIN: Main Dashboard Content -->
+<main class="relative z-10 flex-1 flex items-center justify-center px-4 py-8 sm:py-12" data-purpose="counter-main-dashboard">
+<div class="w-full max-w-2xl mx-auto">
+<!-- Primary Glassmorphic Control Card -->
+<section aria-labelledby="aforo-title" class="glass-card rounded-3xl p-6 sm:p-10 text-center relative overflow-hidden transition-all duration-300">
+<!-- Ambient decorative glow in card header -->
+<div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-32 bg-emerald-500/15 blur-3xl pointer-events-none rounded-full"></div>
+<!-- Section Header -->
+<div class="flex items-center justify-center gap-2 mb-3">
+<svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-xs sm:text-sm font-semibold tracking-widest uppercase text-emerald-400" id="aforo-title">
+            Aforo Actual
+          </span>
+</div>
+<!-- Main Big Counter Display -->
+<div class="my-2 select-none">
+<div aria-live="polite" class="font-display text-7xl sm:text-8xl md:text-9xl font-extrabold tracking-tight text-white number-display transition-transform duration-150 inline-block" id="totalNumberDisplay">
+            0
+          </div>
+</div>
+<!-- Dynamic Grammatical Plural/Singular Counter Label -->
+<p class="text-base sm:text-lg font-medium text-slate-300 tracking-wide mb-6" id="totalTextLabel">
+          0 Personas
+        </p>
+<!-- Capacity Meter Progress Bar -->
+<div class="w-full max-w-md mx-auto mb-8 px-2" data-purpose="capacity-gauge">
+<div class="flex justify-between items-center text-xs text-slate-400 mb-1.5 font-medium">
+<span>Nivel de ocupación</span>
+<span class="text-slate-200 font-bold" id="occupancyPercentageText">0%</span>
+</div>
+<div class="w-full h-2.5 bg-slate-800/80 rounded-full overflow-hidden p-0.5 border border-white/10">
+<div class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 rounded-full transition-all duration-300 w-0" id="capacityProgressBar" style="width: 0%;"></div>
+</div>
+</div>
+<!-- BEGIN: Primary Master Action Buttons -->
+<!-- Master controls allowing rapid general increments or decrements -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto mb-10" data-purpose="master-action-controls">
+<!-- Button: -1 Persona (Subtractive) -->
+<button aria-label="Restar una persona del total" class="btn-press group relative flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold text-sm tracking-wide bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border border-white/10 shadow-lg shadow-black/40 hover:border-slate-500 transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none" id="btnSubtractGeneral" type="button">
+<div class="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+<svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M20 12H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span>-1 Quitar Persona</span>
+</button>
+<!-- Button: +1 Persona (Additive Primary Action) -->
+<button aria-label="Añadir una persona al total" class="btn-press group relative flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold text-sm tracking-wide bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white shadow-lg shadow-emerald-600/30 hover:shadow-emerald-500/50 ring-1 ring-emerald-300/40 hover:scale-[1.02] transition-all duration-200" id="btnAddGeneral" type="button">
+<div class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span>+1 Añadir Persona</span>
+</button>
+</div>
+<!-- END: Primary Master Action Buttons -->
+<!-- Divider with label -->
+<div class="relative my-6 flex items-center justify-center">
+<div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/10"></div></div>
+<span class="relative bg-[#0d1629] px-4 text-xs font-semibold tracking-wider uppercase text-slate-400">
+            Desglose por Género
+          </span>
+</div>
+<!-- BEGIN: Gender Specific Sub-Counters -->
+<!-- Two symmetric balanced glassmorphic panels for Men and Women -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-6" data-purpose="gender-split-counters">
+<!-- Male Counter Card -->
+<div class="glass-inner rounded-2xl p-5 flex flex-col items-center justify-between border-t-2 border-t-cyan-500/70 hover:border-cyan-500/40 transition-colors">
+<div class="flex items-center gap-2 mb-2">
+<div class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center border border-cyan-500/30">
+<!-- Male Icon -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<circle cx="10" cy="14" r="5"></circle>
+<line x1="19" x2="13.6" y1="5" y2="10.4"></line>
+<line x1="19" x2="14" y1="5" y2="5"></line>
+<line x1="19" x2="19" y1="5" y2="10"></line>
+</svg>
+</div>
+<span class="text-sm font-bold tracking-wide text-slate-200">Hombres</span>
+</div>
+<div class="my-2">
+<span class="font-display text-4xl sm:text-5xl font-extrabold text-cyan-300" id="menDisplay">0</span>
+</div>
+<!-- Men Independent Controls -->
+<div class="flex items-center gap-2 w-full mt-3">
+<button aria-label="Restar un hombre" class="btn-press flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-white/5 font-semibold text-xs transition-colors disabled:opacity-40 disabled:pointer-events-none" id="btnSubtractMen" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M20 12H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>-1</span>
+</button>
+<button aria-label="Añadir un hombre" class="btn-press flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded-xl bg-cyan-600/30 hover:bg-cyan-600/50 text-cyan-200 border border-cyan-500/40 font-semibold text-xs transition-colors" id="btnAddMen" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>+1</span>
+</button>
+</div>
+</div>
+<!-- Female Counter Card -->
+<div class="glass-inner rounded-2xl p-5 flex flex-col items-center justify-between border-t-2 border-t-rose-500/70 hover:border-rose-500/40 transition-colors">
+<div class="flex items-center gap-2 mb-2">
+<div class="w-8 h-8 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center border border-rose-500/30">
+<!-- Female Icon -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<circle cx="12" cy="9" r="5"></circle>
+<line x1="12" x2="12" y1="14" y2="21"></line>
+<line x1="9" x2="15" y1="18" y2="18"></line>
+</svg>
+</div>
+<span class="text-sm font-bold tracking-wide text-slate-200">Mujeres</span>
+</div>
+<div class="my-2">
+<span class="font-display text-4xl sm:text-5xl font-extrabold text-rose-300" id="womenDisplay">0</span>
+</div>
+<!-- Women Independent Controls -->
+<div class="flex items-center gap-2 w-full mt-3">
+<button aria-label="Restar una mujer" class="btn-press flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-white/5 font-semibold text-xs transition-colors disabled:opacity-40 disabled:pointer-events-none" id="btnSubtractWomen" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M20 12H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>-1</span>
+</button>
+<button aria-label="Añadir una mujer" class="btn-press flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded-xl bg-rose-600/30 hover:bg-rose-600/50 text-rose-200 border border-rose-500/40 font-semibold text-xs transition-colors" id="btnAddWomen" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>+1</span>
+</button>
+</div>
+</div>
+</div>
+<!-- END: Gender Specific Sub-Counters -->
+</section>
+<!-- Quick Metrics Strip -->
+<aside class="mt-5 px-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400" data-purpose="quick-metrics-footer">
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+<span id="menRatioText">Hombres: 0%</span>
+</span>
+<span class="text-slate-600">•</span>
+<span class="inline-flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-rose-400"></span>
+<span id="womenRatioText">Mujeres: 0%</span>
+</span>
+</div>
+<div class="flex items-center gap-1.5 font-mono text-[11px] text-slate-400">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Último cambio: <span class="text-slate-300" id="lastUpdatedText">Ninguno</span></span>
+</div>
+</aside>
+</div>
+</main>
+<!-- END: Main Dashboard Content -->
+<!-- BEGIN: Footer -->
+<footer class="glass-header z-30 py-3 px-6 text-center text-xs text-slate-400 border-t border-white/5">
+<div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+<p>Práctica de Desarrollo de Interfaces • Componente de Concurrencia de Aforo</p>
+<div class="flex items-center gap-4 text-[11px] text-slate-400">
+<span>Atajos: <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono">+</kbd> / <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono">-</kbd></span>
+<span>Modo Seguro: Activo</span>
+</div>
+</div>
+</footer>
+<!-- END: Footer -->
+<!-- BEGIN: Interactive Business Logic Script -->
+<script data-purpose="counter-state-machine">
+    (function () {
+      'use strict';
+
+      // State variables
+      let menCount = 0;
+      let womenCount = 0;
+      const MAX_CAPACITY = 150;
+
+      // DOM Elements
+      const totalDisplay = document.getElementById('totalNumberDisplay');
+      const totalLabel = document.getElementById('totalTextLabel');
+      const menDisplay = document.getElementById('menDisplay');
+      const womenDisplay = document.getElementById('womenDisplay');
+      
+      const btnSubtractGeneral = document.getElementById('btnSubtractGeneral');
+      const btnAddGeneral = document.getElementById('btnAddGeneral');
+      const btnSubtractMen = document.getElementById('btnSubtractMen');
+      const btnAddMen = document.getElementById('btnAddMen');
+      const btnSubtractWomen = document.getElementById('btnSubtractWomen');
+      const btnAddWomen = document.getElementById('btnAddWomen');
+      const btnReset = document.getElementById('btnReset');
+      
+      const progressBar = document.getElementById('capacityProgressBar');
+      const occupancyPercentageText = document.getElementById('occupancyPercentageText');
+      const menRatioText = document.getElementById('menRatioText');
+      const womenRatioText = document.getElementById('womenRatioText');
+      const lastUpdatedText = document.getElementById('lastUpdatedText');
+
+      /**
+       * Returns current time formatted as HH:MM:SS
+       */
+      function getCurrentTimeFormatted() {
+        const now = new Date();
+        return now.toLocaleTimeString('es-ES', { hour12: false });
+      }
+
+      /**
+       * Animates a quick subtle pulse on number change
+       */
+      function triggerNumberPulse(element) {
+        element.classList.remove('scale-105');
+        void element.offsetWidth; // Force DOM reflow
+        element.classList.add('scale-105');
+        setTimeout(() => element.classList.remove('scale-105'), 150);
+      }
+
+      /**
+       * Main render/update loop ensuring coherence across state and UI
+       */
+      function updateUI(options = { logTime: true }) {
+        const totalCount = menCount + womenCount;
+
+        // 1. Update Display Values
+        totalDisplay.textContent = totalCount;
+        menDisplay.textContent = menCount;
+        womenDisplay.textContent = womenCount;
+
+        // 2. Singular / Plural logic exact phrasing
+        if (totalCount === 0) {
+          totalLabel.textContent = '0 Personas';
+        } else if (totalCount === 1) {
+          totalLabel.textContent = '1 Persona';
+        } else {
+          totalLabel.textContent = `${totalCount} Personas`;
+        }
+
+        // 3. Update Disabled States for Subtract Buttons
+        const isZeroTotal = totalCount <= 0;
+        btnSubtractGeneral.disabled = isZeroTotal;
+        btnSubtractMen.disabled = menCount <= 0;
+        btnSubtractWomen.disabled = womenCount <= 0;
+
+        // 4. Capacity Gauge and Percentage Calculation
+        const percentage = Math.min(100, Math.round((totalCount / MAX_CAPACITY) * 100));
+        progressBar.style.width = `${percentage}%`;
+        occupancyPercentageText.textContent = `${percentage}%`;
+
+        // Color coding progress bar based on capacity
+        if (percentage >= 90) {
+          progressBar.className = 'h-full bg-gradient-to-r from-amber-500 to-rose-500 rounded-full transition-all duration-300';
+        } else if (percentage >= 70) {
+          progressBar.className = 'h-full bg-gradient-to-r from-emerald-500 to-amber-500 rounded-full transition-all duration-300';
+        } else {
+          progressBar.className = 'h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 rounded-full transition-all duration-300';
+        }
+
+        // 5. Gender Ratios
+        if (totalCount > 0) {
+          const menRatio = Math.round((menCount / totalCount) * 100);
+          const womenRatio = 100 - menRatio;
+          menRatioText.textContent = `Hombres: ${menRatio}%`;
+          womenRatioText.textContent = `Mujeres: ${womenRatio}%`;
+        } else {
+          menRatioText.textContent = 'Hombres: 0%';
+          womenRatioText.textContent = 'Mujeres: 0%';
+        }
+
+        // 6. Last Activity Timestamp
+        if (options.logTime) {
+          lastUpdatedText.textContent = getCurrentTimeFormatted();
+        }
+      }
+
+      // Action Handlers
+      function addPersonGeneric() {
+        // Coherent distribution: add alternatively or to the lowest gender balance
+        if (menCount <= womenCount) {
+          menCount++;
+        } else {
+          womenCount++;
+        }
+        triggerNumberPulse(totalDisplay);
+        updateUI();
+      }
+
+      function subtractPersonGeneric() {
+        if (menCount + womenCount <= 0) return;
+        // Prioritize decreasing whichever is higher to keep natural balance
+        if (menCount >= womenCount && menCount > 0) {
+          menCount--;
+        } else if (womenCount > 0) {
+          womenCount--;
+        }
+        triggerNumberPulse(totalDisplay);
+        updateUI();
+      }
+
+      function incrementMen() {
+        menCount++;
+        triggerNumberPulse(menDisplay);
+        triggerNumberPulse(totalDisplay);
+        updateUI();
+      }
+
+      function decrementMen() {
+        if (menCount > 0) {
+          menCount--;
+          triggerNumberPulse(menDisplay);
+          triggerNumberPulse(totalDisplay);
+          updateUI();
+        }
+      }
+
+      function incrementWomen() {
+        womenCount++;
+        triggerNumberPulse(womenDisplay);
+        triggerNumberPulse(totalDisplay);
+        updateUI();
+      }
+
+      function decrementWomen() {
+        if (womenCount > 0) {
+          womenCount--;
+          triggerNumberPulse(womenDisplay);
+          triggerNumberPulse(totalDisplay);
+          updateUI();
+        }
+      }
+
+      function resetAll() {
+        if (menCount === 0 && womenCount === 0) return;
+        
+        // Fluid reset confirmation check
+        const confirmed = window.confirm('¿Deseas restablecer el aforo a 0 personas?');
+        if (confirmed) {
+          menCount = 0;
+          womenCount = 0;
+          triggerNumberPulse(totalDisplay);
+          updateUI();
+          lastUpdatedText.textContent = 'Restablecido';
+        }
+      }
+
+      // Event Listeners for UI Buttons
+      btnAddGeneral.addEventListener('click', addPersonGeneric);
+      btnSubtractGeneral.addEventListener('click', subtractPersonGeneric);
+      btnAddMen.addEventListener('click', incrementMen);
+      btnSubtractMen.addEventListener('click', decrementMen);
+      btnAddWomen.addEventListener('click', incrementWomen);
+      btnSubtractWomen.addEventListener('click', decrementWomen);
+      btnReset.addEventListener('click', resetAll);
+
+      // Keyboard Accessibility (+ and - hotkeys)
+      window.addEventListener('keydown', (e) => {
+        // Prevent trigger if user is interacting with form controls
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        if (e.key === '+' || e.key === '=') {
+          e.preventDefault();
+          addPersonGeneric();
+        } else if (e.key === '-' || e.key === '_') {
+          e.preventDefault();
+          subtractPersonGeneric();
+        } else if (e.key.toLowerCase() === 'r') {
+          resetAll();
+        }
+      });
+
+      // Initialize state on page load
+      updateUI({ logTime: false });
+    })();
+  </script>
+<!-- END: Interactive Business Logic Script -->
+</body></html>
