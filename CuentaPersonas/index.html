@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contador de Personas | Control de Aforo Profesional</title>
+<!-- Google Fonts: Plus Jakarta Sans & Space Grotesk -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              emerald: '#10B981',
+              cyan: '#38BDF8',
+              rose: '#F43F5E',
+              dark: '#0B1326',
+            }
+          },
+          animation: {
+            'pulse-subtle': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .glass-card {
+      background: rgba(11, 19, 38, 0.78);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.7), 0 0 1px 1px rgba(255, 255, 255, 0.05) inset;
+    }
+    .glass-header {
+      background: rgba(8, 15, 30, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-inner {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+    }
+    .glass-drawer {
+      background: rgba(11, 19, 38, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8);
+    }
+    .glass-modal {
+      background: rgba(11, 19, 38, 0.96);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+    }
+    .number-display {
+      text-shadow: 0 0 25px rgba(255, 255, 255, 0.25);
+    }
+    .btn-press:active {
+      transform: scale(0.96);
+    }
+    /* Custom vertical drawer tabs */
+    .vertical-tab-text {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+    }
+    /* Smooth custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+  </style>
+</head>
+<body class="min-h-full font-sans text-slate-100 bg-[#0B1326] antialiased relative selection:bg-emerald-500 selection:text-white flex flex-col justify-between overflow-x-hidden">
+<!-- Background Architecture Layer -->
+<div class="fixed inset-0 z-0 pointer-events-none overflow-hidden" data-purpose="atmosphere-background">
+<img alt="Auditorio arquitectónico moderno con público difuminado e iluminación nocturna sutil" class="w-full h-full object-cover object-center filter brightness-[0.72] contrast-[1.05]" src="https://lh3.googleusercontent.com/aida/AEtjO1VHXFdGFqWTiObxC-jIerGcVLRGhj7aRZngd1lFAQRa8F1T-wUP9PayCI0z9ly9SNCFEgJNfSRF4UjG5zSKTHFOn4p_tK1lQKbHhmaNZ7yVzE4aWKI2ygA0piQr1I59llbcflDzJYa_XqFUocNQmFdK_QEh4ECJNOJVfQdBdiyU5rspg_xPOojR1Wm9MYkO0ItEv2AYGlSVPlDKBOqY68XxM0gbJHT__axuFrdG905wcEYMCxS040BmC76-"/>
+<div class="absolute inset-0 bg-gradient-to-tr from-[#050B17]/95 via-[#0B1326]/85 to-[#061024]/90 backdrop-blur-[2px]"></div>
+</div>
+<!-- Header Navigation -->
+<header class="glass-header sticky top-0 z-40 w-full px-4 sm:px-8 py-3" data-purpose="top-navigation-bar">
+<div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+<!-- Brand & Title -->
+<div class="flex items-center space-x-3.5">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 ring-1 ring-white/20">
+<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<h1 class="text-base sm:text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            Contador de Personas
+            <span class="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-slate-800/80 border border-slate-700 text-slate-300">DI v2.5 PRO</span>
+</h1>
+<p class="text-xs text-slate-400 font-medium hidden sm:block">Control Inteligente de Aforo &amp; Flujo</p>
+</div>
+</div>
+<!-- Real-time Clock in Header -->
+<div class="hidden lg:flex items-center space-x-3 px-3 py-1.5 rounded-xl bg-slate-900/60 border border-white/10 shadow-inner">
+<svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<div class="text-left leading-tight">
+<div class="text-xs font-mono font-bold text-white tracking-wider" id="headerClock">00:00:00</div>
+<div class="text-[10px] text-slate-400 capitalize" id="headerDate">Hoy</div>
+</div>
+</div>
+<!-- Status & Actions Badges -->
+<div class="flex items-center flex-wrap gap-2.5">
+<!-- Live Status Badge -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/70 border border-emerald-500/30 text-emerald-300 text-xs font-medium">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+<span class="tracking-wide text-[11px] font-semibold">EN DIRECTO</span>
+</div>
+<!-- Editable Max Capacity Pill (Item 1) -->
+<button class="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/70 hover:bg-slate-800/90 border border-white/15 hover:border-emerald-400/50 text-xs font-medium text-slate-200 transition-all group" id="btnEditCapacity" title="Haz clic para modificar la capacidad máxima" type="button">
+<svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Capacidad Máx: <strong class="text-emerald-400 font-bold ml-0.5" id="maxCapacityLabel">150</strong></span>
+<svg class="w-3 h-3 text-slate-400 group-hover:text-white transition-colors ml-0.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Undo Button (Item 6) -->
+<button class="btn-press inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-white/10 text-xs font-medium text-slate-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all" disabled="" id="btnUndo" title="Deshacer el último cambio" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 10h10a5 5 0 015 5v2m0 0l-4-4m4 4l4-4M3 10l4-4m-4 4l4 4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="hidden sm:inline">Deshacer</span>
+</button>
+<!-- Reset Button (Item 7) -->
+<button class="btn-press inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 hover:text-rose-200 text-xs font-semibold transition-all" id="btnReset" title="Reiniciar aforo a cero" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Reset</span>
+</button>
+</div>
+</div>
+</header>
+<!-- FLOATING SIDEBAR DRAWER TRIGGERS (Item 2) -->
+<!-- Left Tab: Historial -->
+<button aria-label="Abrir panel de historial" class="fixed left-0 top-1/2 -translate-y-1/2 z-30 flex items-center gap-2 py-3 px-2 sm:px-2.5 rounded-r-xl glass-card border-l-0 text-slate-300 hover:text-emerald-300 hover:border-emerald-500/40 shadow-2xl transition-all group cursor-pointer" id="btnOpenHistory" type="button">
+<svg class="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="vertical-tab-text text-xs font-bold tracking-wider uppercase text-slate-300 group-hover:text-emerald-300">Historial</span>
+</button>
+<!-- Right Tab: Estadísticas -->
+<button aria-label="Abrir panel de estadísticas" class="fixed right-0 top-1/2 -translate-y-1/2 z-30 flex items-center gap-2 py-3 px-2 sm:px-2.5 rounded-l-xl glass-card border-r-0 text-slate-300 hover:text-cyan-300 hover:border-cyan-500/40 shadow-2xl transition-all group cursor-pointer" id="btnOpenStats" type="button">
+<span class="vertical-tab-text text-xs font-bold tracking-wider uppercase text-slate-300 group-hover:text-cyan-300">Estadísticas</span>
+<svg class="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- MAIN DASHBOARD CONTENT -->
+<main class="relative z-10 flex-1 flex items-center justify-center px-4 py-6 sm:py-10" data-purpose="counter-main-dashboard">
+<div class="w-full max-w-2xl mx-auto">
+<!-- FULL CAPACITY ALERT BANNER (Item 1) -->
+<div class="hidden mb-4 p-3.5 rounded-2xl bg-rose-500/20 border border-rose-500/50 text-rose-200 text-center animate-pulse flex items-center justify-center gap-2.5 shadow-lg shadow-rose-900/30" id="capacityBanner">
+<svg class="w-5 h-5 text-rose-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-xs sm:text-sm font-bold tracking-wide">¡LÍMITE ALCANZADO! AFORO COMPLETO (Acceso bloqueado)</span>
+</div>
+<!-- Primary Glassmorphic Control Card -->
+<section aria-labelledby="aforo-title" class="glass-card rounded-3xl p-6 sm:p-10 text-center relative overflow-hidden transition-all duration-300">
+<!-- Ambient decorative glow -->
+<div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-32 bg-emerald-500/15 blur-3xl pointer-events-none rounded-full"></div>
+<!-- Section Header with active Day info -->
+<div class="flex items-center justify-between gap-2 mb-2 px-1">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-xs sm:text-sm font-semibold tracking-widest uppercase text-emerald-400" id="aforo-title">
+              Aforo Actual
+            </span>
+</div>
+<!-- Current Session Badge (Item 8) -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/60 border border-white/10 text-[11px] text-slate-300">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+<span id="activeSessionBadge">Jornada Activa</span>
+</div>
+</div>
+<!-- Main Big Counter Display -->
+<div class="my-2 select-none">
+<div aria-live="polite" class="font-display text-7xl sm:text-8xl md:text-9xl font-extrabold tracking-tight text-white number-display transition-transform duration-150 inline-block" id="totalNumberDisplay">
+            0
+          </div>
+</div>
+<!-- Dynamic Grammatical Counter Label -->
+<p class="text-base sm:text-lg font-medium text-slate-300 tracking-wide mb-6" id="totalTextLabel">
+          0 Personas
+        </p>
+<!-- Capacity Meter Progress Bar (Item 1: reactive dynamic colors) -->
+<div class="w-full max-w-md mx-auto mb-8 px-2" data-purpose="capacity-gauge">
+<div class="flex justify-between items-center text-xs text-slate-400 mb-1.5 font-medium">
+<span>Nivel de ocupación</span>
+<div class="flex items-center gap-2">
+<span class="text-slate-400 font-mono text-[11px]" id="capacityFractionText">0 / 150</span>
+<span class="text-slate-200 font-bold" id="occupancyPercentageText">0%</span>
+</div>
+</div>
+<div class="w-full h-2.5 bg-slate-800/80 rounded-full overflow-hidden p-0.5 border border-white/10">
+<div class="h-full bg-emerald-500 rounded-full transition-all duration-300 w-0" id="capacityProgressBar" style="width: 0%;"></div>
+</div>
+</div>
+<!-- Master Action Buttons -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto mb-10" data-purpose="master-action-controls">
+<!-- Button: -1 Persona -->
+<button aria-label="Restar una persona del total" class="btn-press group relative flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold text-sm tracking-wide bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border border-white/10 shadow-lg shadow-black/40 hover:border-slate-500 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed" id="btnSubtractGeneral" type="button">
+<div class="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+<svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M20 12H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span>-1 Quitar Persona</span>
+</button>
+<!-- Button: +1 Persona -->
+<button aria-label="Añadir una persona al total" class="btn-press group relative flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold text-sm tracking-wide bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white shadow-lg shadow-emerald-600/30 hover:shadow-emerald-500/50 ring-1 ring-emerald-300/40 hover:scale-[1.02] transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none" id="btnAddGeneral" type="button">
+<div class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span>+1 Añadir Persona</span>
+</button>
+</div>
+<!-- Gender Divider -->
+<div class="relative my-6 flex items-center justify-center">
+<div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/10"></div></div>
+<span class="relative bg-[#0B1326] px-4 text-xs font-semibold tracking-wider uppercase text-slate-400">
+            Desglose por Género
+          </span>
+</div>
+<!-- Gender Specific Counters -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-6" data-purpose="gender-split-counters">
+<!-- Male Counter Card -->
+<div class="glass-inner rounded-2xl p-5 flex flex-col items-center justify-between border-t-2 border-t-sky-400/80 hover:border-sky-400/50 transition-colors">
+<div class="flex items-center gap-2 mb-2">
+<div class="w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center border border-sky-500/30">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<circle cx="10" cy="14" r="5"></circle>
+<line x1="19" x2="13.6" y1="5" y2="10.4"></line>
+<line x1="19" x2="14" y1="5" y2="5"></line>
+<line x1="19" x2="19" y1="5" y2="10"></line>
+</svg>
+</div>
+<span class="text-sm font-bold tracking-wide text-slate-200">Hombres</span>
+</div>
+<div class="my-2">
+<span class="font-display text-4xl sm:text-5xl font-extrabold text-sky-300" id="menDisplay">0</span>
+</div>
+<div class="flex items-center gap-2 w-full mt-3">
+<button aria-label="Restar un hombre" class="btn-press flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-white/5 font-semibold text-xs transition-colors disabled:opacity-40 disabled:cursor-not-allowed" id="btnSubtractMen" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M20 12H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>-1</span>
+</button>
+<button aria-label="Añadir un hombre" class="btn-press flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded-xl bg-sky-600/30 hover:bg-sky-600/50 text-sky-200 border border-sky-500/40 font-semibold text-xs transition-colors disabled:opacity-40 disabled:pointer-events-none" id="btnAddMen" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>+1</span>
+</button>
+</div>
+</div>
+<!-- Female Counter Card -->
+<div class="glass-inner rounded-2xl p-5 flex flex-col items-center justify-between border-t-2 border-t-rose-500/80 hover:border-rose-500/50 transition-colors">
+<div class="flex items-center gap-2 mb-2">
+<div class="w-8 h-8 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center border border-rose-500/30">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<circle cx="12" cy="9" r="5"></circle>
+<line x1="12" x2="12" y1="14" y2="21"></line>
+<line x1="9" x2="15" y1="18" y2="18"></line>
+</svg>
+</div>
+<span class="text-sm font-bold tracking-wide text-slate-200">Mujeres</span>
+</div>
+<div class="my-2">
+<span class="font-display text-4xl sm:text-5xl font-extrabold text-rose-300" id="womenDisplay">0</span>
+</div>
+<div class="flex items-center gap-2 w-full mt-3">
+<button aria-label="Restar una mujer" class="btn-press flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-white/5 font-semibold text-xs transition-colors disabled:opacity-40 disabled:cursor-not-allowed" id="btnSubtractWomen" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M20 12H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>-1</span>
+</button>
+<button aria-label="Añadir una mujer" class="btn-press flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded-xl bg-rose-600/30 hover:bg-rose-600/50 text-rose-200 border border-rose-500/40 font-semibold text-xs transition-colors disabled:opacity-40 disabled:pointer-events-none" id="btnAddWomen" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>+1</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Metrics Strip -->
+<aside class="mt-5 px-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400" data-purpose="quick-metrics-footer">
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-sky-400"></span>
+<span id="menRatioText">Hombres: 0%</span>
+</span>
+<span class="text-slate-600">•</span>
+<span class="inline-flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-rose-400"></span>
+<span id="womenRatioText">Mujeres: 0%</span>
+</span>
+</div>
+<div class="flex items-center gap-1.5 font-mono text-[11px] text-slate-400">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Último cambio: <span class="text-slate-300" id="lastUpdatedText">Ninguno</span></span>
+</div>
+</aside>
+</div>
+</main>
+<!-- FOOTER -->
+<footer class="glass-header z-30 py-3 px-6 text-center text-xs text-slate-400 border-t border-white/5">
+<div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+<p>Práctica de Desarrollo de Interfaces • Concurrencia, Historial y Métricas de Aforo</p>
+<div class="flex items-center gap-4 text-[11px] text-slate-400">
+<span>Atajos: <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono">+</kbd> / <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono">-</kbd> / <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono">U</kbd></span>
+<button class="text-emerald-400 hover:underline" id="btnNewSessionFooter" type="button">Nueva Jornada</button>
+</div>
+</div>
+</footer>
+<!-- ============================================================== -->
+<!-- DRAWER: HISTORIAL (PANEL IZQUIERDO - ITEM 2 & 3)               -->
+<!-- ============================================================== -->
+<div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity duration-300 opacity-0 pointer-events-none" id="drawerOverlay"></div>
+<aside aria-label="Historial de movimientos" class="fixed top-0 bottom-0 left-0 z-50 w-full sm:w-[420px] lg:w-[480px] glass-drawer border-r border-white/10 flex flex-col transform -translate-x-full transition-transform duration-300 ease-out shadow-2xl" id="historyDrawer">
+<!-- Header -->
+<div class="p-5 border-b border-white/10 flex items-center justify-between bg-slate-900/40">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<h2 class="text-base font-bold text-white">Historial de Movimientos</h2>
+<p class="text-xs text-slate-400">Registro auditable en tiempo real</p>
+</div>
+</div>
+<button aria-label="Cerrar panel" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors" id="btnCloseHistory" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+</button>
+</div>
+<!-- Jornada / Session Selector & Tools -->
+<div class="p-4 border-b border-white/5 bg-white/[0.02] flex items-center justify-between gap-3">
+<div class="flex-1">
+<label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1" for="historySessionFilter">Filtrar Jornada</label>
+<select class="w-full bg-slate-900/80 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-400" id="historySessionFilter">
+<!-- Populated by JS -->
+</select>
+</div>
+<div class="flex items-end">
+<button class="p-2 rounded-xl bg-slate-800/80 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 border border-white/10 text-xs transition-colors" id="btnClearHistorySession" title="Limpiar historial de esta jornada" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- History List Container -->
+<div class="flex-1 overflow-y-auto p-4 space-y-2.5" id="historyList">
+<!-- Dynamically filled with audit log items -->
+</div>
+<!-- Footer summary -->
+<div class="p-3.5 border-t border-white/10 bg-slate-900/60 flex items-center justify-between text-xs text-slate-400">
+<span id="historyCountBadge">0 movimientos registrados</span>
+<span class="text-[11px] text-slate-500">Persistencia activa</span>
+</div>
+</aside>
+<!-- ============================================================== -->
+<!-- DRAWER: ESTADÍSTICAS (PANEL DERECHO - ITEM 2 & 4)              -->
+<!-- ============================================================== -->
+<aside aria-label="Panel de estadísticas" class="fixed top-0 bottom-0 right-0 z-50 w-full sm:w-[460px] lg:w-[540px] glass-drawer border-l border-white/10 flex flex-col transform translate-x-full transition-transform duration-300 ease-out shadow-2xl" id="statsDrawer">
+<!-- Header -->
+<div class="p-5 border-b border-white/10 flex items-center justify-between bg-slate-900/40">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center border border-cyan-500/30">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+<path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+</svg>
+</div>
+<div>
+<h2 class="text-base font-bold text-white">Analítica y Estadísticas</h2>
+<p class="text-xs text-slate-400">Métricas avanzadas de aforo y flujo</p>
+</div>
+</div>
+<button aria-label="Cerrar panel" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors" id="btnCloseStats" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+</button>
+</div>
+<!-- Jornada Selector for Analytics -->
+<div class="p-4 border-b border-white/5 bg-white/[0.02]">
+<label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1" for="statsSessionFilter">Jornada de Análisis</label>
+<select class="w-full bg-slate-900/80 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-400" id="statsSessionFilter">
+<!-- Populated by JS -->
+</select>
+</div>
+<!-- Analytics Body (Scrollable) -->
+<div class="flex-1 overflow-y-auto p-5 space-y-6">
+<!-- KEY METRIC CARDS (4D) -->
+<div class="grid grid-cols-2 gap-3">
+<!-- Ocupación Media Ponderada -->
+<div class="glass-inner rounded-xl p-3 border-l-2 border-emerald-400">
+<p class="text-[11px] text-slate-400 font-medium">Media Ponderada</p>
+<div class="text-xl font-bold font-display text-white mt-1" id="statAvgOccupancy">0.0 <span class="text-xs text-slate-400 font-normal">pers.</span></div>
+<p class="text-[10px] text-slate-500 mt-0.5">Basado en tiempo activo</p>
+</div>
+<!-- Aforo Pico -->
+<div class="glass-inner rounded-xl p-3 border-l-2 border-cyan-400">
+<p class="text-[11px] text-slate-400 font-medium">Aforo Pico</p>
+<div class="text-xl font-bold font-display text-cyan-300 mt-1" id="statPeakOccupancy">0 <span class="text-xs text-slate-400 font-normal">máx.</span></div>
+<p class="text-[10px] text-slate-500 mt-0.5">Pico máximo registrado</p>
+</div>
+<!-- Hora Punta -->
+<div class="glass-inner rounded-xl p-3 border-l-2 border-amber-400">
+<p class="text-[11px] text-slate-400 font-medium">Hora Punta</p>
+<div class="text-sm font-bold font-mono text-amber-300 mt-1.5 truncate" id="statPeakHour">--:--</div>
+<p class="text-[10px] text-slate-500 mt-0.5">Franja de mayor afluencia</p>
+</div>
+<!-- Flujo Total -->
+<div class="glass-inner rounded-xl p-3 border-l-2 border-purple-400">
+<p class="text-[11px] text-slate-400 font-medium">Flujo Total (In / Out)</p>
+<div class="text-sm font-bold text-white mt-1.5">
+<span class="text-emerald-400" id="statTotalEntries">+0</span> / <span class="text-rose-400" id="statTotalExits">-0</span>
+</div>
+<p class="text-[10px] text-slate-500 mt-0.5">Entradas y salidas sumadas</p>
+</div>
+</div>
+<!-- CHART A: Entradas vs Salidas por franjas horarias (Bar chart SVG) -->
+<div class="glass-inner rounded-2xl p-4">
+<div class="flex items-center justify-between mb-3">
+<div>
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-200">Flujo por Franjas Horarias</h3>
+<p class="text-[11px] text-slate-400">Comparativa Entradas (verde) vs Salidas (ámbar)</p>
+</div>
+<div class="flex items-center gap-2 text-[10px]">
+<span class="inline-flex items-center gap-1 text-emerald-400"><span class="w-2 h-2 rounded bg-emerald-400"></span>Entradas</span>
+<span class="inline-flex items-center gap-1 text-amber-400"><span class="w-2 h-2 rounded bg-amber-400"></span>Salidas</span>
+</div>
+</div>
+<div class="w-full h-44" id="hourlyChartContainer">
+<!-- Interactive SVG rendered here -->
+</div>
+</div>
+<!-- CHART B: Evolución de aforo a lo largo del día (Area SVG) -->
+<div class="glass-inner rounded-2xl p-4">
+<div class="flex items-center justify-between mb-3">
+<div>
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-200">Evolución del Aforo</h3>
+<p class="text-[11px] text-slate-400">Curva de ocupación concurrente en el tiempo</p>
+</div>
+<span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">Línea temporal</span>
+</div>
+<div class="w-full h-40" id="occupancyCurveContainer">
+<!-- Interactive Area Chart rendered here -->
+</div>
+</div>
+<!-- CHART C: Balance por Género (Cumulative entries) -->
+<div class="glass-inner rounded-2xl p-4">
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-200">Balance Acumulado por Género</h3>
+<span class="text-[11px] text-slate-400" id="genderTotalEntriesSummary">0 accesos totales</span>
+</div>
+<!-- Split dual color bar -->
+<div class="w-full h-3.5 rounded-full overflow-hidden bg-slate-800 flex border border-white/10 mb-3">
+<div class="bg-sky-400 transition-all duration-300" id="genderStatMenBar" style="width: 50%;"></div>
+<div class="bg-rose-400 transition-all duration-300" id="genderStatWomenBar" style="width: 50%;"></div>
+</div>
+<div class="grid grid-cols-2 gap-4 text-xs">
+<div class="flex items-center justify-between p-2 rounded-xl bg-sky-500/10 border border-sky-500/20">
+<span class="text-sky-300 font-medium">Hombres</span>
+<span class="font-bold text-white" id="statMenCumulativeText">0 (50%)</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-xl bg-rose-500/10 border border-rose-500/20">
+<span class="text-rose-300 font-medium">Mujeres</span>
+<span class="font-bold text-white" id="statWomenCumulativeText">0 (50%)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions / Export / Reset Session -->
+<div class="p-4 border-t border-white/10 bg-slate-900/60 flex items-center justify-between">
+<button class="btn-press px-4 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 font-semibold text-xs flex items-center gap-1.5 transition-colors" id="btnNewSession" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+<span>Iniciar Nueva Jornada</span>
+</button>
+<span class="text-[11px] text-slate-400 font-mono" id="statsLiveStatusIndicator">Auto-calculado</span>
+</div>
+</aside>
+<!-- ============================================================== -->
+<!-- MODAL 1: CONFIGURAR CAPACIDAD MÁXIMA (ITEM 1)                  -->
+<!-- ============================================================== -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-200" id="capacityModal">
+<div class="w-full max-w-sm glass-modal rounded-3xl p-6 transform scale-95 transition-transform duration-200" id="capacityModalContent">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+</div>
+<h3 class="text-base font-bold text-white">Aforo Máximo</h3>
+</div>
+<button class="text-slate-400 hover:text-white p-1" id="btnCloseCapacityModal" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+</button>
+</div>
+<p class="text-xs text-slate-300 mb-4">Introduce la capacidad límite autorizada para el recinto o evento.</p>
+<div class="space-y-4">
+<div>
+<label class="block text-xs font-semibold text-slate-300 mb-1" for="inputCapacityValue">Capacidad máxima de personas</label>
+<div class="relative">
+<input class="w-full bg-slate-900/90 border border-white/15 rounded-xl px-4 py-3 text-lg font-mono font-bold text-white focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400" id="inputCapacityValue" max="10000" min="1" step="1" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-medium">personas</span>
+</div>
+<p class="text-[11px] text-slate-400 mt-1.5" id="capacityModalHelper">El aforo actual es de 0 personas.</p>
+</div>
+<!-- Preset shortcut buttons -->
+<div class="flex items-center gap-2">
+<button class="btn-press capacity-preset flex-1 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-white/10 text-xs font-medium text-slate-300" data-value="50" type="button">50</button>
+<button class="btn-press capacity-preset flex-1 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-white/10 text-xs font-medium text-slate-300" data-value="100" type="button">100</button>
+<button class="btn-press capacity-preset flex-1 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-white/10 text-xs font-medium text-slate-300" data-value="150" type="button">150</button>
+<button class="btn-press capacity-preset flex-1 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-white/10 text-xs font-medium text-slate-300" data-value="300" type="button">300</button>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="btn-press flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold" id="btnCancelCapacityModal" type="button">Cancelar</button>
+<button class="btn-press flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20" id="btnSaveCapacityModal" type="button">Guardar</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ============================================================== -->
+<!-- MODAL 2: CONFIRMAR REINICIO (RESET - ITEM 7)                    -->
+<!-- ============================================================== -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-200" id="resetModal">
+<div class="w-full max-w-sm glass-modal rounded-3xl p-6 transform scale-95 transition-transform duration-200">
+<div class="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center mx-auto mb-4 border border-rose-500/30">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+</div>
+<h3 class="text-base font-bold text-white text-center mb-2">¿Reiniciar aforo a 0?</h3>
+<p class="text-xs text-slate-300 text-center mb-6 leading-relaxed">
+        Se pondrán a cero los contadores de hombres y mujeres. El historial de movimientos y estadísticas de la jornada <strong class="text-emerald-400">se conservarán íntegros</strong>.
+      </p>
+<div class="flex gap-2.5">
+<button class="btn-press flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold" id="btnCancelResetModal" type="button">Cancelar</button>
+<button class="btn-press flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg shadow-rose-600/30" id="btnConfirmResetModal" type="button">Reiniciar a 0</button>
+</div>
+</div>
+</div>
+<!-- ============================================================== -->
+<!-- MODAL 3: CONFIRMAR NUEVA JORNADA (ITEM 8)                      -->
+<!-- ============================================================== -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-200" id="newSessionModal">
+<div class="w-full max-w-sm glass-modal rounded-3xl p-6 transform scale-95 transition-transform duration-200">
+<div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+</div>
+<h3 class="text-base font-bold text-white text-center mb-2">Iniciar Nueva Jornada</h3>
+<p class="text-xs text-slate-300 text-center mb-4 leading-relaxed">
+        Se archivará la jornada en curso y se iniciará un nuevo ciclo con aforo en 0 personas. Puedes ponerle un nombre identificador:
+      </p>
+<input class="w-full bg-slate-900/90 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white mb-5 focus:outline-none focus:border-emerald-400" id="inputNewSessionName" placeholder="Ej. Sesión Tarde - Concierto" type="text"/>
+<div class="flex gap-2.5">
+<button class="btn-press flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold" id="btnCancelNewSessionModal" type="button">Cancelar</button>
+<button class="btn-press flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/30" id="btnConfirmNewSessionModal" type="button">Crear Jornada</button>
+</div>
+</div>
+</div>
+<!-- TOAST NOTIFICATION (ITEM 6) -->
+<div class="fixed bottom-6 right-6 z-50 px-4 py-3 rounded-2xl glass-modal border border-emerald-500/40 text-emerald-300 text-xs font-semibold shadow-2xl flex items-center gap-2 transform translate-y-16 opacity-0 transition-all duration-300 pointer-events-none" id="toastNotification">
+<svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+<span id="toastMessage">Movimiento revertido correctamente</span>
+</div>
+<!-- ============================================================== -->
+<!-- JAVASCRIPT BUSINESS LOGIC & STATE MACHINE                      -->
+<!-- ============================================================== -->
+<script data-purpose="counter-state-machine">
+    (function () {
+      'use strict';
+
+      // --------------------------------------------------------------
+      // CONSTANTS & LOCAL STORAGE KEYS
+      // --------------------------------------------------------------
+      const STORAGE_KEYS = {
+        MAX_CAPACITY: 'di_aforo_max_capacity',
+        SESSIONS: 'di_aforo_sessions',
+        ACTIVE_SESSION_ID: 'di_aforo_active_session_id',
+        HISTORY: 'di_aforo_history',
+      };
+
+      // --------------------------------------------------------------
+      // STATE MANAGEMENT
+      // Note: Rule 8: Upon reload (F5), current occupancy resets to 0,
+      // but Max Capacity, Sessions and History persist in localStorage.
+      // --------------------------------------------------------------
+      let state = {
+        maxCapacity: 150,
+        menCount: 0,
+        womenCount: 0,
+        activeSessionId: null,
+        sessions: [],
+        history: [], // Array of log records
+      };
+
+      // --------------------------------------------------------------
+      // DOM ELEMENTS
+      // --------------------------------------------------------------
+      const totalDisplay = document.getElementById('totalNumberDisplay');
+      const totalLabel = document.getElementById('totalTextLabel');
+      const menDisplay = document.getElementById('menDisplay');
+      const womenDisplay = document.getElementById('womenDisplay');
+      
+      const btnSubtractGeneral = document.getElementById('btnSubtractGeneral');
+      const btnAddGeneral = document.getElementById('btnAddGeneral');
+      const btnSubtractMen = document.getElementById('btnSubtractMen');
+      const btnAddMen = document.getElementById('btnAddMen');
+      const btnSubtractWomen = document.getElementById('btnSubtractWomen');
+      const btnAddWomen = document.getElementById('btnAddWomen');
+      
+      const btnReset = document.getElementById('btnReset');
+      const btnUndo = document.getElementById('btnUndo');
+      const btnEditCapacity = document.getElementById('btnEditCapacity');
+      const maxCapacityLabel = document.getElementById('maxCapacityLabel');
+      const capacityBanner = document.getElementById('capacityBanner');
+      const capacityFractionText = document.getElementById('capacityFractionText');
+      const progressBar = document.getElementById('capacityProgressBar');
+      const occupancyPercentageText = document.getElementById('occupancyPercentageText');
+      const menRatioText = document.getElementById('menRatioText');
+      const womenRatioText = document.getElementById('womenRatioText');
+      const lastUpdatedText = document.getElementById('lastUpdatedText');
+      const activeSessionBadge = document.getElementById('activeSessionBadge');
+
+      // Clocks
+      const headerClock = document.getElementById('headerClock');
+      const headerDate = document.getElementById('headerDate');
+
+      // Drawers
+      const drawerOverlay = document.getElementById('drawerOverlay');
+      const historyDrawer = document.getElementById('historyDrawer');
+      const statsDrawer = document.getElementById('statsDrawer');
+      const btnOpenHistory = document.getElementById('btnOpenHistory');
+      const btnCloseHistory = document.getElementById('btnCloseHistory');
+      const btnOpenStats = document.getElementById('btnOpenStats');
+      const btnCloseStats = document.getElementById('btnCloseStats');
+
+      // Modals
+      const capacityModal = document.getElementById('capacityModal');
+      const inputCapacityValue = document.getElementById('inputCapacityValue');
+      const btnCloseCapacityModal = document.getElementById('btnCloseCapacityModal');
+      const btnCancelCapacityModal = document.getElementById('btnCancelCapacityModal');
+      const btnSaveCapacityModal = document.getElementById('btnSaveCapacityModal');
+      const capacityModalHelper = document.getElementById('capacityModalHelper');
+
+      const resetModal = document.getElementById('resetModal');
+      const btnCancelResetModal = document.getElementById('btnCancelResetModal');
+      const btnConfirmResetModal = document.getElementById('btnConfirmResetModal');
+
+      const newSessionModal = document.getElementById('newSessionModal');
+      const btnNewSession = document.getElementById('btnNewSession');
+      const btnNewSessionFooter = document.getElementById('btnNewSessionFooter');
+      const btnCancelNewSessionModal = document.getElementById('btnCancelNewSessionModal');
+      const btnConfirmNewSessionModal = document.getElementById('btnConfirmNewSessionModal');
+      const inputNewSessionName = document.getElementById('inputNewSessionName');
+
+      // History Drawer Elements
+      const historySessionFilter = document.getElementById('historySessionFilter');
+      const historyList = document.getElementById('historyList');
+      const historyCountBadge = document.getElementById('historyCountBadge');
+      const btnClearHistorySession = document.getElementById('btnClearHistorySession');
+
+      // Analytics Drawer Elements
+      const statsSessionFilter = document.getElementById('statsSessionFilter');
+      const statAvgOccupancy = document.getElementById('statAvgOccupancy');
+      const statPeakOccupancy = document.getElementById('statPeakOccupancy');
+      const statPeakHour = document.getElementById('statPeakHour');
+      const statTotalEntries = document.getElementById('statTotalEntries');
+      const statTotalExits = document.getElementById('statTotalExits');
+      const hourlyChartContainer = document.getElementById('hourlyChartContainer');
+      const occupancyCurveContainer = document.getElementById('occupancyCurveContainer');
+      const genderStatMenBar = document.getElementById('genderStatMenBar');
+      const genderStatWomenBar = document.getElementById('genderStatWomenBar');
+      const statMenCumulativeText = document.getElementById('statMenCumulativeText');
+      const statWomenCumulativeText = document.getElementById('statWomenCumulativeText');
+      const genderTotalEntriesSummary = document.getElementById('genderTotalEntriesSummary');
+
+      // Toast
+      const toastNotification = document.getElementById('toastNotification');
+      const toastMessage = document.getElementById('toastMessage');
+      let toastTimer = null;
+
+      // --------------------------------------------------------------
+      // INITIALIZATION & LOCALSTORAGE SYNC
+      // --------------------------------------------------------------
+      function loadPersistedData() {
+        try {
+          // 1. Capacity
+          const savedCap = localStorage.getItem(STORAGE_KEYS.MAX_CAPACITY);
+          if (savedCap) {
+            const parsed = parseInt(savedCap, 10);
+            if (!isNaN(parsed) && parsed > 0) state.maxCapacity = parsed;
+          }
+
+          // 2. Sessions
+          const savedSessions = localStorage.getItem(STORAGE_KEYS.SESSIONS);
+          if (savedSessions) {
+            state.sessions = JSON.parse(savedSessions);
+          } else {
+            // Seed initial session
+            const initialSession = {
+              id: 'sess_' + Date.now(),
+              name: 'Jornada Principal',
+              date: new Date().toISOString(),
+              startedAt: new Date().toLocaleTimeString('es-ES'),
+            };
+            state.sessions = [initialSession];
+            state.activeSessionId = initialSession.id;
+            saveSessions();
+          }
+
+          // 3. Active Session ID
+          const savedActiveId = localStorage.getItem(STORAGE_KEYS.ACTIVE_SESSION_ID);
+          if (savedActiveId && state.sessions.some(s => s.id === savedActiveId)) {
+            state.activeSessionId = savedActiveId;
+          } else {
+            state.activeSessionId = state.sessions[0].id;
+          }
+
+          // 4. History
+          const savedHistory = localStorage.getItem(STORAGE_KEYS.HISTORY);
+          if (savedHistory) {
+            state.history = JSON.parse(savedHistory);
+          } else {
+            state.history = [];
+          }
+
+          // Current counts: per Requirement 8, page reload starts counts at 0
+          state.menCount = 0;
+          state.womenCount = 0;
+        } catch (e) {
+          console.error('Error cargando localStorage:', e);
+        }
+      }
+
+      function saveCapacity() {
+        localStorage.setItem(STORAGE_KEYS.MAX_CAPACITY, state.maxCapacity.toString());
+      }
+
+      function saveSessions() {
+        localStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(state.sessions));
+        localStorage.setItem(STORAGE_KEYS.ACTIVE_SESSION_ID, state.activeSessionId);
+      }
+
+      function saveHistory() {
+        localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(state.history));
+      }
+
+      // --------------------------------------------------------------
+      // TIME & CLOCK UTILITIES (ITEM 5)
+      // --------------------------------------------------------------
+      function updateRealtimeClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('es-ES', { hour12: false });
+        headerClock.textContent = timeStr;
+
+        // Long localized Spanish date
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        headerDate.textContent = now.toLocaleDateString('es-ES', options);
+      }
+
+      function getCurrentTimeFormatted() {
+        return new Date().toLocaleTimeString('es-ES', { hour12: false });
+      }
+
+      function getCurrentDateFormatted() {
+        return new Date().toLocaleDateString('es-ES');
+      }
+
+      // --------------------------------------------------------------
+      // TOAST NOTIFICATION
+      // --------------------------------------------------------------
+      function showToast(msg) {
+        if (toastTimer) clearTimeout(toastTimer);
+        toastMessage.textContent = msg;
+        toastNotification.classList.remove('translate-y-16', 'opacity-0');
+        toastNotification.classList.add('translate-y-0', 'opacity-100');
+        toastTimer = setTimeout(() => {
+          toastNotification.classList.add('translate-y-16', 'opacity-0');
+          toastNotification.classList.remove('translate-y-0', 'opacity-100');
+        }, 2600);
+      }
+
+      // --------------------------------------------------------------
+      // AUDIT HISTORY & UNDO ACTIONS (ITEM 3 & 6)
+      // --------------------------------------------------------------
+      /**
+       * Adds a record to history log
+       * @param {Object} action { type: 'entry'|'exit'|'reset', gender: 'man'|'woman'|'generic', deltaMen: 1, deltaWomen: 0, desc: '' }
+       */
+      function recordHistoryEvent(action) {
+        const totalAfter = state.menCount + state.womenCount;
+        const record = {
+          id: 'mov_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+          sessionId: state.activeSessionId,
+          timestamp: Date.now(),
+          timeStr: getCurrentTimeFormatted(),
+          dateStr: getCurrentDateFormatted(),
+          type: action.type, // 'entry', 'exit', 'reset'
+          gender: action.gender, // 'man', 'woman', 'generic'
+          deltaMen: action.deltaMen || 0,
+          deltaWomen: action.deltaWomen || 0,
+          deltaTotal: (action.deltaMen || 0) + (action.deltaWomen || 0),
+          resultTotal: totalAfter,
+          resultMen: state.menCount,
+          resultWomen: state.womenCount,
+          description: action.desc,
+          undone: false,
+        };
+
+        state.history.unshift(record);
+        saveHistory();
+        renderHistoryList();
+        renderAnalytics();
+      }
+
+      function canUndo() {
+        // Can undo the most recent valid active movement in current session
+        return state.history.some(h => h.sessionId === state.activeSessionId && !h.undone && h.type !== 'reset');
+      }
+
+      function undoLastMovement() {
+        const itemToUndo = state.history.find(h => h.sessionId === state.activeSessionId && !h.undone && h.type !== 'reset');
+        if (!itemToUndo) return;
+
+        // Surgical reversal
+        const revMen = -itemToUndo.deltaMen;
+        const revWomen = -itemToUndo.deltaWomen;
+
+        // Apply if mathematically valid
+        if (state.menCount + revMen < 0 || state.womenCount + revWomen < 0) {
+          showToast('No es posible revertir: causaría números negativos');
+          return;
+        }
+
+        state.menCount += revMen;
+        state.womenCount += revWomen;
+        itemToUndo.undone = true;
+        saveHistory();
+
+        triggerNumberPulse(totalDisplay);
+        updateUI({ logTime: true, customLog: 'Deshecho' });
+        renderHistoryList();
+        renderAnalytics();
+        showToast('Movimiento revertido correctamente');
+      }
+
+      // --------------------------------------------------------------
+      // CORE UI UPDATE LOOP (ITEM 1 & ACCESSIBILITY)
+      // --------------------------------------------------------------
+      function triggerNumberPulse(elem) {
+        elem.classList.remove('scale-105');
+        void elem.offsetWidth;
+        elem.classList.add('scale-105');
+        setTimeout(() => elem.classList.remove('scale-105'), 140);
+      }
+
+      function updateUI(options = { logTime: true, customLog: null }) {
+        const total = state.menCount + state.womenCount;
+        const max = state.maxCapacity;
+
+        // 1. Label and numbers
+        totalDisplay.textContent = total;
+        menDisplay.textContent = state.menCount;
+        womenDisplay.textContent = state.womenCount;
+        maxCapacityLabel.textContent = max;
+        capacityFractionText.textContent = `${total} / ${max}`;
+
+        // Grammar
+        if (total === 0) {
+          totalLabel.textContent = '0 Personas';
+        } else if (total === 1) {
+          totalLabel.textContent = '1 Persona';
+        } else {
+          totalLabel.textContent = `${total} Personas`;
+        }
+
+        // 2. Percentage and dynamic progress bar styling (Item 1)
+        const pct = Math.min(100, Math.round((total / max) * 100));
+        progressBar.style.width = `${pct}%`;
+        occupancyPercentageText.textContent = `${pct}%`;
+
+        // Progress bar graduated color scale:
+        // Verde (<70%), Amarillo/Ámbar (70%-89%), Rojo/Carmesí (>=90%)
+        if (pct >= 90) {
+          progressBar.className = 'h-full bg-gradient-to-r from-amber-500 to-rose-600 rounded-full transition-all duration-300 shadow-sm shadow-rose-500/50';
+          occupancyPercentageText.className = 'text-rose-400 font-bold';
+        } else if (pct >= 70) {
+          progressBar.className = 'h-full bg-gradient-to-r from-emerald-500 to-amber-400 rounded-full transition-all duration-300';
+          occupancyPercentageText.className = 'text-amber-300 font-bold';
+        } else {
+          progressBar.className = 'h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 rounded-full transition-all duration-300';
+          occupancyPercentageText.className = 'text-slate-200 font-bold';
+        }
+
+        // 3. Capacity limit enforcement (Item 1)
+        const isFull = total >= max;
+        if (isFull) {
+          capacityBanner.classList.remove('hidden');
+          btnAddGeneral.disabled = true;
+          btnAddMen.disabled = true;
+          btnAddWomen.disabled = true;
+        } else {
+          capacityBanner.classList.add('hidden');
+          btnAddGeneral.disabled = false;
+          btnAddMen.disabled = false;
+          btnAddWomen.disabled = false;
+        }
+
+        // 4. Subtract Button states
+        btnSubtractGeneral.disabled = total <= 0;
+        btnSubtractMen.disabled = state.menCount <= 0;
+        btnSubtractWomen.disabled = state.womenCount <= 0;
+
+        // 5. Undo Button state (Item 6)
+        btnUndo.disabled = !canUndo();
+
+        // 6. Ratios
+        if (total > 0) {
+          const mPct = Math.round((state.menCount / total) * 100);
+          const wPct = 100 - mPct;
+          menRatioText.textContent = `Hombres: ${mPct}%`;
+          womenRatioText.textContent = `Mujeres: ${wPct}%`;
+        } else {
+          menRatioText.textContent = 'Hombres: 0%';
+          womenRatioText.textContent = 'Mujeres: 0%';
+        }
+
+        // 7. Last updated timestamp
+        if (options.customLog) {
+          lastUpdatedText.textContent = options.customLog;
+        } else if (options.logTime) {
+          lastUpdatedText.textContent = getCurrentTimeFormatted();
+        }
+
+        // Active session badge label
+        const curSess = state.sessions.find(s => s.id === state.activeSessionId);
+        if (curSess) {
+          activeSessionBadge.textContent = curSess.name;
+        }
+      }
+
+      // --------------------------------------------------------------
+      // BUTTON HANDLERS WITH RIGOROUS SYNC
+      // --------------------------------------------------------------
+      function handleAddGeneral() {
+        if (state.menCount + state.womenCount >= state.maxCapacity) return;
+        // Keep proportional balance
+        let addedMen = 0;
+        let addedWomen = 0;
+        if (state.menCount <= state.womenCount) {
+          state.menCount++;
+          addedMen = 1;
+        } else {
+          state.womenCount++;
+          addedWomen = 1;
+        }
+        triggerNumberPulse(totalDisplay);
+        recordHistoryEvent({
+          type: 'entry',
+          gender: addedMen ? 'man' : 'woman',
+          deltaMen: addedMen,
+          deltaWomen: addedWomen,
+          desc: addedMen ? '+1 Hombre (Entrada general)' : '+1 Mujer (Entrada general)'
+        });
+        updateUI();
+      }
+
+      function handleSubtractGeneral() {
+        if (state.menCount + state.womenCount <= 0) return;
+        let subMen = 0;
+        let subWomen = 0;
+        if (state.menCount >= state.womenCount && state.menCount > 0) {
+          state.menCount--;
+          subMen = -1;
+        } else if (state.womenCount > 0) {
+          state.womenCount--;
+          subWomen = -1;
+        }
+        triggerNumberPulse(totalDisplay);
+        recordHistoryEvent({
+          type: 'exit',
+          gender: subMen ? 'man' : 'woman',
+          deltaMen: subMen,
+          deltaWomen: subWomen,
+          desc: subMen ? '-1 Hombre (Salida general)' : '-1 Mujer (Salida general)'
+        });
+        updateUI();
+      }
+
+      function handleAddMen() {
+        if (state.menCount + state.womenCount >= state.maxCapacity) return;
+        state.menCount++;
+        triggerNumberPulse(menDisplay);
+        triggerNumberPulse(totalDisplay);
+        recordHistoryEvent({
+          type: 'entry',
+          gender: 'man',
+          deltaMen: 1,
+          deltaWomen: 0,
+          desc: '+1 Hombre'
+        });
+        updateUI();
+      }
+
+      function handleSubtractMen() {
+        if (state.menCount <= 0) return;
+        state.menCount--;
+        triggerNumberPulse(menDisplay);
+        triggerNumberPulse(totalDisplay);
+        recordHistoryEvent({
+          type: 'exit',
+          gender: 'man',
+          deltaMen: -1,
+          deltaWomen: 0,
+          desc: '-1 Hombre'
+        });
+        updateUI();
+      }
+
+      function handleAddWomen() {
+        if (state.menCount + state.womenCount >= state.maxCapacity) return;
+        state.womenCount++;
+        triggerNumberPulse(womenDisplay);
+        triggerNumberPulse(totalDisplay);
+        recordHistoryEvent({
+          type: 'entry',
+          gender: 'woman',
+          deltaMen: 0,
+          deltaWomen: 1,
+          desc: '+1 Mujer'
+        });
+        updateUI();
+      }
+
+      function handleSubtractWomen() {
+        if (state.womenCount <= 0) return;
+        state.womenCount--;
+        triggerNumberPulse(womenDisplay);
+        triggerNumberPulse(totalDisplay);
+        recordHistoryEvent({
+          type: 'exit',
+          gender: 'woman',
+          deltaMen: 0,
+          deltaWomen: -1,
+          desc: '-1 Mujer'
+        });
+        updateUI();
+      }
+
+      // --------------------------------------------------------------
+      // DRAWERS BEHAVIOR (EXCLUSIVE TOGGLE) (ITEM 2)
+      // --------------------------------------------------------------
+      function openHistoryDrawer() {
+        closeStatsDrawer(false); // Close other drawer first
+        drawerOverlay.classList.remove('opacity-0', 'pointer-events-none');
+        drawerOverlay.classList.add('opacity-100', 'pointer-events-auto');
+        historyDrawer.classList.remove('-translate-x-full');
+        historyDrawer.classList.add('translate-x-0');
+        renderHistoryList();
+      }
+
+      function closeHistoryDrawer(closeOverlay = true) {
+        historyDrawer.classList.add('-translate-x-full');
+        historyDrawer.classList.remove('translate-x-0');
+        if (closeOverlay && statsDrawer.classList.contains('translate-x-full')) {
+          drawerOverlay.classList.add('opacity-0', 'pointer-events-none');
+          drawerOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+        }
+      }
+
+      function openStatsDrawer() {
+        closeHistoryDrawer(false);
+        drawerOverlay.classList.remove('opacity-0', 'pointer-events-none');
+        drawerOverlay.classList.add('opacity-100', 'pointer-events-auto');
+        statsDrawer.classList.remove('translate-x-full');
+        statsDrawer.classList.add('translate-x-0');
+        renderAnalytics();
+      }
+
+      function closeStatsDrawer(closeOverlay = true) {
+        statsDrawer.classList.add('translate-x-full');
+        statsDrawer.classList.remove('translate-x-0');
+        if (closeOverlay && historyDrawer.classList.contains('-translate-x-full')) {
+          drawerOverlay.classList.add('opacity-0', 'pointer-events-none');
+          drawerOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+        }
+      }
+
+      function closeAllDrawers() {
+        closeHistoryDrawer(true);
+        closeStatsDrawer(true);
+      }
+
+      // --------------------------------------------------------------
+      // HISTORIAL LIST RENDERER (ITEM 3)
+      // --------------------------------------------------------------
+      function populateSessionSelects() {
+        const historySelected = historySessionFilter.value || state.activeSessionId;
+        const statsSelected = statsSessionFilter.value || state.activeSessionId;
+
+        historySessionFilter.innerHTML = '';
+        statsSessionFilter.innerHTML = '';
+
+        state.sessions.forEach(sess => {
+          const isAct = sess.id === state.activeSessionId;
+          const opt1 = document.createElement('option');
+          opt1.value = sess.id;
+          opt1.textContent = `${sess.name} ${isAct ? '(En curso)' : ''}`;
+          if (sess.id === historySelected) opt1.selected = true;
+          historySessionFilter.appendChild(opt1);
+
+          const opt2 = document.createElement('option');
+          opt2.value = sess.id;
+          opt2.textContent = `${sess.name} ${isAct ? '(En curso)' : ''}`;
+          if (sess.id === statsSelected) opt2.selected = true;
+          statsSessionFilter.appendChild(opt2);
+        });
+      }
+
+      function renderHistoryList() {
+        const filterId = historySessionFilter.value || state.activeSessionId;
+        const items = state.history.filter(h => h.sessionId === filterId);
+
+        historyCountBadge.textContent = `${items.length} ${items.length === 1 ? 'movimiento registrado' : 'movimientos registrados'}`;
+        historyList.innerHTML = '';
+
+        if (items.length === 0) {
+          historyList.innerHTML = `
+            <div class="h-64 flex flex-col items-center justify-center text-center p-6 text-slate-500">
+              <svg class="w-10 h-10 mb-2 opacity-40 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <p class="text-xs font-medium">Sin movimientos registrados para esta jornada</p>
+              <p class="text-[11px] text-slate-600 mt-1">Usa los botones principales para contabilizar personas</p>
+            </div>
+          `;
+          return;
+        }
+
+        items.forEach(item => {
+          const isEntry = item.type === 'entry';
+          const isReset = item.type === 'reset';
+          const isUndone = item.undone;
+
+          const row = document.createElement('div');
+          row.className = `p-3 rounded-xl border transition-all ${
+            isUndone
+              ? 'bg-slate-900/30 border-white/5 opacity-55'
+              : isReset
+              ? 'bg-purple-950/20 border-purple-500/20'
+              : isEntry
+              ? 'bg-emerald-950/20 border-emerald-500/20 hover:border-emerald-500/40'
+              : 'bg-rose-950/20 border-rose-500/20 hover:border-rose-500/40'
+          }`;
+
+          const sign = isReset ? '↺' : isEntry ? '+' : '-';
+          const iconColor = isUndone ? 'text-slate-500' : isReset ? 'text-purple-400' : isEntry ? 'text-emerald-400' : 'text-rose-400';
+          const badgeClass = isUndone
+            ? 'bg-slate-800 text-slate-400 line-through'
+            : isReset
+            ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+            : isEntry
+            ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+            : 'bg-rose-500/20 text-rose-300 border border-rose-500/30';
+
+          row.innerHTML = `
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2.5">
+                <span class="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs ${iconColor} bg-white/5 font-mono">
+                  ${sign}
+                </span>
+                <div>
+                  <div class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+                    <span class="${isUndone ? 'line-through text-slate-400' : ''}">${item.description}</span>
+                    ${isUndone ? '<span class="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">Revertido</span>' : ''}
+                  </div>
+                  <div class="text-[10px] text-slate-400 flex items-center gap-2 mt-0.5 font-mono">
+                    <span>${item.timeStr}</span>
+                    <span>•</span>
+                    <span>${item.dateStr}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="inline-block text-[11px] font-bold px-2 py-0.5 rounded ${badgeClass}">
+                  ${isReset ? 'Aforo: 0' : `Aforo: ${item.resultTotal}`}
+                </span>
+                <div class="text-[10px] text-slate-500 font-mono mt-0.5">
+                  ♂ ${item.resultMen} | ♀ ${item.resultWomen}
+                </div>
+              </div>
+            </div>
+          `;
+          historyList.appendChild(row);
+        });
+      }
+
+      // --------------------------------------------------------------
+      // ADVANCED ANALYTICS RENDERER (ITEM 4: CHARTS & METRICS)
+      // --------------------------------------------------------------
+      function renderAnalytics() {
+        const filterId = statsSessionFilter.value || state.activeSessionId;
+        const validEvents = state.history.filter(h => h.sessionId === filterId && !h.undone);
+
+        // 1. Total entries & exits & gender metrics
+        let totalEntries = 0;
+        let totalExits = 0;
+        let entriesMen = 0;
+        let entriesWomen = 0;
+        let peakOccupancy = 0;
+        let occupancyMap = []; // chronological array { time, occ }
+
+        // Reverse to chronological order (oldest to newest)
+        const chrono = [...validEvents].reverse();
+
+        chrono.forEach(ev => {
+          if (ev.type === 'entry') {
+            totalEntries += ev.deltaTotal;
+            entriesMen += ev.deltaMen;
+            entriesWomen += ev.deltaWomen;
+          } else if (ev.type === 'exit') {
+            totalExits += Math.abs(ev.deltaTotal);
+          }
+          if (ev.resultTotal > peakOccupancy) {
+            peakOccupancy = ev.resultTotal;
+          }
+          occupancyMap.push({
+            timestamp: ev.timestamp,
+            timeStr: ev.timeStr,
+            occupancy: ev.resultTotal,
+          });
+        });
+
+        statPeakOccupancy.innerHTML = `${peakOccupancy} <span class="text-xs text-slate-400 font-normal">máx.</span>`;
+        statTotalEntries.textContent = `+${totalEntries}`;
+        statTotalExits.textContent = `-${totalExits}`;
+
+        // Weighted Average Occupancy Calculation (4D):
+        // Time elapsed between chronological transitions
+        let weightedAvg = 0;
+        if (occupancyMap.length >= 2) {
+          let totalTimeMs = 0;
+          let timeIntegrated = 0;
+          for (let i = 0; i < occupancyMap.length - 1; i++) {
+            const dt = Math.max(1000, occupancyMap[i + 1].timestamp - occupancyMap[i].timestamp);
+            timeIntegrated += occupancyMap[i].occupancy * dt;
+            totalTimeMs += dt;
+          }
+          weightedAvg = totalTimeMs > 0 ? (timeIntegrated / totalTimeMs).toFixed(1) : '0.0';
+        } else if (occupancyMap.length === 1) {
+          weightedAvg = occupancyMap[0].occupancy.toFixed(1);
+        } else {
+          weightedAvg = '0.0';
+        }
+        statAvgOccupancy.innerHTML = `${weightedAvg} <span class="text-xs text-slate-400 font-normal">pers.</span>`;
+
+        // Peak Hour Calculation (Franja horaria con mayor afluencia/aforo)
+        const hourlyStats = {};
+        for (let h = 0; h < 24; h++) {
+          hourlyStats[h] = { entries: 0, exits: 0, peak: 0 };
+        }
+
+        validEvents.forEach(ev => {
+          const hour = new Date(ev.timestamp).getHours();
+          if (ev.type === 'entry') hourlyStats[hour].entries += ev.deltaTotal;
+          if (ev.type === 'exit') hourlyStats[hour].exits += Math.abs(ev.deltaTotal);
+          if (ev.resultTotal > hourlyStats[hour].peak) hourlyStats[hour].peak = ev.resultTotal;
+        });
+
+        let peakHourIndex = null;
+        let maxPeakValue = -1;
+        Object.keys(hourlyStats).forEach(h => {
+          const totalActivity = hourlyStats[h].entries + hourlyStats[h].peak;
+          if (totalActivity > maxPeakValue && (hourlyStats[h].entries > 0 || hourlyStats[h].peak > 0)) {
+            maxPeakValue = totalActivity;
+            peakHourIndex = parseInt(h, 10);
+          }
+        });
+
+        if (peakHourIndex !== null) {
+          const nextH = (peakHourIndex + 1) % 24;
+          statPeakHour.textContent = `${String(peakHourIndex).padStart(2, '0')}:00 - ${String(nextH).padStart(2, '0')}:00`;
+        } else {
+          statPeakHour.textContent = '--:--';
+        }
+
+        // Gender entries cumulative balance (4C)
+        const totalGenderEntries = entriesMen + entriesWomen;
+        genderTotalEntriesSummary.textContent = `${totalGenderEntries} accesos registrados`;
+        if (totalGenderEntries > 0) {
+          const menPct = Math.round((entriesMen / totalGenderEntries) * 100);
+          const womenPct = 100 - menPct;
+          genderStatMenBar.style.width = `${menPct}%`;
+          genderStatWomenBar.style.width = `${womenPct}%`;
+          statMenCumulativeText.textContent = `${entriesMen} (${menPct}%)`;
+          statWomenCumulativeText.textContent = `${entriesWomen} (${womenPct}%)`;
+        } else {
+          genderStatMenBar.style.width = '50%';
+          genderStatWomenBar.style.width = '50%';
+          statMenCumulativeText.textContent = '0 (0%)';
+          statWomenCumulativeText.textContent = '0 (0%)';
+        }
+
+        // ------------------------------------------------------------
+        // RENDER SVG CHART A: HOURLY ENTRIES VS EXITS (4A)
+        // ------------------------------------------------------------
+        renderHourlyChart(hourlyStats);
+
+        // ------------------------------------------------------------
+        // RENDER SVG CHART B: OCCUPANCY EVOLUTION AREA (4B)
+        // ------------------------------------------------------------
+        renderOccupancyAreaChart(occupancyMap);
+      }
+
+      function renderHourlyChart(hourlyStats) {
+        // Find active hour range (e.g. from 8am to 22pm, or window around activity)
+        let minHour = 8;
+        let maxHour = 22;
+        Object.keys(hourlyStats).forEach(h => {
+          const num = parseInt(h, 10);
+          if (hourlyStats[num].entries > 0 || hourlyStats[num].exits > 0) {
+            if (num < minHour) minHour = Math.max(0, num - 1);
+            if (num > maxHour) maxHour = Math.min(23, num + 1);
+          }
+        });
+
+        const hours = [];
+        for (let h = minHour; h <= maxHour; h++) hours.push(h);
+
+        let maxVal = 4;
+        hours.forEach(h => {
+          if (hourlyStats[h].entries > maxVal) maxVal = hourlyStats[h].entries;
+          if (hourlyStats[h].exits > maxVal) maxVal = hourlyStats[h].exits;
+        });
+
+        const svgW = 420;
+        const svgH = 160;
+        const padX = 25;
+        const padBottom = 26;
+        const padTop = 15;
+        const graphW = svgW - padX * 2;
+        const graphH = svgH - padBottom - padTop;
+        const slotW = graphW / hours.length;
+        const barW = Math.max(4, Math.min(10, (slotW - 6) / 2));
+
+        let barsSvg = '';
+        hours.forEach((h, idx) => {
+          const xCenter = padX + idx * slotW + slotW / 2;
+          const eVal = hourlyStats[h].entries;
+          const xVal = hourlyStats[h].exits;
+
+          const eH = (eVal / maxVal) * graphH;
+          const xH = (xVal / maxVal) * graphH;
+
+          const eY = padTop + graphH - eH;
+          const xY = padTop + graphH - xH;
+
+          // Green bar (Entries)
+          barsSvg += `
+            <rect x="${xCenter - barW - 1}" y="${eY}" width="${barW}" height="${eH}" rx="2" fill="#10B981" opacity="0.9">
+              <title>${String(h).padStart(2, '0')}:00 -> Entradas: ${eVal}</title>
+            </rect>
+          `;
+          // Amber bar (Exits)
+          barsSvg += `
+            <rect x="${xCenter + 1}" y="${xY}" width="${barW}" height="${xH}" rx="2" fill="#F59E0B" opacity="0.9">
+              <title>${String(h).padStart(2, '0')}:00 -> Salidas: ${xVal}</title>
+            </rect>
+          `;
+
+          // X Axis label
+          if (idx % Math.ceil(hours.length / 8) === 0 || idx === hours.length - 1) {
+            barsSvg += `
+              <text x="${xCenter}" y="${svgH - 8}" text-anchor="middle" font-size="9" fill="#94A3B8" font-family="monospace">${String(h).padStart(2, '0')}h</text>
+            `;
+          }
+        });
+
+        hourlyChartContainer.innerHTML = `
+          <svg class="w-full h-full" viewBox="0 0 ${svgW} ${svgH}" preserveAspectRatio="none">
+            <!-- Grid lines -->
+            <line x1="${padX}" y1="${padTop}" x2="${svgW - padX}" y2="${padTop}" stroke="#ffffff" stroke-opacity="0.06" stroke-dasharray="3,3"/>
+            <line x1="${padX}" y1="${padTop + graphH / 2}" x2="${svgW - padX}" y2="${padTop + graphH / 2}" stroke="#ffffff" stroke-opacity="0.06" stroke-dasharray="3,3"/>
+            <line x1="${padX}" y1="${padTop + graphH}" x2="${svgW - padX}" y2="${padTop + graphH}" stroke="#ffffff" stroke-opacity="0.15"/>
+            ${barsSvg}
+          </svg>
+        `;
+      }
+
+      function renderOccupancyAreaChart(occupancyMap) {
+        const svgW = 420;
+        const svgH = 140;
+        const padX = 20;
+        const padTop = 15;
+        const padBottom = 22;
+        const graphW = svgW - padX * 2;
+        const graphH = svgH - padTop - padBottom;
+
+        if (occupancyMap.length < 2) {
+          occupancyCurveContainer.innerHTML = `
+            <div class="h-full flex items-center justify-center text-center text-xs text-slate-500 font-mono">
+              Registra más movimientos para trazar la curva continua
+            </div>
+          `;
+          return;
+        }
+
+        const maxCap = Math.max(state.maxCapacity, ...occupancyMap.map(d => d.occupancy));
+        const pts = occupancyMap.map((d, i) => {
+          const x = padX + (i / (occupancyMap.length - 1)) * graphW;
+          const y = padTop + graphH - (d.occupancy / maxCap) * graphH;
+          return { x, y, occ: d.occupancy, time: d.timeStr };
+        });
+
+        // Path line & fill area
+        let lineD = `M ${pts[0].x} ${pts[0].y}`;
+        for (let i = 1; i < pts.length; i++) {
+          lineD += ` L ${pts[i].x} ${pts[i].y}`;
+        }
+
+        const areaD = `${lineD} L ${pts[pts.length - 1].x} ${padTop + graphH} L ${pts[0].x} ${padTop + graphH} Z`;
+
+        // SVG Gradient definition
+        occupancyCurveContainer.innerHTML = `
+          <svg class="w-full h-full overflow-visible" viewBox="0 0 ${svgW} ${svgH}" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#10B981" stop-opacity="0.45"/>
+                <stop offset="100%" stop-color="#10B981" stop-opacity="0.0"/>
+              </linearGradient>
+            </defs>
+            <!-- Baseline -->
+            <line x1="${padX}" y1="${padTop + graphH}" x2="${svgW - padX}" y2="${padTop + graphH}" stroke="#ffffff" stroke-opacity="0.15"/>
+            <!-- Capacity dashed ceiling -->
+            <line x1="${padX}" y1="${padTop}" x2="${svgW - padX}" y2="${padTop}" stroke="#F43F5E" stroke-opacity="0.3" stroke-dasharray="4,4"/>
+            <!-- Area & Line -->
+            <path d="${areaD}" fill="url(#areaGradient)"/>
+            <path d="${lineD}" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Dots -->
+            ${pts.map(p => `
+              <circle cx="${p.x}" cy="${p.y}" r="3" fill="#ffffff" stroke="#10B981" stroke-width="2">
+                <title>${p.time} -> Aforo: ${p.occ}</title>
+              </circle>
+            `).join('')}
+            <!-- Start and end labels -->
+            <text x="${padX}" y="${svgH - 6}" font-size="9" fill="#94A3B8" font-family="monospace">${pts[0].time}</text>
+            <text x="${svgW - padX}" y="${svgH - 6}" font-size="9" text-anchor="end" fill="#94A3B8" font-family="monospace">${pts[pts.length - 1].time}</text>
+          </svg>
+        `;
+      }
+
+      // --------------------------------------------------------------
+      // MODAL CONTROLLERS (ITEM 1, 7, 8)
+      // --------------------------------------------------------------
+      function openCapacityModal() {
+        inputCapacityValue.value = state.maxCapacity;
+        capacityModalHelper.textContent = `El aforo actual en sala es de ${state.menCount + state.womenCount} personas.`;
+        capacityModal.classList.remove('opacity-0', 'pointer-events-none');
+        capacityModal.classList.add('opacity-100', 'pointer-events-auto');
+        inputCapacityValue.focus();
+      }
+
+      function closeCapacityModal() {
+        capacityModal.classList.add('opacity-0', 'pointer-events-none');
+        capacityModal.classList.remove('opacity-100', 'pointer-events-auto');
+      }
+
+      function saveNewCapacity() {
+        const val = parseInt(inputCapacityValue.value, 10);
+        if (isNaN(val) || val <= 0) {
+          alert('Por favor introduce un límite de aforo válido (mínimo 1).');
+          return;
+        }
+        state.maxCapacity = val;
+        saveCapacity();
+        updateUI();
+        closeCapacityModal();
+        showToast(`Capacidad máxima actualizada a ${val}`);
+      }
+
+      // Reset Modal (Item 7)
+      function openResetModal() {
+        resetModal.classList.remove('opacity-0', 'pointer-events-none');
+        resetModal.classList.add('opacity-100', 'pointer-events-auto');
+      }
+
+      function closeResetModal() {
+        resetModal.classList.add('opacity-0', 'pointer-events-none');
+        resetModal.classList.remove('opacity-100', 'pointer-events-auto');
+      }
+
+      function confirmResetCounters() {
+        const prevTotal = state.menCount + state.womenCount;
+        if (prevTotal > 0) {
+          recordHistoryEvent({
+            type: 'reset',
+            gender: 'generic',
+            deltaMen: -state.menCount,
+            deltaWomen: -state.womenCount,
+            desc: `Reinicio de aforo a 0 (Anterior: ${prevTotal})`
+          });
+        }
+        state.menCount = 0;
+        state.womenCount = 0;
+        triggerNumberPulse(totalDisplay);
+        updateUI({ logTime: true, customLog: 'Restablecido' });
+        closeResetModal();
+        showToast('Aforo restablecido a 0 personas');
+      }
+
+      // New Session Modal (Item 8)
+      function openNewSessionModal() {
+        inputNewSessionName.value = `Jornada ${new Date().toLocaleDateString('es-ES')} (${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })})`;
+        newSessionModal.classList.remove('opacity-0', 'pointer-events-none');
+        newSessionModal.classList.add('opacity-100', 'pointer-events-auto');
+        inputNewSessionName.focus();
+      }
+
+      function closeNewSessionModal() {
+        newSessionModal.classList.add('opacity-0', 'pointer-events-none');
+        newSessionModal.classList.remove('opacity-100', 'pointer-events-auto');
+      }
+
+      function confirmNewSession() {
+        const name = inputNewSessionName.value.trim() || 'Nueva Jornada';
+        const newSess = {
+          id: 'sess_' + Date.now(),
+          name: name,
+          date: new Date().toISOString(),
+          startedAt: new Date().toLocaleTimeString('es-ES'),
+        };
+
+        state.sessions.unshift(newSess);
+        state.activeSessionId = newSess.id;
+        state.menCount = 0;
+        state.womenCount = 0;
+
+        saveSessions();
+        populateSessionSelects();
+        triggerNumberPulse(totalDisplay);
+        updateUI({ logTime: true, customLog: 'Nueva Jornada' });
+        closeNewSessionModal();
+        renderHistoryList();
+        renderAnalytics();
+        showToast(`Jornada "${name}" iniciada`);
+      }
+
+      // --------------------------------------------------------------
+      // EVENT LISTENERS BINDING
+      // --------------------------------------------------------------
+      // Primary Action Buttons
+      btnAddGeneral.addEventListener('click', handleAddGeneral);
+      btnSubtractGeneral.addEventListener('click', handleSubtractGeneral);
+      btnAddMen.addEventListener('click', handleAddMen);
+      btnSubtractMen.addEventListener('click', handleSubtractMen);
+      btnAddWomen.addEventListener('click', handleAddWomen);
+      btnSubtractWomen.addEventListener('click', handleSubtractWomen);
+
+      // Undo & Reset
+      btnUndo.addEventListener('click', undoLastMovement);
+      btnReset.addEventListener('click', (e) => {
+        e.preventDefault(); // Rule 7: NEVER trigger page reload
+        openResetModal();
+      });
+
+      // Capacity Modal
+      btnEditCapacity.addEventListener('click', openCapacityModal);
+      btnCloseCapacityModal.addEventListener('click', closeCapacityModal);
+      btnCancelCapacityModal.addEventListener('click', closeCapacityModal);
+      btnSaveCapacityModal.addEventListener('click', saveNewCapacity);
+
+      document.querySelectorAll('.capacity-preset').forEach(btn => {
+        btn.addEventListener('click', () => {
+          inputCapacityValue.value = btn.dataset.value;
+        });
+      });
+
+      // Reset Modal Buttons
+      btnCancelResetModal.addEventListener('click', closeResetModal);
+      btnConfirmResetModal.addEventListener('click', confirmResetCounters);
+
+      // New Session Buttons
+      btnNewSession.addEventListener('click', openNewSessionModal);
+      btnNewSessionFooter.addEventListener('click', openNewSessionModal);
+      btnCancelNewSessionModal.addEventListener('click', closeNewSessionModal);
+      btnConfirmNewSessionModal.addEventListener('click', confirmNewSession);
+
+      // Drawers open / close
+      btnOpenHistory.addEventListener('click', openHistoryDrawer);
+      btnCloseHistory.addEventListener('click', closeAllDrawers);
+      btnOpenStats.addEventListener('click', openStatsDrawer);
+      btnCloseStats.addEventListener('click', closeAllDrawers);
+      drawerOverlay.addEventListener('click', closeAllDrawers);
+
+      // Drawer Filter Selects
+      historySessionFilter.addEventListener('change', () => {
+        renderHistoryList();
+      });
+
+      statsSessionFilter.addEventListener('change', () => {
+        renderAnalytics();
+      });
+
+      btnClearHistorySession.addEventListener('click', () => {
+        const filterId = historySessionFilter.value;
+        const curSess = state.sessions.find(s => s.id === filterId);
+        if (!confirm(`¿Borrar el historial registrado para "${curSess ? curSess.name : 'esta jornada'}"?`)) return;
+
+        state.history = state.history.filter(h => h.sessionId !== filterId);
+        saveHistory();
+        renderHistoryList();
+        renderAnalytics();
+        showToast('Historial de la jornada depurado');
+      });
+
+      // Hotkey Keyboard Support (+, -, U, R, ESC)
+      window.addEventListener('keydown', (e) => {
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+
+        if (e.key === '+' || e.key === '=') {
+          e.preventDefault();
+          handleAddGeneral();
+        } else if (e.key === '-' || e.key === '_') {
+          e.preventDefault();
+          handleSubtractGeneral();
+        } else if (e.key.toLowerCase() === 'u') {
+          e.preventDefault();
+          undoLastMovement();
+        } else if (e.key.toLowerCase() === 'r') {
+          e.preventDefault();
+          openResetModal();
+        } else if (e.key === 'Escape') {
+          closeAllDrawers();
+          closeCapacityModal();
+          closeResetModal();
+          closeNewSessionModal();
+        }
+      });
+
+      // --------------------------------------------------------------
+      // BOOTSTRAP SYSTEM
+      // --------------------------------------------------------------
+      loadPersistedData();
+      populateSessionSelects();
+      updateRealtimeClock();
+      setInterval(updateRealtimeClock, 1000); // Rule 5
+      updateUI({ logTime: false });
+    })();
+  </script>
+</body></html>
