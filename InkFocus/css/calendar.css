@@ -1,0 +1,527 @@
+/* =========================================================
+   calendar.css · Pestañas de vista, calendario mensual y panel del día
+   ========================================================= */
+
+/* ---------- Pestañas Concentración / Calendario ---------- */
+.view-tabs {
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto 0.5rem;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+}
+
+.view-tabs__list {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 5px;
+  border: 3px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-sunken);
+}
+
+.view-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 40px;
+  padding: 0.35rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.view-tab:hover:not([aria-selected='true']) {
+  color: var(--text);
+}
+
+/* Seleccionada: píldora rellena e inclinada (no solo cambio de color) */
+.view-tab[aria-selected='true'] {
+  background: var(--ink-a);
+  color: var(--ink-a-contrast);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.45);
+  transform: rotate(-1.5deg);
+}
+
+.view-tab__icon {
+  width: 1.1em;
+  height: 1.1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.view-tab__status {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--ink-b);
+  color: var(--ink-b-contrast);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Distribución de la vista Calendario ---------- */
+.calendar-view {
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0.35rem clamp(1rem, 3vw, 2rem) 2rem;
+  display: grid;
+  grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .calendar-view {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- Calendario ---------- */
+.calendar {
+  container: calendar / inline-size;
+}
+
+.calendar__header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.calendar__title {
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.calendar__table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 4px;
+  table-layout: fixed;
+}
+
+.calendar__table th {
+  padding: 0.15rem 0;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.day-cell {
+  position: relative;
+  height: clamp(46px, 5.2vw, 62px);
+  padding: 0.3rem;
+  vertical-align: top;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.day-cell--outside {
+  background: transparent;
+  cursor: default;
+}
+
+.day-cell:hover:not(.is-selected):not(.day-cell--outside) {
+  background: var(--surface-hover);
+}
+
+.day-cell__num {
+  display: inline-grid;
+  place-items: center;
+  width: 1.9em;
+  height: 1.9em;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.day-cell.is-past .day-cell__num {
+  color: var(--text-muted);
+}
+
+/* Hoy: aro alrededor del número (forma, no solo color) */
+.day-cell.is-today .day-cell__num {
+  border: 3px solid var(--ink-b-text);
+  color: var(--text);
+}
+
+/* Seleccionado: relleno de tinta, borde claro y ligera inclinación */
+.day-cell.is-selected {
+  background: var(--ink-a);
+  border-color: var(--text);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+  transform: rotate(-1.5deg);
+}
+
+.day-cell.is-selected .day-cell__num,
+.day-cell.is-selected .mark {
+  color: var(--ink-a-contrast);
+}
+
+.day-cell.is-selected.is-today .day-cell__num {
+  border-color: var(--ink-a-contrast);
+}
+
+.day-cell__marks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 6px;
+  margin-top: 0.15rem;
+}
+
+/* ---------- Indicadores (formas distintas, no solo colores) ---------- */
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text);
+}
+
+.mark i {
+  display: inline-block;
+  flex: none;
+}
+
+/* Anillo: tareas pendientes */
+.mark--pending i {
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--ink-a-text);
+  border-radius: 50%;
+}
+
+/* Gota rellena: tareas completadas */
+.mark--done i {
+  width: 9px;
+  height: 11px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: var(--ink-a-solid);
+}
+
+/* Barra: sesiones de concentración */
+.mark--focus i {
+  width: 12px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--ink-b-text);
+}
+
+.day-cell.is-selected .mark--pending i {
+  border-color: var(--ink-a-contrast);
+}
+
+.day-cell.is-selected .mark--done i {
+  background: var(--ink-a-contrast);
+}
+
+.day-cell.is-selected .mark--focus i {
+  background: var(--ink-b);
+}
+
+/* En calendarios estrechos (móvil) solo se ven las formas; las cifras están en el nombre accesible y en el panel del día */
+@container calendar (max-width: 340px) {
+  .mark b {
+    display: none;
+  }
+}
+
+.calendar__legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 1rem;
+  margin: 1rem 0 0.4rem;
+  padding: 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.calendar__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.legend-day {
+  display: inline-grid;
+  place-items: center;
+}
+
+.legend-day--today {
+  width: 16px;
+  height: 16px;
+  border: 3px solid var(--ink-b-text);
+  border-radius: 50%;
+}
+
+.legend-day--selected {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--text);
+  border-radius: 5px;
+  background: var(--ink-a);
+}
+
+.calendar__note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Panel del día ---------- */
+.day {
+  container: day / inline-size;
+}
+
+.day__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+}
+
+.day__title {
+  margin: 0;
+}
+
+.day__title:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.day__relation {
+  display: inline-block;
+  margin-bottom: 0.4rem;
+  padding: 0.15rem 0.6rem 0.1rem;
+  border: 2px solid var(--text);
+  border-radius: 6px;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+}
+
+.day__relation[data-relation='today'] {
+  border-color: var(--ink-b);
+  background: var(--ink-b);
+  color: var(--ink-b-contrast);
+}
+
+.day__relation[data-relation='future'] {
+  border-style: dashed;
+}
+
+.day-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 1rem 0 0.6rem;
+}
+
+.day-stat {
+  padding: 0.7rem 0.8rem;
+  border-radius: 16px;
+  background: var(--surface-2);
+}
+
+.day-stat dt {
+  font-size: 0.78rem;
+  line-height: 1.25;
+  color: var(--text-muted);
+}
+
+.day-stat dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+}
+
+.day-stat dd span {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.day__note {
+  margin-bottom: 1.25rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.day__columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.day__lists {
+  display: grid;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.day__subtitle {
+  margin-bottom: 0.6rem;
+  font-size: 1.2rem;
+}
+
+.territory--day .territory__progress {
+  margin-bottom: 0.75rem;
+}
+
+.territory--day .zone-info {
+  margin-top: 0.25rem;
+}
+
+.day__empty {
+  padding: 0.8rem 1rem;
+  border: 2px dashed var(--line);
+  border-radius: 14px;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Actividad del día ---------- */
+.activity-list {
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.activity {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.2rem 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border-left: 5px solid var(--ink-b);
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.activity__time {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.activity__minutes {
+  font-family: var(--font-display);
+  color: var(--ink-b-text);
+}
+
+.activity__task {
+  overflow-wrap: anywhere;
+}
+
+.activity__note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+@container day (max-width: 720px) {
+  .day__columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@container day (max-width: 430px) {
+  .day-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .day-stat {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .activity {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .activity__task {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 680px) {
+  .view-tabs {
+    margin-bottom: 0.4rem;
+  }
+
+  .view-tabs__list {
+    display: flex;
+    width: 100%;
+  }
+
+  /* Tres pestañas en una fila: icono encima del texto */
+  .view-tab {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.1rem;
+    min-height: 50px;
+    padding: 0.3rem 0.2rem;
+    font-size: 0.85rem;
+    line-height: 1.1;
+  }
+
+  .view-tab__status {
+    font-size: 0.72rem;
+  }
+
+  .calendar__header {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .calendar__header #calendar-today {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+
+  .calendar__title {
+    font-size: 1.3rem;
+  }
+
+  .calendar__table {
+    border-spacing: 2px;
+  }
+
+  .day-cell {
+    padding: 0.2rem;
+    border-radius: 10px;
+  }
+}
+
+/* Movimiento reducido (sistema o Ajustes) */
+:root[data-motion='reduce'] .view-tab,
+:root[data-motion='reduce'] .day-cell {
+  transition: none;
+}
+
+:root[data-motion='reduce'] .view-tab[aria-selected='true'],
+:root[data-motion='reduce'] .day-cell.is-selected {
+  transform: none;
+}

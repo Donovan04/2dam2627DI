@@ -1,0 +1,331 @@
+/* =========================================================
+   territory.css · Territorio del día (mapa SVG de zonas)
+   ========================================================= */
+.territory__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.15rem 1rem;
+}
+
+.territory__header .panel__title {
+  margin: 0;
+}
+
+.territory__date {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.territory__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.territory__caption {
+  margin: 0.35rem 0 1rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.territory__progress {
+  display: grid;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+
+.territory__progress-text {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  line-height: 1.15;
+}
+
+.meter {
+  height: 14px;
+  overflow: hidden;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-sunken);
+}
+
+.meter__fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ink-a-solid);
+  transition: width 0.6s ease;
+}
+
+/* ---------- Mapa ----------
+   El mapa es un «tablero» oscuro en ambos temas (tokens --board-*), así la
+   tinta pintada contrasta igual con cualquier tema y pareja de colores. */
+.territory__map {
+  padding: 0.4rem;
+  border: 3px solid var(--line);
+  border-radius: 22px;
+  background-color: var(--board-bg);
+  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.07) 1px, transparent 0);
+  background-size: 14px 14px;
+}
+
+.territory__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.island__shore {
+  fill: var(--board-tile);
+  stroke: var(--board-line);
+  stroke-width: 12;
+  stroke-linejoin: round;
+}
+
+.island__ground {
+  fill: var(--board-bg);
+}
+
+.zone {
+  cursor: pointer;
+  outline: none; /* el foco se dibuja con .zone-overlay--focus */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Pendiente: rayado diagonal (se distingue sin depender del color).
+   El relleno se indica en el SVG (fill="url(#prefijo-hatch)") porque cada
+   territorio tiene su propio patrón. */
+.zone__base {
+  transition: filter 0.15s ease;
+}
+
+.hatch__bg {
+  fill: var(--board-tile);
+}
+
+.hatch__line {
+  fill: var(--board-hatch);
+}
+
+.zone:hover .zone__base {
+  filter: brightness(1.3);
+}
+
+/* La mancha crece desde el número de la zona al completarse
+   y se retira al reabrir la tarea. */
+.zone__paint {
+  transform-box: view-box;
+  transform: scale(0);
+  transition: transform 0.45s cubic-bezier(0.5, 0, 0.75, 0);
+}
+
+.zone[data-state='done'] .zone__paint {
+  transform: scale(1);
+  transition: transform 0.85s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+}
+
+.zone__splat {
+  fill: var(--ink-a);
+}
+
+.zone__splat--shade {
+  fill: rgba(22, 21, 27, 0.14);
+}
+
+/* Calles entre zonas */
+.zone__edge {
+  fill: none;
+  stroke: var(--board-bg);
+  stroke-width: 5;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.zone__badge {
+  fill: var(--board-tile);
+  stroke: var(--board-text);
+  stroke-width: 2.5;
+  transition: fill 0.3s ease;
+}
+
+.zone__number {
+  fill: var(--board-text);
+  font-family: var(--font-display);
+  pointer-events: none;
+}
+
+.zone[data-state='done'] .zone__badge {
+  fill: var(--board-text);
+  stroke: var(--board-bg);
+}
+
+.zone[data-state='done'] .zone__number {
+  fill: var(--board-bg);
+}
+
+.zone[data-active] .zone__badge {
+  fill: var(--ink-b);
+  stroke: var(--board-text);
+}
+
+.zone[data-active] .zone__number {
+  fill: var(--ink-b-contrast);
+}
+
+/* Contornos superpuestos: zona seleccionada (blanco) y foco de teclado (amarillo) */
+.zone-overlay {
+  fill: none;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.zone-overlay--selected {
+  stroke: var(--board-text);
+  stroke-width: 4;
+}
+
+/* Sobre el tablero oscuro el foco es siempre amarillo, en cualquier tema */
+.zone-overlay--focus {
+  stroke: #ffe14d;
+  stroke-width: 5;
+  stroke-dasharray: 10 6;
+}
+
+/* ---------- Leyenda ---------- */
+.territory__legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  margin: 0.75rem 0;
+  padding: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.territory__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.legend-zone {
+  display: inline-block;
+  width: 18px;
+  height: 13px;
+  border-radius: 4px;
+}
+
+.legend-zone--done {
+  border: 1px solid var(--board-bg);
+  background: var(--ink-a);
+}
+
+.legend-zone--pending {
+  border: 1px solid var(--board-bg);
+  background: repeating-linear-gradient(45deg, var(--board-hatch) 0 3px, var(--board-tile) 3px 7px);
+}
+
+.legend-zone--active {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--text);
+  border-radius: 50%;
+  background: var(--ink-b);
+}
+
+/* ---------- Ficha de la zona seleccionada ---------- */
+.zone-info {
+  min-height: 76px;
+  padding: 0.9rem 1rem;
+  border: 3px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface-2);
+}
+
+.zone-info[data-state='done'] {
+  border-color: var(--ink-a);
+}
+
+.zone-info[data-state='none'] {
+  border-style: dashed;
+  background: transparent;
+}
+
+.zone-info__zone {
+  display: inline-block;
+  padding: 0.1rem 0.5rem 0.05rem;
+  border-radius: 6px;
+  background: var(--text);
+  color: var(--text-on-light);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  transform: rotate(-2deg);
+}
+
+.zone-info__title {
+  margin-top: 0.35rem;
+  font-weight: 800;
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+
+.zone-info__meta {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.zone-info__hint {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.zone-info__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+}
+
+.zone-info__actions .btn {
+  min-height: 40px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.9rem;
+}
+
+/* ---------- Estado vacío ---------- */
+.territory__empty {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.territory__empty-art {
+  width: 100%;
+  max-width: 260px;
+}
+
+.territory__empty-art path {
+  fill: rgba(255, 255, 255, 0.02);
+  stroke: var(--line);
+  stroke-width: 5;
+  stroke-dasharray: 12 9;
+  stroke-linecap: round;
+}
+
+/* ---------- Movimiento reducido: se pinta al instante ----------
+   data-motion="reduce" lo pone appearance.js si el sistema lo pide o si se
+   activa «Reducir animaciones» en Ajustes. */
+:root[data-motion='reduce'] .zone__paint,
+:root[data-motion='reduce'] .zone[data-state='done'] .zone__paint,
+:root[data-motion='reduce'] .zone__base,
+:root[data-motion='reduce'] .zone__badge,
+:root[data-motion='reduce'] .meter__fill {
+  transition: none;
+}

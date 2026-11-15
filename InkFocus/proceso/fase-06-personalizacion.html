@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fase 6 · Personalización y utilidades · Proceso InkFocus</title>
+  <meta name="description" content="Temas claro y oscuro, parejas de tinta, modo concentración, sonidos, notificaciones, atajos y ayuda; revisión del zoom.">
+  <meta name="theme-color" content="#16151b">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&amp;family=Rubik:wght@400;500;700&amp;display=swap">
+  <link rel="stylesheet" href="css/proceso.css">
+  <script src="js/proceso.js" defer></script>
+</head>
+<body class="page-phase">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<div class="splats" aria-hidden="true">
+  <svg class="splat splat--1" viewBox="0 0 208 208"><path d="M104 14c11 0 13 22 24 25 12 3 25-15 36-6 10 9-4 27 2 38 6 12 30 8 31 22 1 13-22 14-26 26-4 13 14 28 4 38-10 9-27-6-39 0-12 6-10 31-25 31-14 0-14-23-26-29-12-5-27 10-36 1-9-10 6-25 1-37-5-11-30-11-30-25 0-13 23-13 28-25 4-12-13-26-4-36 10-9 26 5 38-1 11-6 11-22 22-22z"/></svg>
+  <svg class="splat splat--2" viewBox="0 0 208 208"><path d="M104 14c11 0 13 22 24 25 12 3 25-15 36-6 10 9-4 27 2 38 6 12 30 8 31 22 1 13-22 14-26 26-4 13 14 28 4 38-10 9-27-6-39 0-12 6-10 31-25 31-14 0-14-23-26-29-12-5-27 10-36 1-9-10 6-25 1-37-5-11-30-11-30-25 0-13 23-13 28-25 4-12-13-26-4-36 10-9 26 5 38-1 11-6 11-22 22-22z"/></svg>
+  <svg class="splat splat--3" viewBox="0 0 208 208"><path d="M104 14c11 0 13 22 24 25 12 3 25-15 36-6 10 9-4 27 2 38 6 12 30 8 31 22 1 13-22 14-26 26-4 13 14 28 4 38-10 9-27-6-39 0-12 6-10 31-25 31-14 0-14-23-26-29-12-5-27 10-36 1-9-10 6-25 1-37-5-11-30-11-30-25 0-13 23-13 28-25 4-12-13-26-4-36 10-9 26 5 38-1 11-6 11-22 22-22z"/></svg>
+</div>
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="index.html">
+      <svg class="brand__mark" viewBox="0 0 208 208" aria-hidden="true"><path d="M104 14c11 0 13 22 24 25 12 3 25-15 36-6 10 9-4 27 2 38 6 12 30 8 31 22 1 13-22 14-26 26-4 13 14 28 4 38-10 9-27-6-39 0-12 6-10 31-25 31-14 0-14-23-26-29-12-5-27 10-36 1-9-10 6-25 1-37-5-11-30-11-30-25 0-13 23-13 28-25 4-12-13-26-4-36 10-9 26 5 38-1 11-6 11-22 22-22z"/></svg>
+      <span class="brand__text"><span class="brand__name"><span class="brand__ink">Ink</span>Focus</span><span class="brand__sub">Proceso de desarrollo</span></span>
+    </a>
+    <nav class="site-nav" aria-label="Principal">
+      <a class="site-nav__link" href="index.html#fases">Fases</a>
+      <a class="btn btn--app" href="../index.html">Abrir InkFocus</a>
+    </nav>
+  </div>
+</header>
+<main id="contenido" tabindex="-1">
+<section class="phase-hero"><div class="wrap"><nav class="crumbs" aria-label="Ruta"><a href="index.html">Índice</a><span aria-hidden="true">/</span><span aria-current="page">Fase 6</span></nav><p class="kicker">Fase 6 de 7</p><h1 class="phase-hero__title"><span class="phase-hero__num" aria-hidden="true">06</span><span class="phase-hero__text">Personalización y utilidades</span></h1><p class="lead">Temas claro y oscuro, parejas de tinta, modo concentración, sonidos, notificaciones, atajos y ayuda; revisión del zoom.</p><ul class="chips" aria-label="IAs que intervienen"><li><span class="who who--claude">Claude Opus 5.5</span></li></ul><nav class="pager" aria-label="Navegación entre fases (arriba)"><a class="pager__link pager__link--prev" href="fase-05-estadisticas.html" rel="prev"><span class="pager__dir"><span aria-hidden="true">←</span> Fase anterior</span><span class="pager__name">05 · Escala, objetivo y estadísticas</span></a><a class="pager__link pager__link--index" href="index.html#fases"><span class="pager__dir">Volver al</span><span class="pager__name">Índice de fases</span></a><a class="pager__link pager__link--next" href="fase-07-revision-final.html" rel="next"><span class="pager__dir">Fase siguiente <span aria-hidden="true">→</span></span><span class="pager__name">07 · Revisión final y datos</span></a></nav></div></section><div class="wrap phase-body"><div class="intro-grid"><section class="panel" aria-labelledby="f06-ctx"><h2 id="f06-ctx">Contexto</h2><p>Tras aprobar las estadísticas, se envía a Claude el prompt de personalización. Incluye investigar por qué la aplicación se abría con un zoom distinto. El Word no indica si este prompt lo redactó GPT-6.1 Sol.</p></section><section class="panel" aria-labelledby="f06-obj"><h2 id="f06-obj">Objetivo</h2><p>Añadir personalización visual y utilidades (modo concentración, sonidos, notificaciones opcionales, atajos y ayuda) sin perder datos ni interrumpir sesiones, y explicar qué ocurría con el zoom.</p></section><section class="panel" aria-labelledby="f06-ia"><h2 id="f06-ia">IAs y modelos</h2><ul class="ai-list"><li><span class="who who--claude">Claude Opus 5.5</span> <span>Esfuerzo Alto · desarrollo</span></li></ul></section></div><section class="sequence" aria-labelledby="f06-seq"><h2 id="f06-seq">Secuencia</h2><p class="sequence__hint">Cada bloque indica quién escribe y a quién va dirigido. «En resumen» es una síntesis de esta web; el texto del Word se reproduce completo debajo.</p><h3 class="group-title">Prompt de personalización y resultado</h3><ol class="timeline"><li class="step step--yo"><article class="msg" aria-labelledby="f06-p1-t"><header class="msg__head"><p class="msg__who"><span class="msg__role">Envía</span> <span class="who who--yo">Yo</span><span class="msg__sep" aria-hidden="true">·</span><span class="msg__role">Para</span> <span class="who who--claude">Claude Opus 5.5</span><span class="msg__sep" aria-hidden="true">·</span><span class="msg__role">Redacción</span> <span class="who who--unknown">no documentada</span></p><h4 class="msg__title" id="f06-p1-t">Prompt enviado a Claude</h4><p class="msg__source"><span>En el Word:</span> «Prompt para Claude Oppus 5.5 Alto:»</p></header><p class="msg__origin"><strong>Origen:</strong> El Word no indica quién redactó este texto. A continuación muestra el resultado.</p><p class="msg__summary"><strong>En resumen:</strong> Nueve apartados: investigar el zoom, revisar lo implementado, personalización visual, modo concentración, sonidos, notificaciones opcionales, atajos y ayuda, persistencia y accesibilidad, y verificación. Deja insignias, datos y demostración para la siguiente fase.</p><div class="msg__tools"><button type="button" class="btn btn--small btn-copy" data-copy="f06-p1-raw">Copiar prompt</button><span class="copy-status" role="status"></span></div><details class="fold"><summary><span class="fold__label">Leer el texto completo</span> <span class="fold__meta">(84 párrafos)</span></summary><div class="doc"><p class="doc__label">Texto completo, tal como aparece en el Word</p><p>La última fase ha quedado muy bien. La interfaz ya se ve correctamente al 100 % de zoom.</p><p>Primero quiero que investigues un detalle del zoom y después continúes con la siguiente fase: <strong>personalización y utilidades</strong>.</p><p>Revisa los archivos actuales, conserva los datos existentes y mantén las funciones y el diseño que ya funcionan.</p><p class="md-h"><strong>1. Investigar el zoom al abrir la aplicación</strong></p><p>Cuando abro la aplicación, el navegador parece ponerse automáticamente al 67 % y tengo que devolverlo manualmente al 100 %. Una vez al 100 %, el tamaño es correcto.</p><p>Comprueba si existe algo en el proyecto o en su configuración de ejecución que pueda provocar ese comportamiento:</p><ul><li>Uso de <code>zoom</code>, escalado global mediante transformaciones o estilos equivalentes.</li><li>Configuración incorrecta del viewport.</li><li>Scripts, herramientas de automatización o configuración de la vista previa que cambien la escala.</li></ul><p>Distingue entre el zoom real que muestra el navegador y un escalado visual aplicado mediante CSS.</p><p>Si encuentras una causa en el proyecto, corrígela. Si no la encuentras, indícalo claramente y explícame cómo comprobar si el navegador recuerda el zoom para esa dirección o si ocurre solo en la vista previa.</p><p>No intentes forzar el zoom del navegador desde JavaScript, bloquear el zoom del usuario ni compensar el problema escalando la página. No cambies el tamaño actual del diseño, porque al 100 % ya está bien.</p><p class="md-h"><strong>2. Revisar lo que ya está implementado</strong></p><p>Antes de añadir funciones, revisa cuáles de los siguientes requisitos ya existen. Conserva y mejora lo que funcione, sin duplicar controles, configuraciones o sistemas de guardado.</p><p>Integra las nuevas opciones en los ajustes y la navegación actuales.</p><p class="md-h"><strong>3. Personalización visual</strong></p><p>Añade o completa:</p><ul><li>Tema oscuro y claro.</li><li>Opción de seguir el tema del sistema.</li><li>Varias parejas de colores de tinta, incluida la combinación actual de violeta y verde lima.</li><li>Vista previa de los colores mediante muestras identificadas con nombres.</li><li>Guardado de las preferencias.</li></ul><p>Aplica las elecciones de forma coherente al tanque, territorio, botones, indicadores y gráficos.</p><p>Mantén el contraste en todos los temas. Las etiquetas de zona con fondos claros deben conservar texto oscuro y legible.</p><p>Respeta el movimiento reducido del sistema y permite reducir las animaciones desde los ajustes. El tanque debe seguir mostrando correctamente el progreso aunque sus animaciones decorativas estén desactivadas.</p><p class="md-h"><strong>4. Modo concentración</strong></p><p>Implementa un modo que oculte temporalmente los elementos secundarios y destaque:</p><ul><li>Tanque.</li><li>Tiempo restante.</li><li>Fase y posición dentro del ciclo.</li><li>Tarea activa.</li><li>Controles principales.</li></ul><p>Incluye un botón visible para entrar y salir. No reinicies ni pauses la sesión al cambiar de modo.</p><p>Este modo debe funcionar dentro de la página. Si añades pantalla completa como opción adicional, debe ser independiente y permitir salir con facilidad.</p><p class="md-h"><strong>5. Sonidos</strong></p><p>Añade o completa:</p><ul><li>Aviso breve al terminar una concentración.</li><li>Aviso al terminar un descanso.</li><li>Control de volumen.</li><li>Opción de silenciar.</li><li>Botón para probar el sonido.</li></ul><p>Utiliza sonidos originales generados con Web Audio o recursos con licencia compatible y documentada. Mantén la estética del proyecto sin depender de audio oficial de Splatoon.</p><p>Respeta las restricciones de reproducción del navegador: prepara el audio a partir de una interacción del usuario y maneja los casos en los que no pueda reproducirse.</p><p>Saltar manualmente una fase no debe reproducir el aviso de sesión completada. Evita avisos duplicados.</p><p class="md-h"><strong>6. Notificaciones opcionales</strong></p><p>Permite activar notificaciones de fin de fase:</p><ul><li>Solicita permiso únicamente cuando el usuario active esta opción.</li><li>Explica brevemente para qué se utilizarán.</li><li>Distingue permiso pendiente, concedido, denegado y función no disponible.</li><li>Si el permiso está denegado, no lo solicites repetidamente.</li><li>Mantén siempre un aviso visual dentro de la aplicación como alternativa.</li><li>Evita notificaciones duplicadas.</li></ul><p>No prometas avisos con la aplicación cerrada si la arquitectura actual no los permite. Explica de forma breve las limitaciones reales y los requisitos de compatibilidad o contexto seguro que correspondan.</p><p class="md-h"><strong>7. Atajos de teclado y ayuda</strong></p><p>Añade atajos documentados para acciones habituales, como iniciar o pausar y activar el modo concentración.</p><p>Evita atajos que entren en conflicto con el navegador. No los ejecutes mientras se escribe en campos, selectores o contenido editable, ni cuando interfieran con una ventana abierta.</p><p>Incluye una sección de ayuda con:</p><ul><li>Explicación breve de la técnica Pomodoro.</li><li>Diferencia entre tanque, territorio y objetivo diario.</li><li>Funcionamiento de «Saltar fase»: avanza la secuencia sin contar la concentración como completada.</li><li>Lista de atajos.</li></ul><p>Usa textos claros y breves en español.</p><p class="md-h"><strong>8. Persistencia y accesibilidad</strong></p><p>Guarda las nuevas preferencias sin perder tareas, historial, objetivos ni ajustes anteriores.</p><p>Comprueba:</p><ul><li>Navegación con teclado y foco visible.</li><li>Etiquetas y estados accesibles de los controles.</li><li>Gestión del foco en ventanas.</li><li>Contraste en cada combinación de tema y tinta.</li><li>Adaptación a móvil.</li><li>Que el temporizador continúe correctamente al abrir ajustes, cambiar de vista o activar el modo concentración.</li></ul><p>No reinicies una sesión al modificar colores, sonido o preferencias visuales.</p><p class="md-h"><strong>9. Verificación y cierre de esta fase</strong></p><p>Comprueba las funciones implementadas y posibles regresiones en temporizador, tareas, territorio, calendario, estadísticas e historial.</p><p>Para el zoom, explica qué has podido verificar y qué depende de mi navegador. Si no puedes reproducirlo, no afirmes que está corregido: dame pasos concretos para comprobarlo.</p><p>Si alguna prueba requiere permisos o interacción manual, indícalo. No mezcles datos de prueba con mis registros reales.</p><p>Al terminar:</p><ol><li>Explica el resultado de la investigación del zoom.</li><li>Resume las funciones añadidas o completadas.</li><li>Distingue las pruebas ejecutadas de las comprobaciones que deba hacer yo.</li><li>Recomienda capturas para documentar la versión.</li><li>Sugiere un mensaje de commit.</li><li>Enumera brevemente qué queda pendiente del proyecto inicial.</li></ol><p>Deja para la siguiente fase las insignias, exportación e importación, restablecimiento de datos y modo demostración, salvo que ya estén implementados. Todavía no construyas la web del proceso ni el PDF de entrega.</p></div></details><template id="f06-p1-raw">La última fase ha quedado muy bien. La interfaz ya se ve correctamente al 100 % de zoom.
+
+Primero quiero que investigues un detalle del zoom y después continúes con la siguiente fase: **personalización y utilidades**.
+
+Revisa los archivos actuales, conserva los datos existentes y mantén las funciones y el diseño que ya funcionan.
+
+**1. Investigar el zoom al abrir la aplicación**
+
+Cuando abro la aplicación, el navegador parece ponerse automáticamente al 67 % y tengo que devolverlo manualmente al 100 %. Una vez al 100 %, el tamaño es correcto.
+
+Comprueba si existe algo en el proyecto o en su configuración de ejecución que pueda provocar ese comportamiento:
+
+- Uso de `zoom`, escalado global mediante transformaciones o estilos equivalentes.
+- Configuración incorrecta del viewport.
+- Scripts, herramientas de automatización o configuración de la vista previa que cambien la escala.
+
+Distingue entre el zoom real que muestra el navegador y un escalado visual aplicado mediante CSS.
+
+Si encuentras una causa en el proyecto, corrígela. Si no la encuentras, indícalo claramente y explícame cómo comprobar si el navegador recuerda el zoom para esa dirección o si ocurre solo en la vista previa.
+
+No intentes forzar el zoom del navegador desde JavaScript, bloquear el zoom del usuario ni compensar el problema escalando la página. No cambies el tamaño actual del diseño, porque al 100 % ya está bien.
+
+**2. Revisar lo que ya está implementado**
+
+Antes de añadir funciones, revisa cuáles de los siguientes requisitos ya existen. Conserva y mejora lo que funcione, sin duplicar controles, configuraciones o sistemas de guardado.
+
+Integra las nuevas opciones en los ajustes y la navegación actuales.
+
+**3. Personalización visual**
+
+Añade o completa:
+
+- Tema oscuro y claro.
+- Opción de seguir el tema del sistema.
+- Varias parejas de colores de tinta, incluida la combinación actual de violeta y verde lima.
+- Vista previa de los colores mediante muestras identificadas con nombres.
+- Guardado de las preferencias.
+
+Aplica las elecciones de forma coherente al tanque, territorio, botones, indicadores y gráficos.
+
+Mantén el contraste en todos los temas. Las etiquetas de zona con fondos claros deben conservar texto oscuro y legible.
+
+Respeta el movimiento reducido del sistema y permite reducir las animaciones desde los ajustes. El tanque debe seguir mostrando correctamente el progreso aunque sus animaciones decorativas estén desactivadas.
+
+**4. Modo concentración**
+
+Implementa un modo que oculte temporalmente los elementos secundarios y destaque:
+
+- Tanque.
+- Tiempo restante.
+- Fase y posición dentro del ciclo.
+- Tarea activa.
+- Controles principales.
+
+Incluye un botón visible para entrar y salir. No reinicies ni pauses la sesión al cambiar de modo.
+
+Este modo debe funcionar dentro de la página. Si añades pantalla completa como opción adicional, debe ser independiente y permitir salir con facilidad.
+
+**5. Sonidos**
+
+Añade o completa:
+
+- Aviso breve al terminar una concentración.
+- Aviso al terminar un descanso.
+- Control de volumen.
+- Opción de silenciar.
+- Botón para probar el sonido.
+
+Utiliza sonidos originales generados con Web Audio o recursos con licencia compatible y documentada. Mantén la estética del proyecto sin depender de audio oficial de Splatoon.
+
+Respeta las restricciones de reproducción del navegador: prepara el audio a partir de una interacción del usuario y maneja los casos en los que no pueda reproducirse.
+
+Saltar manualmente una fase no debe reproducir el aviso de sesión completada. Evita avisos duplicados.
+
+**6. Notificaciones opcionales**
+
+Permite activar notificaciones de fin de fase:
+
+- Solicita permiso únicamente cuando el usuario active esta opción.
+- Explica brevemente para qué se utilizarán.
+- Distingue permiso pendiente, concedido, denegado y función no disponible.
+- Si el permiso está denegado, no lo solicites repetidamente.
+- Mantén siempre un aviso visual dentro de la aplicación como alternativa.
+- Evita notificaciones duplicadas.
+
+No prometas avisos con la aplicación cerrada si la arquitectura actual no los permite. Explica de forma breve las limitaciones reales y los requisitos de compatibilidad o contexto seguro que correspondan.
+
+**7. Atajos de teclado y ayuda**
+
+Añade atajos documentados para acciones habituales, como iniciar o pausar y activar el modo concentración.
+
+Evita atajos que entren en conflicto con el navegador. No los ejecutes mientras se escribe en campos, selectores o contenido editable, ni cuando interfieran con una ventana abierta.
+
+Incluye una sección de ayuda con:
+
+- Explicación breve de la técnica Pomodoro.
+- Diferencia entre tanque, territorio y objetivo diario.
+- Funcionamiento de «Saltar fase»: avanza la secuencia sin contar la concentración como completada.
+- Lista de atajos.
+
+Usa textos claros y breves en español.
+
+**8. Persistencia y accesibilidad**
+
+Guarda las nuevas preferencias sin perder tareas, historial, objetivos ni ajustes anteriores.
+
+Comprueba:
+
+- Navegación con teclado y foco visible.
+- Etiquetas y estados accesibles de los controles.
+- Gestión del foco en ventanas.
+- Contraste en cada combinación de tema y tinta.
+- Adaptación a móvil.
+- Que el temporizador continúe correctamente al abrir ajustes, cambiar de vista o activar el modo concentración.
+
+No reinicies una sesión al modificar colores, sonido o preferencias visuales.
+
+**9. Verificación y cierre de esta fase**
+
+Comprueba las funciones implementadas y posibles regresiones en temporizador, tareas, territorio, calendario, estadísticas e historial.
+
+Para el zoom, explica qué has podido verificar y qué depende de mi navegador. Si no puedes reproducirlo, no afirmes que está corregido: dame pasos concretos para comprobarlo.
+
+Si alguna prueba requiere permisos o interacción manual, indícalo. No mezcles datos de prueba con mis registros reales.
+
+Al terminar:
+
+1. Explica el resultado de la investigación del zoom.
+2. Resume las funciones añadidas o completadas.
+3. Distingue las pruebas ejecutadas de las comprobaciones que deba hacer yo.
+4. Recomienda capturas para documentar la versión.
+5. Sugiere un mensaje de commit.
+6. Enumera brevemente qué queda pendiente del proyecto inicial.
+
+Deja para la siguiente fase las insignias, exportación e importación, restablecimiento de datos y modo demostración, salvo que ya estén implementados. Todavía no construyas la web del proceso ni el PDF de entrega.</template></article></li><li class="step step--claude step--missing"><article class="msg" aria-labelledby="f06-p2-t"><header class="msg__head"><p class="msg__who"><span class="msg__role">De</span> <span class="who who--claude">Claude Opus 5.5</span></p><h4 class="msg__title" id="f06-p2-t">Respuesta de Claude</h4></header><p class="missing"><span class="missing__tag">No documentado</span> El Word la titula «Respuesta/Resultado», pero solo contiene capturas.</p></article></li><li class="step step--result"><article class="msg" aria-labelledby="f06-p3-t"><header class="msg__head"><p class="msg__who"><span class="who who--result">Resultado</span></p><h4 class="msg__title" id="f06-p3-t">Resultado documentado</h4><p class="msg__source"><span>En el Word:</span> «Respuesta/Resultado:»</p></header><div class="shots"><figure class="shot"><button type="button" class="shot__zoom" data-full="img/fase-06-tema-claro-turquesa.png" aria-label="Ampliar la captura 1. InkFocus en tema claro con tintas turquesa y rosa; cabecera con Modo concentración, Ayuda y Ajustes; tanque con interior oscuro."><img src="img/fase-06-tema-claro-turquesa.png" width="1679" height="872" alt="InkFocus en tema claro con tintas turquesa y rosa; cabecera con Modo concentración, Ayuda y Ajustes; tanque con interior oscuro." loading="lazy" decoding="async"><span class="shot__hint" aria-hidden="true">Ampliar</span></button><figcaption><span class="shot__num">Captura 1.</span> Tema claro con la pareja de tintas turquesa y rosa, en modo demostración. La cabecera estrena «Modo concentración» y «Ayuda». El interior del tanque todavía es oscuro.</figcaption></figure></div><div class="shots shots--3"><figure class="shot"><button type="button" class="shot__zoom" data-full="img/fase-06-modo-concentracion.png" aria-label="Ampliar la captura 2. Modo concentración en tema claro: solo el tanque, el tiempo y los controles, con botones Pantalla completa y Salir."><img src="img/fase-06-modo-concentracion.png" width="1679" height="881" alt="Modo concentración en tema claro: solo el tanque, el tiempo y los controles, con botones Pantalla completa y Salir." loading="lazy" decoding="async"><span class="shot__hint" aria-hidden="true">Ampliar</span></button><figcaption><span class="shot__num">Captura 2.</span> Modo concentración: solo quedan el tanque, el tiempo, los controles y la tarea activa, con «Pantalla completa» y «Salir del modo concentración».</figcaption></figure><figure class="shot"><button type="button" class="shot__zoom" data-full="img/fase-06-ajustes-apariencia-sonido.png" aria-label="Ampliar la captura 3. Ajustes con selector de tema, cuatro parejas de tinta, reducir animaciones y control de volumen."><img src="img/fase-06-ajustes-apariencia-sonido.png" width="1679" height="875" alt="Ajustes con selector de tema, cuatro parejas de tinta, reducir animaciones y control de volumen." loading="lazy" decoding="async"><span class="shot__hint" aria-hidden="true">Ampliar</span></button><figcaption><span class="shot__num">Captura 3.</span> Ajustes: tema Sistema, Oscuro o Claro, cuatro parejas de tinta, «Reducir animaciones», sonido con volumen y botones de prueba, y el inicio de Notificaciones.</figcaption></figure><figure class="shot"><button type="button" class="shot__zoom" data-full="img/fase-06-ventana-ayuda.png" aria-label="Ampliar la captura 4. Ventana Ayuda con la técnica Pomodoro, explicación del tanque, el territorio y el objetivo, y lista de atajos de teclado."><img src="img/fase-06-ventana-ayuda.png" width="1662" height="882" alt="Ventana Ayuda con la técnica Pomodoro, explicación del tanque, el territorio y el objetivo, y lista de atajos de teclado." loading="lazy" decoding="async"><span class="shot__hint" aria-hidden="true">Ampliar</span></button><figcaption><span class="shot__num">Captura 4.</span> Ventana «Ayuda»: la técnica Pomodoro, qué son el tanque, el territorio y el objetivo, qué hace «Saltar fase» y la lista de atajos de teclado.</figcaption></figure></div></article></li><li class="step step--yo"><article class="msg" aria-labelledby="f06-p4-t"><header class="msg__head"><p class="msg__who"><span class="msg__role">De</span> <span class="who who--yo">Yo</span></p><h4 class="msg__title" id="f06-p4-t">Descripción y valoración</h4><p class="msg__source"><span>En el Word:</span> texto tras las capturas</p></header><div class="doc"><p class="doc__label">Texto del Word</p><p>Añadido modo claro, sonido, y colores de la tinta.</p><p>Me gusta bastante y solo cambiaria el fondo del tanque de tinta a blanco en el modo claro.</p></div></article></li></ol></section><section class="panel" aria-labelledby="f06-dec"><h2 id="f06-dec">Correcciones y decisiones posteriores</h2><ul class="decisions"><li>Retoque pendiente: fondo blanco del tanque en el modo claro. Se resuelve en la <a href="fase-07-revision-final.html">fase 7</a>.</li></ul></section><section class="panel panel--summary" aria-labelledby="f06-sum"><h2 id="f06-sum">Resumen de la fase</h2><p>InkFocus se puede personalizar (tema y tintas) y gana modo concentración, sonidos, ayuda y atajos. Queda un detalle visual del tanque en el tema claro.</p></section><nav class="pager" aria-label="Navegación entre fases (abajo)"><a class="pager__link pager__link--prev" href="fase-05-estadisticas.html" rel="prev"><span class="pager__dir"><span aria-hidden="true">←</span> Fase anterior</span><span class="pager__name">05 · Escala, objetivo y estadísticas</span></a><a class="pager__link pager__link--index" href="index.html#fases"><span class="pager__dir">Volver al</span><span class="pager__name">Índice de fases</span></a><a class="pager__link pager__link--next" href="fase-07-revision-final.html" rel="next"><span class="pager__dir">Fase siguiente <span aria-hidden="true">→</span></span><span class="pager__name">07 · Revisión final y datos</span></a></nav></div>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>InkFocus · Proyecto académico de Desarrollo de Interfaces (2.º DAM).</p>
+    <p>Documentación elaborada a partir del Word del proyecto, «DocumentacionIAsInkFocus.docx».</p>
+  </div>
+</footer>
+<dialog class="lightbox" id="lightbox" aria-labelledby="lightbox-caption">
+  <div class="lightbox__bar">
+    <p class="lightbox__caption" id="lightbox-caption"></p>
+    <div class="lightbox__actions">
+      <button type="button" class="btn btn--small" data-lb="prev"><span aria-hidden="true">←</span> Anterior</button>
+      <button type="button" class="btn btn--small" data-lb="next">Siguiente <span aria-hidden="true">→</span></button>
+      <a class="btn btn--small" data-lb="open" href="#" target="_blank" rel="noopener">Abrir original</a>
+      <button type="button" class="btn btn--small btn--close" data-lb="close">Cerrar <kbd>Esc</kbd></button>
+    </div>
+  </div>
+  <div class="lightbox__stage"></div>
+</dialog>
+</body>
+</html>

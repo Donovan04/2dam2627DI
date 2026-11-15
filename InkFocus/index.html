@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InkFocus · Temporizador Pomodoro</title>
+  <meta name="description" content="InkFocus: estación de concentración Pomodoro con estética de tinta urbana.">
+  <meta name="theme-color" content="#16151b">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <!-- Tipografías: Lilita One (títulos gruesos) y Rubik (lectura y números).
+       Si no cargan (sin conexión), se usan fuentes del sistema. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Rubik:wght@400;500;700;800&display=swap">
+
+  <!-- Aplica tema, tintas y movimiento ANTES de pintar (evita un destello del tema
+       equivocado). Repite en pequeño lo que hace js/appearance.js. -->
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var s = {};
+      try { s = JSON.parse(localStorage.getItem('inkfocus.settings.v1')) || {}; } catch (e) { s = {}; }
+      var system = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      root.dataset.theme = s.theme === 'light' || s.theme === 'dark' ? s.theme : s.theme === 'system' ? system : 'dark';
+      root.dataset.ink = ['naranja-azul', 'turquesa-rosa', 'menta-coral'].indexOf(s.inkPair) >= 0 ? s.inkPair : 'lima-violeta';
+      root.dataset.motion = s.reduceMotion === true || window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduce' : 'full';
+    })();
+  </script>
+
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/tank.css">
+  <link rel="stylesheet" href="css/tasks.css">
+  <link rel="stylesheet" href="css/territory.css">
+  <link rel="stylesheet" href="css/calendar.css">
+  <link rel="stylesheet" href="css/stats.css">
+  <link rel="stylesheet" href="css/preferences.css">
+
+  <script type="module" src="js/main.js"></script>
+</head>
+<body data-phase="focus" data-status="idle">
+  <a class="skip-link" href="#timer-stage">Saltar al temporizador</a>
+
+  <!-- Manchas decorativas de fondo (sin significado: ocultas a lectores de pantalla) -->
+  <div class="backdrop" aria-hidden="true">
+    <svg class="backdrop__splat backdrop__splat--a" viewBox="0 0 200 200"><use href="#splat-shape"/></svg>
+    <svg class="backdrop__splat backdrop__splat--b" viewBox="0 0 200 200"><use href="#splat-shape"/></svg>
+    <svg class="backdrop__splat backdrop__splat--c" viewBox="0 0 200 200"><use href="#splat-shape"/></svg>
+  </div>
+
+  <!-- Formas SVG reutilizables -->
+  <svg width="0" height="0" class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <path id="splat-shape" d="M104 14c11 0 13 22 24 25 12 3 25-15 36-6 10 9-4 27 2 38 6 12 30 8 31 22 1 13-22 14-26 26-4 13 14 28 4 38-10 9-27-6-39 0-12 6-10 31-25 31-14 0-14-23-26-29-12-5-27 10-36 1-9-10 6-25 1-37-5-11-30-11-30-25 0-13 23-13 28-25 4-12-13-26-4-36 10-9 26 5 38-1 11-6 11-22 22-22z"/>
+    </defs>
+  </svg>
+
+  <header class="app-header">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#splat-shape"/></svg>
+      <div>
+        <h1 class="brand__name"><span class="brand__ink">Ink</span>Focus</h1>
+        <p class="brand__tagline">Estación de concentración</p>
+      </div>
+    </div>
+
+    <p id="demo-badge" class="demo-badge" hidden>Modo demostración</p>
+
+    <nav class="header-actions" aria-label="Opciones">
+      <button id="btn-fullscreen" class="btn btn--ghost" type="button" aria-pressed="false" hidden>
+        <svg class="btn__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg>
+        <span class="btn__text" data-label>Pantalla completa</span>
+      </button>
+      <button id="btn-focus-mode" class="btn btn--ghost btn--focus-mode" type="button" aria-pressed="false" title="Modo concentración (C)">
+        <svg class="btn__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
+        <span class="btn__text" data-label>Modo concentración</span>
+      </button>
+      <button id="btn-help" class="btn btn--ghost" type="button" aria-haspopup="dialog" title="Ayuda (H)">
+        <svg class="btn__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .8-1 1.5v.6M12 17h.01"/></svg>
+        <span class="btn__text">Ayuda</span>
+      </button>
+      <button id="btn-settings" class="btn btn--ghost" type="button" aria-haspopup="dialog">
+        <svg class="btn__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2.4"/><circle cx="10" cy="17" r="2.4"/></svg>
+        <span class="btn__text">Ajustes</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Pestañas principales: la vista de concentración sigue siendo la protagonista -->
+  <nav class="view-tabs" aria-label="Vistas">
+    <div class="view-tabs__list" role="tablist" aria-label="Vistas de InkFocus">
+      <button id="tab-focus" class="view-tab" role="tab" type="button" aria-selected="true" aria-controls="view-focus">
+        <svg class="view-tab__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/></svg>
+        Concentración
+        <span class="view-tab__status" data-tab-status hidden></span>
+      </button>
+      <button id="tab-calendar" class="view-tab" role="tab" type="button" aria-selected="false" aria-controls="view-calendar" tabindex="-1">
+        <svg class="view-tab__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>
+        Calendario
+      </button>
+      <button id="tab-stats" class="view-tab" role="tab" type="button" aria-selected="false" aria-controls="view-stats" tabindex="-1">
+        <svg class="view-tab__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 20V12M12 20V5M19 20v-9"/></svg>
+        Estadísticas
+      </button>
+    </div>
+  </nav>
+
+  <main id="main" class="app-shell">
+  <div id="view-focus" class="app-main" role="tabpanel" aria-labelledby="tab-focus">
+    <!-- ========== Temporizador (foco principal) ========== -->
+    <section id="timer-stage" class="stage panel" aria-labelledby="stage-heading" tabindex="-1">
+      <h2 id="stage-heading" class="visually-hidden">Temporizador</h2>
+
+      <p id="demo-stripe" class="demo-stripe" hidden>
+        <strong>Modo demostración:</strong> fases de pocos segundos. No suma a tus estadísticas y los cambios en tareas se descartan al salir.
+      </p>
+
+      <div class="stage__labels">
+        <p class="sticker sticker--phase" id="phase-label">Concentración</p>
+        <p class="sticker sticker--session" id="session-label">Sesión 1 de 4</p>
+      </div>
+
+      <div class="stage__grid">
+        <!-- Tanque de tinta: representa el tiempo restante -->
+        <figure class="tank" id="tank" data-phase="focus" data-status="idle">
+          <svg class="tank__svg" viewBox="0 0 200 330" role="img" aria-labelledby="tank-svg-title" focusable="false">
+            <title id="tank-svg-title" data-tank-title>Tanque de tinta al 100 %.</title>
+            <defs>
+              <clipPath id="tank-clip"><rect x="40" y="56" width="120" height="212" rx="30"/></clipPath>
+            </defs>
+
+            <!-- Correas laterales -->
+            <rect class="tank__strap" x="18" y="92" width="16" height="150" rx="8"/>
+            <rect class="tank__strap" x="166" y="92" width="16" height="150" rx="8"/>
+
+            <!-- Tapón y cuello -->
+            <rect class="tank__cap" x="68" y="14" width="64" height="28" rx="9"/>
+            <rect class="tank__cap-line" x="80" y="24" width="40" height="5" rx="2.5"/>
+            <rect class="tank__neck" x="82" y="40" width="36" height="16" rx="4"/>
+
+            <!-- Fondo del vidrio -->
+            <rect class="tank__back" x="34" y="50" width="132" height="224" rx="36"/>
+
+            <!-- Interior recortado por la forma del vidrio -->
+            <g clip-path="url(#tank-clip)">
+              <g class="tank__liquid" data-tank-liquid style="transform: translateY(44px)">
+                <path class="tank__wave tank__wave--back" d="M0 0 Q30 -7 60 0 T120 0 T180 0 T240 0 T300 0 T360 0 T420 0 T480 0 V330 H0 Z"/>
+                <path class="tank__wave tank__wave--front" d="M0 0 Q30 -7 60 0 T120 0 T180 0 T240 0 T300 0 T360 0 T420 0 T480 0 V330 H0 Z"/>
+                <!-- Burbujas dentro del líquido: suben hasta la superficie y se mueven con ella -->
+                <g class="tank__bubbles">
+                  <circle cx="62" cy="232" r="4"/>
+                  <circle cx="96" cy="236" r="6"/>
+                  <circle cx="128" cy="232" r="3.5"/>
+                  <circle cx="146" cy="238" r="5"/>
+                </g>
+              </g>
+
+              <!-- Gota que cae dentro durante los descansos (recarga) -->
+              <path class="tank__drop tank__drop--in" d="M100 52c6 9 9 14 9 18a9 9 0 0 1-18 0c0-4 3-9 9-18z"/>
+
+              <!-- Marcas de nivel: 75 %, 50 %, 25 % -->
+              <g class="tank__ticks">
+                <line x1="138" y1="101" x2="156" y2="101"/>
+                <line x1="132" y1="158" x2="156" y2="158"/>
+                <line x1="138" y1="215" x2="156" y2="215"/>
+              </g>
+
+              <!-- Brillo del vidrio -->
+              <path class="tank__shine" d="M60 86 Q52 160 60 236"/>
+            </g>
+
+            <!-- Contorno por encima del líquido -->
+            <rect class="tank__glass" x="34" y="50" width="132" height="224" rx="36"/>
+
+            <!-- Boquilla inferior y gota que sale durante la concentración -->
+            <rect class="tank__nozzle" x="86" y="272" width="28" height="16" rx="5"/>
+            <path class="tank__drop tank__drop--out" d="M100 290c6 9 9 14 9 18a9 9 0 0 1-18 0c0-4 3-9 9-18z"/>
+          </svg>
+
+          <p class="tank__stamp" data-tank-stamp hidden>En pausa</p>
+          <figcaption class="tank__meter">Tinta <strong data-tank-percent>100 %</strong></figcaption>
+        </figure>
+
+        <!-- Lectura numérica y controles -->
+        <div class="readout">
+          <p class="readout__status" id="status-text">Preparado para concentrarte</p>
+
+          <div class="readout__plate">
+            <div id="time-display" class="time" role="timer" aria-live="off" aria-label="Tiempo restante: 25 minutos">25:00</div>
+          </div>
+
+          <p class="readout__end" id="end-time">Si empiezas ahora, terminaría a las --:--</p>
+
+          <!-- Aviso: concentración terminada sin la app activa -->
+          <div id="expired-notice" class="notice" role="group" aria-labelledby="expired-title" hidden>
+            <h3 id="expired-title" class="notice__title">¿Contamos esta sesión?</h3>
+            <p id="expired-text" class="notice__text"></p>
+            <div class="notice__actions">
+              <button id="btn-expired-yes" class="btn btn--solid" type="button">Sí, contarla</button>
+              <button id="btn-expired-no" class="btn" type="button">No contarla</button>
+            </div>
+          </div>
+
+          <div class="controls" role="group" aria-label="Controles del temporizador">
+            <button id="btn-primary" class="btn btn--primary" type="button" data-action="play">
+              <svg class="btn__glyph btn__glyph--play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 4.5v15l12-7.5z"/></svg>
+              <svg class="btn__glyph btn__glyph--pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5.5" y="4.5" width="4.5" height="15" rx="1.5"/><rect x="14" y="4.5" width="4.5" height="15" rx="1.5"/></svg>
+              <span data-label>Iniciar</span>
+            </button>
+            <div class="controls__secondary">
+              <button id="btn-reset" class="btn" type="button" disabled>Reiniciar</button>
+              <button id="btn-skip" class="btn" type="button">Saltar fase</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarea activa: a qué tarea se sumará la sesión -->
+      <section id="active-task" class="active-task" aria-labelledby="active-task-heading" data-state="empty">
+        <h3 id="active-task-heading" class="active-task__label">Tarea activa</h3>
+        <div id="active-task-content" class="active-task__content"></div>
+      </section>
+    </section>
+
+    <!-- ========== Territorio del día (izquierda en escritorio) ========== -->
+    <section id="territory-panel" class="panel territory" aria-labelledby="territory-heading">
+      <header class="territory__header">
+        <h2 id="territory-heading" class="panel__title">Territorio de hoy</h2>
+        <p class="territory__date" data-territory="date"></p>
+      </header>
+      <div class="territory__actions">
+        <button id="btn-territory-new" class="btn btn--solid btn--small" type="button" aria-haspopup="dialog">
+          <svg class="btn__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>
+          Nueva tarea
+        </button>
+        <button id="btn-territory-list" class="btn btn--small" type="button" aria-haspopup="dialog">Ver tareas</button>
+      </div>
+      <p class="territory__caption">Cada tarea de hoy es una zona del mapa. Al completarla se pinta con tu tinta. Mide tareas terminadas, no sesiones de concentración.</p>
+
+      <div class="territory__progress">
+        <p class="territory__progress-text" data-territory="progress">Sin tareas para hoy</p>
+        <div class="meter" aria-hidden="true"><span class="meter__fill" data-territory="meter"></span></div>
+      </div>
+
+      <p id="territory-help" class="visually-hidden" data-territory="help">Usa las flechas para recorrer las zonas y Enter o Espacio para ver su tarea.</p>
+      <div class="territory__map" data-territory="map"></div>
+
+      <ul class="territory__legend" data-territory="legend" aria-label="Leyenda del mapa">
+        <li><span class="legend-zone legend-zone--done" aria-hidden="true"></span>Pintada: completada</li>
+        <li><span class="legend-zone legend-zone--pending" aria-hidden="true"></span>Rayada: pendiente</li>
+        <li><span class="legend-zone legend-zone--active" aria-hidden="true"></span>Número violeta: tarea activa</li>
+      </ul>
+
+      <div class="zone-info" data-territory="info" data-state="none"></div>
+
+      <div class="territory__empty" data-territory="empty" hidden>
+        <svg class="territory__empty-art" viewBox="0 0 400 300" aria-hidden="true" focusable="false">
+          <path d="M200 40c52 0 90 6 128 30 34 22 44 54 36 86-8 34-40 60-86 72-40 10-90 12-130 2-46-12-86-36-96-72-10-34 6-70 46-92 32-18 64-26 102-26z"/>
+        </svg>
+        <p class="empty__title">Territorio sin explorar</p>
+        <p class="empty__text" data-territory="empty-text"></p>
+        <button type="button" class="btn btn--solid btn--small" data-territory="empty-button">Crear tarea para hoy</button>
+      </div>
+    </section>
+
+    <!-- ========== Columna derecha: objetivo de hoy + ciclo ========== -->
+    <div class="app-side">
+    <section id="goal-panel" class="panel goal" aria-labelledby="goal-heading" data-state="pending">
+      <header class="goal__header">
+        <h2 id="goal-heading" class="panel__title">Objetivo de hoy</h2>
+        <button id="btn-goal-edit" class="btn btn--small" type="button" aria-haspopup="dialog" aria-label="Cambiar el objetivo diario">Cambiar</button>
+      </header>
+      <p id="goal-count" class="goal__count"><strong>0</strong> de 6 sesiones</p>
+      <div id="goal-progress" class="goal__progress" role="progressbar" aria-labelledby="goal-heading"
+           aria-valuemin="0" aria-valuemax="6" aria-valuenow="0"></div>
+      <p id="goal-status" class="goal__status"></p>
+      <p id="goal-minutes" class="goal__minutes"></p>
+      <p class="goal__note">Cuenta sesiones de concentración completadas hoy. Saltar, descansar o reiniciar no suma. El territorio, en cambio, mide tareas.</p>
+      <p class="goal__celebration" aria-hidden="true">
+        <svg viewBox="0 0 200 200" focusable="false"><use href="#splat-shape"/></svg>
+        <span>¡Meta!</span>
+      </p>
+    </section>
+
+    <!-- ========== Ciclo actual ========== -->
+    <aside class="panel panel--tilt cycle" aria-labelledby="cycle-heading">
+      <h2 id="cycle-heading" class="panel__title">Ciclo actual</h2>
+      <p id="cycle-summary" class="cycle__summary">Posición: sesión 1 de 4</p>
+      <p id="cycle-results" class="cycle__results">En este ciclo: 0 completadas</p>
+
+      <ol id="cycle-track" class="cycle__track" aria-label="Recorrido del ciclo"></ol>
+
+      <ul class="cycle__legend" aria-label="Leyenda del recorrido">
+        <li><span class="legend-mark legend-mark--focus" aria-hidden="true"></span>Completada</li>
+        <li><span class="legend-mark legend-mark--skipped" aria-hidden="true"></span>Saltada (no cuenta)</li>
+        <li><span class="legend-mark legend-mark--upcoming" aria-hidden="true"></span>Pendiente</li>
+        <li><span class="legend-mark legend-mark--current" aria-hidden="true"></span>Posición actual</li>
+        <li><span class="legend-mark legend-mark--short" aria-hidden="true"></span>Descanso corto</li>
+        <li><span class="legend-mark legend-mark--long" aria-hidden="true"></span>Descanso largo</li>
+      </ul>
+
+      <p id="cycle-hint" class="cycle__hint"></p>
+
+      <dl id="durations-list" class="durations"></dl>
+
+      <button id="btn-restart-cycle" class="btn btn--small" type="button">Reiniciar ciclo</button>
+
+      <details class="explainer">
+        <summary>¿Cómo se lee el tanque?</summary>
+        <ul>
+          <li><strong>Concentración:</strong> el tanque empieza lleno y se vacía al ritmo del tiempo restante.</li>
+          <li><strong>Descanso:</strong> el tanque se recarga desde vacío hasta lleno.</li>
+          <li><strong>En pausa:</strong> la tinta se queda quieta y aparece el sello «En pausa».</li>
+          <li><strong>Saltar fase</strong> avanza a la siguiente posición del ciclo, pero la sesión saltada <strong>no</strong> cuenta como completada ni suma pomodoros.</li>
+          <li><strong>Reiniciar</strong> vuelve a llenar el tanque de la fase actual sin contarla.</li>
+          <li>Si cambias las duraciones con una fase en curso, esa fase conserva su duración y los cambios llegan en la siguiente.</li>
+        </ul>
+      </details>
+    </aside>
+    </div>
+  </div>
+
+  <!-- ========== Vista Calendario ========== -->
+  <div id="view-calendar" class="calendar-view" role="tabpanel" aria-labelledby="tab-calendar" hidden>
+    <section class="panel calendar" aria-labelledby="calendar-title">
+      <header class="calendar__header">
+        <button id="calendar-prev" class="btn btn--icon" type="button" aria-label="Mes anterior">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <h2 id="calendar-title" class="calendar__title" aria-live="polite"></h2>
+        <button id="calendar-next" class="btn btn--icon" type="button" aria-label="Mes siguiente">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <button id="calendar-today" class="btn btn--small" type="button">Hoy</button>
+      </header>
+      <p id="calendar-help" class="visually-hidden">Usa las flechas para moverte entre días, Inicio y Fin para ir al principio o al final de la semana, Re Pág y Av Pág para cambiar de mes, y Enter para seleccionar el día.</p>
+
+      <div id="calendar-grid" class="calendar__grid"></div>
+
+      <ul class="calendar__legend" aria-label="Leyenda del calendario">
+        <li><span class="mark mark--pending" aria-hidden="true"><i></i></span>Tareas pendientes</li>
+        <li><span class="mark mark--done" aria-hidden="true"><i></i></span>Tareas completadas</li>
+        <li><span class="mark mark--focus" aria-hidden="true"><i></i></span>Sesiones de concentración</li>
+        <li><span class="legend-day legend-day--today" aria-hidden="true"></span>Hoy (aro)</li>
+        <li><span class="legend-day legend-day--selected" aria-hidden="true"></span>Día seleccionado (relleno)</li>
+      </ul>
+      <p class="calendar__note">Los números indican cuántas hay de cada tipo. Solo se muestran datos registrados: nada de actividad de ejemplo.</p>
+    </section>
+
+    <section id="day-panel" class="panel day" aria-labelledby="day-title">
+      <header class="day__header">
+        <div>
+          <p id="day-relation" class="day__relation">Hoy</p>
+          <h2 id="day-title" class="panel__title day__title" tabindex="-1"></h2>
+        </div>
+        <button id="day-new-task" class="btn btn--solid btn--small" type="button" aria-haspopup="dialog">
+          <svg class="btn__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>
+          Nueva tarea
+        </button>
+      </header>
+
+      <dl id="day-summary" class="day-summary"></dl>
+      <p class="day__note">Cada sesión cuenta en el día en que termina (si cruza la medianoche, en el día siguiente), aunque su tarea esté planificada para otra fecha. Los descansos, las pausas y las fases saltadas no suman.</p>
+
+      <div class="day__columns">
+        <section id="day-territory" class="territory territory--day" aria-labelledby="day-territory-heading">
+          <h3 id="day-territory-heading" class="day__subtitle">Territorio del día</h3>
+          <div class="territory__progress">
+            <p class="territory__progress-text" data-territory="progress"></p>
+            <div class="meter" aria-hidden="true"><span class="meter__fill" data-territory="meter"></span></div>
+          </div>
+          <p id="day-territory-help" class="visually-hidden" data-territory="help">Usa las flechas para recorrer las zonas y Enter o Espacio para ver su tarea.</p>
+          <div class="territory__map" data-territory="map"></div>
+          <ul class="territory__legend" data-territory="legend" aria-label="Leyenda del mapa">
+            <li><span class="legend-zone legend-zone--done" aria-hidden="true"></span>Pintada: completada</li>
+            <li><span class="legend-zone legend-zone--pending" aria-hidden="true"></span>Rayada: pendiente</li>
+            <li><span class="legend-zone legend-zone--active" aria-hidden="true"></span>Número violeta: tarea activa</li>
+          </ul>
+          <div class="zone-info" data-territory="info" data-state="none"></div>
+          <div class="territory__empty" data-territory="empty" hidden>
+            <svg class="territory__empty-art" viewBox="0 0 400 300" aria-hidden="true" focusable="false">
+              <path d="M200 40c52 0 90 6 128 30 34 22 44 54 36 86-8 34-40 60-86 72-40 10-90 12-130 2-46-12-86-36-96-72-10-34 6-70 46-92 32-18 64-26 102-26z"/>
+            </svg>
+            <p class="empty__title">Territorio sin explorar</p>
+            <p class="empty__text" data-territory="empty-text"></p>
+            <button type="button" class="btn btn--solid btn--small" data-territory="empty-button">Crear tarea para este día</button>
+          </div>
+        </section>
+
+        <div class="day__lists">
+          <section aria-labelledby="day-tasks-heading">
+            <h3 id="day-tasks-heading" class="day__subtitle">Tareas planificadas</h3>
+            <ul id="day-task-list" class="task-list" aria-labelledby="day-tasks-heading"></ul>
+            <div id="day-tasks-empty" class="empty" hidden></div>
+          </section>
+
+          <section aria-labelledby="day-activity-heading">
+            <h3 id="day-activity-heading" class="day__subtitle">Actividad de concentración</h3>
+            <ol id="day-activity" class="activity-list" aria-labelledby="day-activity-heading"></ol>
+            <p id="day-activity-empty" class="day__empty" hidden></p>
+          </section>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ========== Vista Estadísticas ========== -->
+  <div id="view-stats" class="stats-view" role="tabpanel" aria-labelledby="tab-stats" hidden>
+    <div class="stats-view__summary">
+      <section class="panel stats-block" aria-labelledby="stats-today-heading">
+        <h2 id="stats-today-heading" class="panel__title">Hoy</h2>
+        <dl id="stats-today" class="stat-tiles"></dl>
+      </section>
+
+      <section class="panel stats-block" aria-labelledby="stats-week-heading">
+        <h2 id="stats-week-heading" class="panel__title">Últimos 7 días <span class="panel__title-note">(incluido hoy)</span></h2>
+        <dl id="stats-week-totals" class="stat-tiles"></dl>
+        <div id="stats-week-data">
+          <div id="stats-chart" class="chart"></div>
+          <details class="chart-table">
+            <summary>Ver los mismos datos en una tabla</summary>
+            <table class="data-table">
+              <caption class="visually-hidden">Sesiones y minutos de concentración de los últimos 7 días</caption>
+              <thead><tr><th scope="col">Día</th><th scope="col">Sesiones</th><th scope="col">Minutos</th></tr></thead>
+              <tbody id="stats-table-body"></tbody>
+            </table>
+          </details>
+        </div>
+        <div id="stats-week-empty" class="empty" hidden>
+          <svg class="empty__art" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#splat-shape"/></svg>
+          <p class="empty__title">Sin actividad estos 7 días</p>
+          <p class="empty__text">Completa una sesión de concentración y aquí verás tus minutos de cada día.</p>
+        </div>
+        <p class="stats__note">Cada sesión cuenta en el día en que termina. Las pausas, los descansos y las fases saltadas no suman.</p>
+      </section>
+
+      <section class="panel stats-block" aria-labelledby="stats-total-heading">
+        <h2 id="stats-total-heading" class="panel__title">Totales</h2>
+        <dl id="stats-totals" class="stat-tiles"></dl>
+        <p class="stats__note">Salen del mismo registro de sesiones que el calendario y el objetivo, sin contadores aparte.</p>
+      </section>
+
+      <section class="panel stats-block" aria-labelledby="badges-heading">
+        <h2 id="badges-heading" class="panel__title">Insignias <span id="badge-summary" class="panel__title-note"></span></h2>
+        <ul id="badge-list" class="badge-list"></ul>
+        <p class="stats__note">Se calculan con tus sesiones reales (nunca con el modo demostración) y, una vez conseguidas, se quedan aunque cambies el objetivo.</p>
+      </section>
+    </div>
+
+    <section class="panel history" aria-labelledby="history-heading">
+      <h2 id="history-heading" class="panel__title">Historial de sesiones</h2>
+      <form id="history-filters" class="history__filters" role="search" aria-label="Filtrar el historial" novalidate>
+        <div class="field field--compact">
+          <label for="history-from">Desde</label>
+          <input id="history-from" type="date" min="2000-01-01" max="2100-12-31" aria-describedby="history-range-error">
+        </div>
+        <div class="field field--compact">
+          <label for="history-to">Hasta</label>
+          <input id="history-to" type="date" min="2000-01-01" max="2100-12-31" aria-describedby="history-range-error">
+        </div>
+        <div class="field field--compact history__task-field">
+          <label for="history-task">Tarea</label>
+          <select id="history-task"><option value="">Todas</option></select>
+        </div>
+        <button type="reset" class="btn btn--small history__reset">Restablecer filtros</button>
+        <p id="history-range-error" class="field-error history__error" hidden></p>
+      </form>
+      <p id="history-count" class="history__count" role="status"></p>
+      <ol id="history-list" class="history-list" aria-labelledby="history-heading"></ol>
+      <div id="history-empty" class="empty" hidden></div>
+      <button id="history-more" class="btn btn--small history__more" type="button" hidden>Cargar más</button>
+    </section>
+  </div>
+  </main>
+
+  <footer class="app-footer">
+    <p>InkFocus · Proyecto académico de Desarrollo de Interfaces (2.º DAM).</p>
+  </footer>
+
+  <!-- ========== Ventana de ajustes ========== -->
+  <dialog id="settings-dialog" class="dialog" aria-labelledby="settings-title">
+    <form id="settings-form" class="dialog__body" novalidate>
+      <header class="dialog__header">
+        <h2 id="settings-title" class="dialog__title">Ajustes</h2>
+        <button type="button" class="btn btn--icon" data-close-dialog aria-label="Cerrar ajustes">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      <p id="settings-apply-note" class="dialog__note"></p>
+
+      <fieldset class="field-group">
+        <legend>Presets rápidos</legend>
+        <div class="preset-row">
+          <button type="button" class="preset" data-preset="classic">
+            <span class="preset__value">25 / 5</span>
+            <span class="preset__hint">Clásico · largo 15</span>
+          </button>
+          <button type="button" class="preset" data-preset="long">
+            <span class="preset__value">50 / 10</span>
+            <span class="preset__hint">Bloque largo · largo 30</span>
+          </button>
+        </div>
+        <p class="field-hint">Rellenan los campos; se guardan al pulsar «Guardar ajustes».</p>
+      </fieldset>
+
+      <fieldset class="field-group">
+        <legend>Duraciones y ciclo</legend>
+        <div class="field-grid">
+          <div class="field">
+            <label for="set-focus">Concentración (min)</label>
+            <input id="set-focus" name="focusMin" type="number" inputmode="numeric" min="1" max="180" step="1" required aria-describedby="set-focus-hint set-focus-error">
+            <p class="field-hint" id="set-focus-hint">Entre 1 y 180</p>
+            <p class="field-error" id="set-focus-error" hidden></p>
+          </div>
+          <div class="field">
+            <label for="set-short">Descanso corto (min)</label>
+            <input id="set-short" name="shortMin" type="number" inputmode="numeric" min="1" max="60" step="1" required aria-describedby="set-short-hint set-short-error">
+            <p class="field-hint" id="set-short-hint">Entre 1 y 60</p>
+            <p class="field-error" id="set-short-error" hidden></p>
+          </div>
+          <div class="field">
+            <label for="set-long">Descanso largo (min)</label>
+            <input id="set-long" name="longMin" type="number" inputmode="numeric" min="1" max="90" step="1" required aria-describedby="set-long-hint set-long-error">
+            <p class="field-hint" id="set-long-hint">Entre 1 y 90</p>
+            <p class="field-error" id="set-long-error" hidden></p>
+          </div>
+          <div class="field">
+            <label for="set-sessions">Sesiones por ciclo</label>
+            <input id="set-sessions" name="sessionsPerCycle" type="number" inputmode="numeric" min="2" max="12" step="1" required aria-describedby="set-sessions-hint set-sessions-error">
+            <p class="field-hint" id="set-sessions-hint">Antes del descanso largo (2 a 12)</p>
+            <p class="field-error" id="set-sessions-error" hidden></p>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="field-group">
+        <legend>Objetivo diario</legend>
+        <div class="field field--narrow">
+          <label for="set-goal">Sesiones de concentración al día</label>
+          <input id="set-goal" name="dailyGoal" type="number" inputmode="numeric" min="1" max="24" step="1" required aria-describedby="set-goal-hint set-goal-error">
+          <p class="field-hint" id="set-goal-hint">Entre 1 y 24. Solo cuentan las sesiones completadas; cambiarlo no modifica tu actividad registrada.</p>
+          <p class="field-error" id="set-goal-error" hidden></p>
+        </div>
+      </fieldset>
+
+      <fieldset class="field-group">
+        <legend>Inicio automático</legend>
+        <label class="check">
+          <input type="checkbox" name="autoStartBreaks">
+          <span class="check__box" aria-hidden="true"></span>
+          <span>Empezar los descansos automáticamente</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" name="autoStartFocus">
+          <span class="check__box" aria-hidden="true"></span>
+          <span>Empezar la concentración automáticamente tras un descanso</span>
+        </label>
+        <p class="field-hint">Solo actúa si la fase anterior terminó con InkFocus abierta.</p>
+      </fieldset>
+
+      <fieldset class="field-group">
+        <legend>Apariencia</legend>
+        <fieldset class="subgroup">
+          <legend class="subgroup__legend">Tema</legend>
+          <div class="segmented">
+            <label class="segmented__option"><input type="radio" name="theme" value="system"><span>Sistema</span></label>
+            <label class="segmented__option"><input type="radio" name="theme" value="dark"><span>Oscuro</span></label>
+            <label class="segmented__option"><input type="radio" name="theme" value="light"><span>Claro</span></label>
+          </div>
+          <p class="field-hint">«Sistema» sigue el modo claro u oscuro de tu dispositivo.</p>
+        </fieldset>
+
+        <fieldset class="subgroup">
+          <legend class="subgroup__legend">Colores de tinta</legend>
+          <div class="swatches">
+            <label class="swatch">
+              <input type="radio" name="inkPair" value="lima-violeta">
+              <span class="swatch__card">
+                <span class="swatch__inks" aria-hidden="true"><i style="background:#c4f53a"></i><i style="background:#7b47f5"></i></span>
+                <span class="swatch__name">Lima y violeta</span>
+                <span class="swatch__hint">Original</span>
+              </span>
+            </label>
+            <label class="swatch">
+              <input type="radio" name="inkPair" value="naranja-azul">
+              <span class="swatch__card">
+                <span class="swatch__inks" aria-hidden="true"><i style="background:#ff8a1f"></i><i style="background:#1a5fe0"></i></span>
+                <span class="swatch__name">Naranja y azul</span>
+              </span>
+            </label>
+            <label class="swatch">
+              <input type="radio" name="inkPair" value="turquesa-rosa">
+              <span class="swatch__card">
+                <span class="swatch__inks" aria-hidden="true"><i style="background:#2ee6c5"></i><i style="background:#c8106f"></i></span>
+                <span class="swatch__name">Turquesa y rosa</span>
+              </span>
+            </label>
+            <label class="swatch">
+              <input type="radio" name="inkPair" value="menta-coral">
+              <span class="swatch__card">
+                <span class="swatch__inks" aria-hidden="true"><i style="background:#5ff0a8"></i><i style="background:#c73a2e"></i></span>
+                <span class="swatch__name">Menta y coral</span>
+              </span>
+            </label>
+          </div>
+          <p class="field-hint">La primera tinta se usa en la concentración y la segunda en los descansos.</p>
+        </fieldset>
+
+        <label class="check">
+          <input type="checkbox" name="reduceMotion" aria-describedby="motion-hint">
+          <span class="check__box" aria-hidden="true"></span>
+          <span>Reducir animaciones</span>
+        </label>
+        <p class="field-hint" id="motion-hint">Quita olas, gotas y transiciones. El tanque sigue mostrando el progreso. Si tu sistema ya pide menos movimiento, se respeta siempre.</p>
+
+        <label class="check">
+          <input type="checkbox" name="celebrations" aria-describedby="celebrations-hint">
+          <span class="check__box" aria-hidden="true"></span>
+          <span>Mostrar celebraciones</span>
+        </label>
+        <p class="field-hint" id="celebrations-hint">Avisos breves al alcanzar el objetivo diario o conseguir una insignia. Si lo desactivas, se siguen registrando igual.</p>
+      </fieldset>
+
+      <fieldset class="field-group">
+        <legend>Sonido</legend>
+        <label class="check">
+          <input type="checkbox" name="soundMuted">
+          <span class="check__box" aria-hidden="true"></span>
+          <span>Silenciar los avisos</span>
+        </label>
+        <div class="range-field">
+          <label for="set-volume">Volumen</label>
+          <div class="range-field__row">
+            <input id="set-volume" name="volume" type="range" min="0" max="100" step="5" aria-describedby="set-volume-value">
+            <output id="set-volume-value" for="set-volume">60 %</output>
+          </div>
+        </div>
+        <div class="sound-tests">
+          <button type="button" class="btn btn--small" id="btn-test-focus-sound">Probar fin de concentración</button>
+          <button type="button" class="btn btn--small" id="btn-test-break-sound">Probar fin de descanso</button>
+        </div>
+        <p class="field-hint" id="sound-status" role="status">Sonidos originales generados en el navegador. Suenan al terminar una fase de forma natural, nunca al saltarla.</p>
+      </fieldset>
+
+      <fieldset class="field-group">
+        <legend>Notificaciones</legend>
+        <label class="check">
+          <input type="checkbox" name="notifications" aria-describedby="notifications-info notifications-status">
+          <span class="check__box" aria-hidden="true"></span>
+          <span>Avisarme con una notificación al terminar cada fase</span>
+        </label>
+        <p class="field-hint" id="notifications-info">Sirve para enterarte cuando InkFocus está en otra pestaña o minimizada. Solo funciona con la app abierta: con la pestaña cerrada no hay avisos, y en segundo plano pueden llegar hasta un minuto tarde. Dentro de la app siempre verás el aviso visual.</p>
+        <p class="notice-status" id="notifications-status" role="status"></p>
+      </fieldset>
+
+      <fieldset class="field-group">
+        <legend>Teclado</legend>
+        <label class="check">
+          <input type="checkbox" name="shortcuts" aria-describedby="shortcuts-hint">
+          <span class="check__box" aria-hidden="true"></span>
+          <span>Activar atajos de una tecla</span>
+        </label>
+        <p class="field-hint" id="shortcuts-hint">Por ejemplo, Espacio para iniciar o pausar y C para el modo concentración. Desactívalos si usas un lector de pantalla que navega con letras. La lista completa está en la Ayuda.</p>
+      </fieldset>
+
+      <fieldset class="field-group field-group--data">
+        <legend>Tus datos</legend>
+        <p class="field-hint">Se guardan solo en este navegador. Puedes descargar una copia (tareas, historial, insignias, objetivo y preferencias) y restaurarla aquí o en otro equipo.</p>
+        <div class="data-actions">
+          <button type="button" class="btn btn--small" id="btn-export">Exportar copia (JSON)</button>
+          <button type="button" class="btn btn--small" id="btn-import" aria-haspopup="dialog">Importar copia…</button>
+          <input type="file" id="import-file" accept="application/json,.json" hidden>
+          <button type="button" class="btn btn--small btn--quiet-danger" id="btn-reset-data" aria-haspopup="dialog">Borrar todos los datos…</button>
+        </div>
+        <p class="notice-status" id="data-status" role="status"></p>
+      </fieldset>
+
+      <fieldset class="field-group field-group--demo">
+        <legend>Modo demostración</legend>
+        <label class="check">
+          <input type="checkbox" name="demo" id="set-demo" aria-describedby="demo-hint set-demo-error">
+          <span class="check__box" aria-hidden="true"></span>
+          <span>Activar el modo demostración (fases de pocos segundos)</span>
+        </label>
+        <p class="field-hint" id="demo-hint">Concentración de 10 s, descanso corto de 5 s y largo de 8 s, para enseñar el tanque y el ciclo completo. No suma minutos, sesiones, pomodoros, objetivo, insignias ni actividad, y los cambios en tareas se descartan al salir. Tus duraciones reales no cambian. Solo se puede activar sin una sesión real iniciada o en pausa.</p>
+        <p class="field-error" id="set-demo-error" hidden></p>
+      </fieldset>
+
+      <footer class="dialog__footer dialog__footer--sticky">
+        <button type="button" class="btn" data-close-dialog>Cancelar</button>
+        <button type="submit" class="btn btn--solid">Guardar ajustes</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ========== Confirmar importación ========== -->
+  <dialog id="import-dialog" class="dialog dialog--confirm" aria-labelledby="import-title" aria-describedby="import-warning">
+    <div class="dialog__body">
+      <h2 id="import-title" class="dialog__title">¿Sustituir tus datos?</h2>
+      <p id="import-warning" class="dialog__message">La copia es válida. Al importarla <strong>se sustituirán todos tus datos actuales</strong> por los del archivo:</p>
+      <ul id="import-summary" class="data-summary"></ul>
+      <p id="import-date" class="field-hint"></p>
+      <p class="field-hint">El temporizador empezará un ciclo nuevo. Las notificaciones habrá que activarlas de nuevo.</p>
+      <button type="button" class="btn btn--small" data-action="backup">Descargar antes una copia de mis datos actuales</button>
+      <p id="import-backup-status" class="field-hint" role="status"></p>
+      <footer class="dialog__footer">
+        <button type="button" class="btn" data-action="cancel">Cancelar</button>
+        <button type="button" class="btn btn--danger" data-action="confirm">Sustituir datos</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- ========== Confirmar borrado ========== -->
+  <dialog id="reset-dialog" class="dialog dialog--confirm" aria-labelledby="reset-title" aria-describedby="reset-warning">
+    <div class="dialog__body">
+      <h2 id="reset-title" class="dialog__title">¿Borrar todos los datos?</h2>
+      <p id="reset-warning" class="dialog__message">Se eliminarán de este navegador y no se podrán recuperar:</p>
+      <ul class="data-summary">
+        <li>Todas las tareas y la tarea activa</li>
+        <li>El historial de sesiones y las estadísticas</li>
+        <li>Las insignias conseguidas</li>
+        <li>El objetivo diario y todas las preferencias</li>
+        <li>El estado del temporizador y del ciclo</li>
+      </ul>
+      <p class="field-hint">Solo se borran los datos de InkFocus, no los de otras webs.</p>
+      <button type="button" class="btn btn--small" data-action="backup">Descargar antes una copia</button>
+      <p id="reset-backup-status" class="field-hint" role="status"></p>
+      <label class="check">
+        <input type="checkbox" id="reset-confirm-check">
+        <span class="check__box" aria-hidden="true"></span>
+        <span>Entiendo que se borrarán mis datos de InkFocus</span>
+      </label>
+      <footer class="dialog__footer">
+        <button type="button" class="btn" data-action="cancel">Cancelar</button>
+        <button type="button" class="btn btn--danger" id="reset-confirm" data-action="confirm" disabled>Borrar datos</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- ========== Ayuda ========== -->
+  <dialog id="help-dialog" class="dialog dialog--help" aria-labelledby="help-title">
+    <div class="dialog__body">
+      <header class="dialog__header">
+        <h2 id="help-title" class="dialog__title">Ayuda</h2>
+        <button type="button" class="btn btn--icon" data-close-help aria-label="Cerrar la ayuda">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      <section class="help-section" aria-labelledby="help-pomodoro">
+        <h3 id="help-pomodoro" class="help-section__title">La técnica Pomodoro</h3>
+        <p>Trabajas en bloques de concentración (25 minutos por defecto) separados por descansos cortos. Tras varias sesiones llega un descanso largo. Elige una tarea, pulsa Iniciar y céntrate solo en ella hasta que suene el aviso.</p>
+      </section>
+
+      <section class="help-section" aria-labelledby="help-measures">
+        <h3 id="help-measures" class="help-section__title">Tanque, territorio y objetivo</h3>
+        <dl class="help-terms">
+          <div><dt>Tanque de tinta</dt><dd>El tiempo de la fase actual: se vacía mientras te concentras y se recarga en los descansos.</dd></div>
+          <div><dt>Territorio</dt><dd>Tus tareas del día: cada tarea es una zona del mapa y se pinta al completarla.</dd></div>
+          <div><dt>Objetivo de hoy</dt><dd>Cuántas sesiones de concentración has completado hoy frente a tu meta.</dd></div>
+        </dl>
+      </section>
+
+      <section class="help-section" aria-labelledby="help-skip">
+        <h3 id="help-skip" class="help-section__title">«Saltar fase»</h3>
+        <p>Avanza a la siguiente posición del ciclo, pero la concentración saltada <strong>no</strong> cuenta como completada: no suma pomodoros, minutos ni progreso del objetivo. Tampoco suena el aviso de sesión completada.</p>
+      </section>
+
+      <section class="help-section" aria-labelledby="help-keys">
+        <h3 id="help-keys" class="help-section__title">Atajos de teclado</h3>
+        <p class="field-hint">Funcionan en cualquier vista, salvo mientras escribes o con una ventana abierta. Se pueden desactivar en Ajustes › Teclado.</p>
+        <dl id="help-shortcuts" class="shortcut-list"></dl>
+      </section>
+
+      <footer class="dialog__footer">
+        <button type="button" class="btn btn--solid" data-close-help>Entendido</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- ========== Gestión de tareas (ventana) ========== -->
+  <dialog id="tasks-dialog" class="dialog dialog--tasks" aria-labelledby="tasks-heading" aria-describedby="tasks-intro">
+    <div id="tasks-panel" class="dialog__body tasks">
+      <header class="tasks__header">
+        <h2 id="tasks-heading" class="dialog__title" tabindex="-1">Tareas</h2>
+        <div class="tasks__header-actions">
+          <button id="btn-new-task" class="btn btn--solid btn--small" type="button" aria-haspopup="dialog">
+            <svg class="btn__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>
+            Nueva tarea
+          </button>
+          <button type="button" class="btn btn--icon" data-close-tasks aria-label="Cerrar tareas">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+      </header>
+      <p id="tasks-intro" class="tasks__intro">Consulta y gestiona tus tareas. Pulsa <strong>«Activar»</strong> para elegir la tarea activa: cada sesión de concentración completada le sumará un pomodoro.</p>
+
+      <div class="tasks__filters" role="search" aria-label="Buscar y filtrar tareas">
+        <div class="field field--compact">
+          <label for="task-search">Buscar</label>
+          <input id="task-search" type="search" placeholder="Título, notas o categoría" autocomplete="off">
+        </div>
+        <div class="filter-row">
+          <div class="field field--compact">
+            <label for="task-scope">Fecha</label>
+            <select id="task-scope">
+              <option value="today">Hoy</option>
+              <option value="all">Todas las fechas</option>
+            </select>
+          </div>
+          <div class="field field--compact">
+            <label for="task-category-filter">Categoría</label>
+            <select id="task-category-filter"><option value="">Todas</option></select>
+          </div>
+        </div>
+        <fieldset class="segmented">
+          <legend class="visually-hidden">Estado de las tareas</legend>
+          <label class="segmented__option"><input type="radio" name="task-status" value="all" checked><span>Todas</span></label>
+          <label class="segmented__option"><input type="radio" name="task-status" value="pending"><span>Pendientes</span></label>
+          <label class="segmented__option"><input type="radio" name="task-status" value="done"><span>Completadas</span></label>
+        </fieldset>
+      </div>
+
+      <p id="tasks-count" class="tasks__count" role="status"></p>
+      <ul id="task-list" class="task-list" aria-labelledby="tasks-heading"></ul>
+      <div id="tasks-empty" class="empty" hidden></div>
+
+      <!-- Avisos mientras la ventana está abierta (fuera de ella, la página está inerte) -->
+      <div class="toast-region toast-region--dialog" data-toast-region aria-live="polite"></div>
+    </div>
+  </dialog>
+
+  <!-- ========== Crear / editar tarea ========== -->
+  <dialog id="task-dialog" class="dialog" aria-labelledby="task-dialog-title">
+    <form id="task-form" class="dialog__body" novalidate>
+      <header class="dialog__header">
+        <h2 id="task-dialog-title" class="dialog__title">Nueva tarea</h2>
+        <button type="button" class="btn btn--icon" data-close-dialog aria-label="Cerrar sin guardar">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      <div class="field">
+        <label for="task-title">Título <span class="field-tag">obligatorio</span></label>
+        <input id="task-title" name="title" type="text" maxlength="120" autocomplete="off" required aria-required="true" aria-describedby="task-title-error">
+        <p class="field-error" id="task-title-error" hidden></p>
+      </div>
+
+      <div class="field">
+        <label for="task-notes">Notas <span class="field-tag field-tag--muted">opcional</span></label>
+        <textarea id="task-notes" name="notes" rows="3" maxlength="500" aria-describedby="task-notes-count task-notes-error"></textarea>
+        <p class="field-hint" id="task-notes-count">0 / 500</p>
+        <p class="field-error" id="task-notes-error" hidden></p>
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <label for="task-date">Fecha</label>
+          <input id="task-date" name="date" type="date" min="2000-01-01" max="2100-12-31" required aria-describedby="task-date-error">
+          <p class="field-error" id="task-date-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="task-category">Categoría o asignatura <span class="field-tag field-tag--muted">opcional</span></label>
+          <input id="task-category" name="category" type="text" maxlength="40" list="task-category-options" autocomplete="off" aria-describedby="task-category-error">
+          <datalist id="task-category-options"></datalist>
+          <p class="field-error" id="task-category-error" hidden></p>
+        </div>
+      </div>
+
+      <fieldset class="field-group field-group--inline">
+        <legend>Prioridad</legend>
+        <div class="segmented segmented--priority">
+          <label class="segmented__option"><input type="radio" name="priority" value="high"><span><span class="priority-bars" data-level="3" aria-hidden="true"><i></i><i></i><i></i></span>Alta</span></label>
+          <label class="segmented__option"><input type="radio" name="priority" value="medium" checked><span><span class="priority-bars" data-level="2" aria-hidden="true"><i></i><i></i><i></i></span>Media</span></label>
+          <label class="segmented__option"><input type="radio" name="priority" value="low"><span><span class="priority-bars" data-level="1" aria-hidden="true"><i></i><i></i><i></i></span>Baja</span></label>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label for="task-estimate">Pomodoros estimados</label>
+        <div class="stepper">
+          <button type="button" class="btn btn--icon" data-step="-1" aria-label="Restar un pomodoro">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 12h12"/></svg>
+          </button>
+          <input id="task-estimate" name="estimate" type="number" inputmode="numeric" min="1" max="20" step="1" required aria-describedby="task-estimate-hint task-estimate-error">
+          <button type="button" class="btn btn--icon" data-step="1" aria-label="Sumar un pomodoro">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 6v12M6 12h12"/></svg>
+          </button>
+        </div>
+        <p class="field-hint" id="task-estimate-hint">Entre 1 y 20 sesiones de concentración.</p>
+        <p class="field-error" id="task-estimate-error" hidden></p>
+      </div>
+
+      <label class="check check--activate" id="task-activate-row">
+        <input type="checkbox" name="activate">
+        <span class="check__box" aria-hidden="true"></span>
+        <span>Hacerla la tarea activa al guardar</span>
+      </label>
+
+      <p id="task-progress-note" class="dialog__note" hidden></p>
+
+      <footer class="dialog__footer">
+        <button type="button" class="btn" data-close-dialog>Cancelar</button>
+        <button type="submit" class="btn btn--solid" id="task-submit">Crear tarea</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ========== Confirmación genérica ========== -->
+  <dialog id="confirm-dialog" class="dialog dialog--confirm" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+    <form method="dialog" class="dialog__body">
+      <h2 id="confirm-title" class="dialog__title"></h2>
+      <p id="confirm-message" class="dialog__message"></p>
+      <footer class="dialog__footer">
+        <button value="cancel" class="btn" data-confirm-cancel>Cancelar</button>
+        <button value="confirm" class="btn btn--danger" data-confirm-accept>Confirmar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Transición de tinta al terminar una fase (decorativa) -->
+  <div id="splash" class="splash" aria-hidden="true" hidden>
+    <svg class="splash__blob" viewBox="0 0 200 200"><use href="#splat-shape"/></svg>
+    <div class="splash__text">
+      <p class="splash__title" data-splash-title></p>
+      <p class="splash__subtitle" data-splash-subtitle></p>
+    </div>
+  </div>
+
+  <!-- Avisos temporales (deshacer, +1 pomodoro...) -->
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+
+  <!-- Región para anuncios de lectores de pantalla -->
+  <div id="announcer" class="visually-hidden" role="status" aria-live="polite"></div>
+</body>
+</html>

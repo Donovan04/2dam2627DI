@@ -1,0 +1,168 @@
+/* =========================================================
+   tokens.css · Variables de diseño (colores, tipografía, formas)
+   Cambiar aquí un valor actualiza toda la interfaz.
+
+   El tema y la pareja de tintas se eligen con atributos en <html>:
+     data-theme="dark" | "light"   (resuelto desde «Sistema», «Oscuro» o «Claro»)
+     data-ink="lima-violeta" | "naranja-azul" | "turquesa-rosa" | "menta-coral"
+   ========================================================= */
+:root {
+  color-scheme: dark;
+
+  /* Superficies (fondo carbón) */
+  --bg: #16151b;
+  --surface: #23202c;
+  --surface-2: #2d2939;
+  --surface-hover: #3a3549;
+  --surface-sunken: #0f0e13;
+  --line: #433d57;
+  --hatch-line: #3d3850;
+  --dot: rgba(255, 255, 255, 0.05);
+
+  /* Texto */
+  --text: #f5f2ea;
+  --text-muted: #bdb7cc;
+  /* Texto INVERSO: el que va sobre un fondo de color var(--text)
+     (pegatinas claras, botón sólido, avisos). En el tema claro se invierte. */
+  --text-on-light: #16151b;
+  /* Texto siempre oscuro para fondos amarillos fijos (enlace de salto, modo demo) */
+  --text-on-yellow: #16151b;
+
+  /* Estados */
+  --danger: #ff7a7a;
+  --danger-fill: #e0465b;
+  --focus-ring: #ffe14d;
+  --demo: #ffe14d;
+  --demo-contrast: #16151b;
+  --priority-high: #ffb38a;
+
+  /* Tipografía */
+  --font-display: 'Lilita One', 'Arial Black', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Rubik', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Formas */
+  --radius-panel: 28px;
+  --radius-control: 999px;
+  --radius-blob: 58% 42% 55% 45% / 52% 60% 40% 48%;
+  --shadow-hard: 6px 6px 0 rgba(0, 0, 0, 0.45);
+  --shadow-press: 0 6px 0 rgba(0, 0, 0, 0.5);
+
+  /* ---------- Pareja de tintas (por defecto: lima + violeta) ----------
+     Cada tinta define:
+       --ink-x            relleno (tanque, botones, zonas pintadas, barras)
+       --ink-x-contrast   texto sobre ese relleno (≥ 4,5:1)
+       --ink-x-on-dark    versión para TEXTO sobre fondos oscuros (≥ 4,5:1)
+       --ink-x-on-light   versión para TEXTO sobre fondos claros (≥ 4,5:1) */
+  --ink-a: #c4f53a;
+  --ink-a-contrast: #16151b;
+  --ink-a-on-dark: #c4f53a;
+  --ink-a-on-light: #4a6b00;
+  --ink-b: #7b47f5;
+  --ink-b-contrast: #ffffff;
+  --ink-b-on-dark: #b597ff;
+  --ink-b-on-light: #5a2fd6;
+
+  /* Versión de texto según el tema (oscuro por defecto) */
+  --ink-a-text: var(--ink-a-on-dark);
+  --ink-b-text: var(--ink-b-on-dark);
+  /* Relleno de indicadores pequeños sobre superficies (gotas, barras, marcas):
+     en el tema claro usa la versión oscura para no perderse sobre fondo claro. */
+  --ink-a-solid: var(--ink-a);
+
+  /* «Tablero»: interior del tanque y fondo del mapa. Es oscuro en ambos temas
+     para que la tinta (clara o saturada) se vea siempre con contraste. */
+  --board-bg: #0f0e13;
+  --board-tile: #2d2939;
+  --board-hatch: #3d3850;
+  --board-line: #433d57;
+  --board-text: #f5f2ea;
+
+  /* Interior del tanque (parte vacía) y sus marcas de nivel */
+  --tank-bg: var(--board-bg);
+  --tank-tick: var(--board-text);
+  --tank-shadow: rgba(0, 0, 0, 0.4);
+
+  /* Tinta de la fase actual (se redefine según data-phase) */
+  --phase-ink: var(--ink-a);
+  --phase-ink-contrast: var(--ink-a-contrast);
+  --phase-ink-text: var(--ink-a-text);
+}
+
+/* ---------- Tema claro ---------- */
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f3efe6;
+  --surface: #fffdf8;
+  --surface-2: #efe9f5;
+  --surface-hover: #e3dcee;
+  --surface-sunken: #e6e0ee;
+  --line: #c9c0d8;
+  --hatch-line: #cfc6de;
+  --dot: rgba(40, 30, 60, 0.07);
+
+  --text: #1d1a24;
+  --text-muted: #5a536a;
+  --text-on-light: #fffdf8;
+
+  --danger: #b4232f;
+  --danger-fill: #c62c3c;
+  /* En fondo claro, un anillo amarillo no se vería: usamos uno oscuro */
+  --focus-ring: #1d1a24;
+  --demo: #7a5600;
+  --demo-contrast: #ffffff;
+  --priority-high: #a13f08;
+
+  --shadow-hard: 6px 6px 0 rgba(40, 30, 60, 0.28);
+  --shadow-press: 0 6px 0 rgba(40, 30, 60, 0.3);
+
+  --ink-a-text: var(--ink-a-on-light);
+  --ink-b-text: var(--ink-b-on-light);
+  --ink-a-solid: var(--ink-a-on-light);
+
+  /* Tanque en tema claro: interior blanco; el borde sigue siendo oscuro (--text) */
+  --tank-bg: #ffffff;
+  --tank-tick: #1d1a24;
+  --tank-shadow: rgba(40, 30, 60, 0.22);
+}
+
+/* ---------- Otras parejas de tintas ---------- */
+:root[data-ink='naranja-azul'] {
+  --ink-a: #ff8a1f;
+  --ink-a-contrast: #16151b;
+  --ink-a-on-dark: #ff8a1f;
+  --ink-a-on-light: #a84800;
+  --ink-b: #1a5fe0;
+  --ink-b-contrast: #ffffff;
+  --ink-b-on-dark: #7fb0ff;
+  --ink-b-on-light: #1a4fbf;
+}
+
+:root[data-ink='turquesa-rosa'] {
+  --ink-a: #2ee6c5;
+  --ink-a-contrast: #16151b;
+  --ink-a-on-dark: #2ee6c5;
+  --ink-a-on-light: #006b5f;
+  --ink-b: #c8106f;
+  --ink-b-contrast: #ffffff;
+  --ink-b-on-dark: #ff7ab8;
+  --ink-b-on-light: #b0105f;
+}
+
+:root[data-ink='menta-coral'] {
+  --ink-a: #5ff0a8;
+  --ink-a-contrast: #16151b;
+  --ink-a-on-dark: #5ff0a8;
+  --ink-a-on-light: #0b6b40;
+  --ink-b: #c73a2e;
+  --ink-b-contrast: #ffffff;
+  --ink-b-on-dark: #ff8f80;
+  --ink-b-on-light: #a8291f;
+}
+
+/* Concentración = tinta A. Descansos = tinta B. */
+[data-phase='shortBreak'],
+[data-phase='longBreak'] {
+  --phase-ink: var(--ink-b);
+  --phase-ink-contrast: var(--ink-b-contrast);
+  --phase-ink-text: var(--ink-b-text);
+}

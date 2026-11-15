@@ -1,0 +1,806 @@
+/* =========================================================
+   tasks.css · Tarea activa, panel de tareas, formulario de tarea
+   y avisos temporales
+   ========================================================= */
+
+/* ---------- Tarea activa (dentro del temporizador) ---------- */
+.active-task {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 3px dashed var(--line);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0.5rem 1rem;
+}
+
+.active-task__label {
+  width: fit-content;
+  padding: 0.25rem 0.7rem 0.15rem;
+  border-radius: 8px;
+  background: var(--ink-b);
+  color: var(--ink-b-contrast);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transform: rotate(-2deg);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Sin tarea: etiqueta en contorno discontinuo (no depende del color) */
+.active-task[data-state='empty'] .active-task__label {
+  background: transparent;
+  color: var(--text-muted);
+  border: 2px dashed var(--text-muted);
+  box-shadow: none;
+}
+
+.active-task__content {
+  min-width: 0;
+}
+
+.active-task__title {
+  font-weight: 800;
+  font-size: 1.15rem;
+  overflow-wrap: anywhere;
+}
+
+.active-task__meta {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.active-task__hint {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--ink-b-text);
+}
+
+.active-task__empty {
+  color: var(--text-muted);
+}
+
+.active-task__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+/* Aviso integrado «No hay ninguna tarea disponible» */
+.active-task[data-state='prompt'] .active-task__label {
+  background: transparent;
+  color: var(--focus-ring);
+  border: 2px dashed var(--focus-ring);
+  box-shadow: none;
+}
+
+.active-task__prompt {
+  padding: 0.75rem 0.9rem;
+  border: 3px dashed var(--focus-ring);
+  border-radius: 16px;
+  background: var(--surface-2);
+}
+
+.active-task__prompt-text {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+@container stage (max-width: 520px) {
+  .active-task {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+
+  .active-task__actions {
+    justify-content: center;
+  }
+}
+
+/* ---------- Ventana de tareas ---------- */
+.dialog--tasks {
+  width: min(680px, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto; /* el contenido largo se desplaza dentro de la ventana */
+  overscroll-behavior: contain;
+}
+
+.dialog--tasks .dialog__body {
+  padding-top: 0;
+}
+
+/* Cabecera fija: «Cerrar» y «Nueva tarea» siempre a mano al desplazarse */
+.tasks__header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin: 0 calc(-1 * clamp(1rem, 3vw, 1.5rem));
+  padding: 1rem clamp(1rem, 3vw, 1.5rem) 0.7rem;
+  background: var(--surface);
+  border-bottom: 2px dashed var(--line);
+}
+
+.tasks__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tasks__header .dialog__title:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.tasks__intro {
+  margin-top: 0.9rem;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+/* Avisos dentro de la ventana: pegados al borde inferior visible */
+.toast-region--dialog {
+  position: sticky;
+  left: auto;
+  bottom: 0.75rem;
+  z-index: 3;
+  width: auto;
+  margin-top: 1rem;
+  transform: none;
+}
+
+.toast-region--dialog:empty {
+  margin: 0;
+}
+
+.check--activate {
+  margin-top: 1rem;
+}
+
+@media (max-width: 680px) {
+  .dialog--tasks {
+    width: calc(100vw - 1rem);
+    max-height: calc(100dvh - 1rem);
+  }
+}
+
+.tasks__filters {
+  display: grid;
+  gap: 0.7rem;
+  margin: 1rem 0 0.8rem;
+}
+
+.filter-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+/* Campos compactos (filtros) y campos de texto del formulario de tarea */
+.field--compact label {
+  font-size: 0.85rem;
+  margin-bottom: 0.2rem;
+}
+
+.field--compact input,
+.field--compact select,
+.field select,
+.field textarea,
+.field input[type='text'],
+.field input[type='search'],
+.field input[type='date'] {
+  width: 100%;
+  min-height: 46px;
+  padding: 0.5rem 0.75rem;
+  border: 3px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-sunken);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.field textarea {
+  min-height: 92px;
+  resize: vertical;
+  line-height: 1.4;
+}
+
+.field select:focus-visible,
+.field textarea:focus-visible {
+  border-color: var(--ink-a);
+}
+
+.field textarea[aria-invalid] {
+  border-color: var(--danger);
+  border-style: dashed;
+}
+
+#task-form > .field + .field,
+#task-form > .field + .field-grid,
+#task-form > .field-grid + .field-group,
+#task-form > .field-group + .field {
+  margin-top: 1rem;
+}
+
+.field-tag {
+  margin-left: 0.3rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 6px;
+  background: var(--ink-a);
+  color: var(--ink-a-contrast);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: 0.1em;
+}
+
+.field-tag--muted {
+  background: var(--surface-2);
+  color: var(--text-muted);
+}
+
+/* La leyenda «Prioridad» del formulario de tarea, como el resto de etiquetas */
+#task-form .field-group legend {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+
+#task-form .field-group {
+  margin: 1rem 0 0;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stepper input {
+  max-width: 110px;
+  text-align: center;
+}
+
+/* ---------- Control segmentado (estado, prioridad) ---------- */
+.segmented {
+  display: flex;
+  margin: 0;
+  padding: 3px;
+  border: 3px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-sunken);
+  min-width: 0;
+}
+
+.segmented__option {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.segmented__option input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.segmented__option > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 38px;
+  padding: 0.3rem 0.35rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: center;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Seleccionado: relleno claro con texto oscuro (cambio de contraste, no solo de tono) */
+.segmented__option input:checked + span {
+  background: var(--text);
+  color: var(--text-on-light);
+}
+
+.segmented__option input:focus-visible + span {
+  outline: 4px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.segmented__option:hover input:not(:checked) + span {
+  color: var(--text);
+}
+
+/* ---------- Prioridad: barras de 1 a 3 ---------- */
+.priority-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.priority-bars i {
+  width: 4px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.28;
+}
+
+.priority-bars i:nth-child(1) { height: 5px; }
+.priority-bars i:nth-child(2) { height: 8px; }
+.priority-bars i:nth-child(3) { height: 12px; }
+
+:is([data-level='1'] > .priority-bars, .priority-bars[data-level='1']) i:nth-child(-n + 1),
+:is([data-level='2'] > .priority-bars, .priority-bars[data-level='2']) i:nth-child(-n + 2),
+:is([data-level='3'] > .priority-bars, .priority-bars[data-level='3']) i {
+  opacity: 1;
+}
+
+/* ---------- Lista de tareas ---------- */
+.tasks__count {
+  margin-bottom: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.task {
+  position: relative;
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.7rem 0.8rem;
+  border: 3px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface-2);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task:focus {
+  outline: none;
+}
+
+.task:focus-visible {
+  outline: 4px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.task[data-active] {
+  border-color: var(--ink-b-text);
+  box-shadow: 5px 5px 0 var(--ink-b);
+}
+
+/* Completada: borde discontinuo, fondo transparente y título tachado */
+.task[data-state='done'] {
+  background: transparent;
+  border-style: dashed;
+}
+
+.task[data-state='done'] .task__title {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.task.is-highlighted {
+  animation: task-flash 1.3s ease-out;
+}
+
+@keyframes task-flash {
+  0%,
+  35% {
+    box-shadow: 0 0 0 5px var(--focus-ring);
+  }
+  100% {
+    box-shadow: 0 0 0 5px transparent;
+  }
+}
+
+/* Casilla de completar con forma de mancha */
+.task__check {
+  position: relative;
+  flex: none;
+  width: 34px;
+  height: 34px;
+}
+
+.task__checkbox {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.task__check-label {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 3px dashed var(--ink-a-text);
+  border-radius: var(--radius-blob);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.task__checkbox:hover + .task__check-label {
+  border-style: solid;
+  transform: rotate(-8deg);
+}
+
+.task__checkbox:checked + .task__check-label {
+  border-style: solid;
+  border-color: var(--ink-a);
+  background: var(--ink-a);
+}
+
+/* Marca de verificación dibujada con bordes */
+.task__checkbox:checked + .task__check-label::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 6px;
+  width: 9px;
+  height: 15px;
+  border: solid var(--ink-a-contrast);
+  border-width: 0 4px 4px 0;
+  transform: rotate(45deg);
+}
+
+.task__checkbox:focus-visible + .task__check-label {
+  outline: 4px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.task__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.task__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.45rem;
+}
+
+.task__title {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.task__badge {
+  padding: 0.1rem 0.5rem 0.05rem;
+  border-radius: 6px;
+  background: var(--ink-b);
+  color: var(--ink-b-contrast);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transform: rotate(-3deg);
+}
+
+.task__badge--done {
+  background: var(--ink-a);
+  color: var(--ink-a-contrast);
+}
+
+.task__notes {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.task__meta {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.6rem 0 0;
+  padding: 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 28px;
+  padding: 0.15rem 0.6rem;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+button.chip {
+  cursor: pointer;
+  color: inherit;
+}
+
+/* Etiqueta «Zona N»: fondo de tinta A (claro) con texto oscuro.
+   Se usa button.chip--zone para ganar a «button.chip { color: inherit }»,
+   que antes dejaba el texto blanco sobre lima. Usa siempre el token
+   --ink-a-contrast, así cada pareja de tintas futura define su texto legible. */
+.chip--zone,
+button.chip--zone {
+  border-color: var(--ink-a);
+  background: var(--ink-a);
+  color: var(--ink-a-contrast);
+}
+
+.chip--zone:hover {
+  transform: rotate(-3deg);
+}
+
+.chip--category {
+  border-color: var(--ink-b-text);
+  color: var(--ink-b-text);
+  overflow-wrap: anywhere;
+}
+
+.chip--priority {
+  color: var(--text-muted);
+}
+
+.chip--priority[data-level='3'] {
+  border-color: var(--priority-high);
+  color: var(--priority-high);
+}
+
+.chip--priority[data-level='2'] {
+  color: var(--text);
+}
+
+.pomodoros {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.drops {
+  display: inline-flex;
+  gap: 3px;
+}
+
+/* Gotitas: contorno = pendiente, relleno = hecho (lima) o extra (violeta) */
+.drop {
+  width: 9px;
+  height: 11px;
+  border: 2px solid var(--ink-a-text);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+
+.drop--done {
+  background: var(--ink-a-solid);
+}
+
+.drop--extra {
+  border-color: var(--ink-b-text);
+  background: var(--ink-b-text);
+}
+
+.task__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.task__actions .btn {
+  min-height: 40px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.9rem;
+}
+
+.btn--active-on {
+  background: var(--ink-b);
+  border-color: var(--ink-b);
+  color: var(--ink-b-contrast);
+}
+
+.btn--quiet-danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* ---------- Estados vacíos ---------- */
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  border: 3px dashed var(--line);
+  border-radius: 20px;
+  text-align: center;
+}
+
+.empty__art {
+  width: 64px;
+  height: 64px;
+  fill: var(--ink-b);
+  opacity: 0.75;
+  transform: rotate(-14deg);
+}
+
+.empty__title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+}
+
+.empty__text {
+  max-width: 34ch;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.empty .btn {
+  margin-top: 0.4rem;
+}
+
+/* ---------- Avisos temporales ---------- */
+.toast-region {
+  position: fixed;
+  left: 50%;
+  bottom: 1.25rem;
+  z-index: 120;
+  width: min(560px, calc(100vw - 2rem));
+  transform: translateX(-50%);
+  display: grid;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.toast {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.7rem 0.8rem 1.1rem;
+  border-radius: 18px;
+  background: var(--text);
+  color: var(--text-on-light);
+  box-shadow: 6px 6px 0 var(--ink-b);
+  overflow: hidden;
+  pointer-events: auto;
+  animation: toast-in 0.25s ease-out;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.toast.is-leaving {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.toast__message {
+  flex: 1;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.toast__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: none;
+}
+
+.toast .btn {
+  border-color: var(--text-on-light);
+  color: var(--text-on-light);
+  box-shadow: none;
+}
+
+.toast__action {
+  background: var(--ink-a);
+}
+
+.toast__close {
+  width: 40px;
+  min-height: 40px;
+}
+
+/* Sobre fondo claro, el anillo amarillo no se vería: usamos violeta */
+.toast :focus-visible {
+  outline-color: var(--ink-b);
+}
+
+/* Barra de tiempo restante; se detiene con el ratón encima o el foco dentro */
+.toast__timer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--ink-b);
+  transform-origin: left;
+  animation: toast-timer var(--toast-duration) linear forwards;
+}
+
+.toast.is-paused .toast__timer {
+  animation-play-state: paused;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) rotate(-1deg);
+  }
+}
+
+@keyframes toast-timer {
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* ---------- Adaptación ---------- */
+@media (max-width: 680px) {
+  .toast {
+    flex-wrap: wrap;
+  }
+
+  .toast-region {
+    bottom: 0.75rem;
+  }
+}
+
+/* Movimiento reducido (sistema o Ajustes) */
+:root[data-motion='reduce'] .task,
+:root[data-motion='reduce'] .task__check-label,
+:root[data-motion='reduce'] .segmented__option > span,
+:root[data-motion='reduce'] .toast {
+  transition: none;
+  animation: none;
+}
+
+:root[data-motion='reduce'] .task.is-highlighted {
+  animation: none;
+  outline: 4px solid var(--focus-ring);
+}
+
+:root[data-motion='reduce'] .task__checkbox:hover + .task__check-label,
+:root[data-motion='reduce'] .chip--zone:hover {
+  transform: none;
+}
+
+:root[data-motion='reduce'] .toast__timer {
+  display: none;
+}

@@ -1,0 +1,338 @@
+/* =========================================================
+   preferences.css · Ajustes de apariencia, sonido y notificaciones,
+   modo concentración, ayuda y cabecera compacta en móvil
+   ========================================================= */
+
+/* ---------- Grupos dentro de Ajustes ---------- */
+.subgroup {
+  margin: 0 0 0.9rem;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.field-group .subgroup__legend {
+  margin-bottom: 0.35rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Barra inferior fija: «Guardar» siempre a la vista aunque la ventana sea larga */
+.dialog__footer--sticky {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  margin: 1rem calc(-1 * clamp(1rem, 3vw, 1.5rem)) -1.1rem;
+  padding: 0.75rem clamp(1rem, 3vw, 1.5rem);
+  border-top: 2px dashed var(--line);
+  background: var(--surface);
+}
+
+/* ---------- Muestras de tinta ---------- */
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  gap: 0.5rem;
+}
+
+.swatch {
+  position: relative;
+  cursor: pointer;
+}
+
+.swatch input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.swatch__card {
+  display: grid;
+  gap: 0.3rem;
+  height: 100%;
+  padding: 0.55rem 0.65rem;
+  border: 3px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.swatch__inks {
+  display: flex;
+  gap: 4px;
+}
+
+.swatch__inks i {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--board-bg);
+  border-radius: var(--radius-blob);
+}
+
+.swatch__inks i:nth-child(2) {
+  transform: rotate(40deg) translateX(-4px);
+}
+
+.swatch__name {
+  font-weight: 800;
+  font-size: 0.88rem;
+  line-height: 1.2;
+}
+
+.swatch__hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Seleccionada: borde grueso del color del texto y marca (no solo color) */
+.swatch input:checked + .swatch__card {
+  border-color: var(--text);
+  box-shadow: 3px 3px 0 var(--text);
+}
+
+.swatch input:checked + .swatch__card .swatch__name::after {
+  content: ' ✓';
+}
+
+.swatch input:focus-visible + .swatch__card {
+  outline: 4px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ---------- Volumen y pruebas de sonido ---------- */
+.range-field {
+  margin-top: 0.6rem;
+}
+
+.range-field label {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-weight: 700;
+}
+
+.range-field__row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.range-field input[type='range'] {
+  flex: 1;
+  min-height: 32px;
+  accent-color: var(--ink-b-text);
+}
+
+.range-field output {
+  min-width: 3.2em;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.sound-tests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+/* ---------- Estado del permiso de notificaciones ---------- */
+.notice-status {
+  margin-top: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  border-left: 5px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  font-size: 0.85rem;
+}
+
+.notice-status:empty {
+  display: none;
+}
+
+.notice-status[data-state='granted'] {
+  border-left-color: var(--ink-a-solid);
+}
+
+.notice-status[data-state='denied'],
+.notice-status[data-state='unsupported'],
+.notice-status[data-state='insecure'] {
+  border-left-color: var(--danger);
+}
+
+/* ---------- Tus datos: exportar, importar y borrar ---------- */
+.data-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.notice-status[data-kind='ok'] {
+  border-left-color: var(--ink-a-solid);
+}
+
+.notice-status[data-kind='error'] {
+  border-left-color: var(--danger);
+  color: var(--text);
+}
+
+.data-summary {
+  margin: 0.5rem 0 0.6rem;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.93rem;
+}
+
+.dialog--confirm .check {
+  margin-top: 0.6rem;
+}
+
+/* ---------- Ayuda ---------- */
+.dialog--help {
+  width: min(620px, calc(100vw - 2rem));
+}
+
+.help-section + .help-section {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 2px dashed var(--line);
+}
+
+.help-section__title {
+  margin-bottom: 0.35rem;
+  font-size: 1.1rem;
+  color: var(--ink-a-text);
+}
+
+.help-section p {
+  font-size: 0.93rem;
+}
+
+.help-terms,
+.shortcut-list {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.4rem 0 0;
+}
+
+.help-terms div {
+  padding: 0.5rem 0.7rem;
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.help-terms dt {
+  font-weight: 800;
+}
+
+.help-terms dd {
+  margin: 0.1rem 0 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.shortcut {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.shortcut dd {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+kbd {
+  display: inline-block;
+  min-width: 2em;
+  padding: 0.12rem 0.45rem;
+  border: 2px solid var(--line);
+  border-bottom-width: 4px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* ---------- Botón del modo concentración ---------- */
+.btn--focus-mode[aria-pressed='true'],
+#btn-fullscreen[aria-pressed='true'] {
+  border-color: var(--ink-b);
+  background: var(--ink-b);
+  color: var(--ink-b-contrast);
+}
+
+/* ---------- Modo concentración ----------
+   Solo oculta elementos: el temporizador sigue igual por debajo. */
+body[data-focus-mode] .view-tabs,
+body[data-focus-mode] #view-focus > .territory,
+body[data-focus-mode] #view-focus > .app-side,
+body[data-focus-mode] .app-footer,
+body[data-focus-mode] .brand__tagline,
+body[data-focus-mode] #btn-help,
+body[data-focus-mode] #btn-settings,
+body[data-focus-mode] .active-task__actions,
+body[data-focus-mode] .active-task__hint {
+  display: none !important;
+}
+
+body[data-focus-mode] #view-focus {
+  grid-template-columns: minmax(0, 860px);
+  grid-template-areas: 'stage';
+  justify-content: center;
+  padding-top: 0.75rem;
+}
+
+body[data-focus-mode] .stage {
+  border-color: var(--phase-ink);
+}
+
+@media (min-width: 681px) {
+  body[data-focus-mode] .stage .tank__svg {
+    max-width: 250px;
+    max-height: min(56vh, 430px);
+  }
+
+  body[data-focus-mode] .time {
+    font-size: clamp(2.6rem, 28cqi, 7.5rem);
+  }
+}
+
+/* ---------- Cabecera en móvil: botones solo con icono ---------- */
+@media (max-width: 680px) {
+  .header-actions {
+    gap: 0.35rem;
+  }
+
+  .header-actions .btn {
+    width: 44px;
+    padding: 0;
+  }
+
+  /* El texto sigue disponible para lectores de pantalla */
+  .header-actions .btn__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .brand__name {
+    font-size: 1.5rem;
+  }
+
+  .shortcut {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+}

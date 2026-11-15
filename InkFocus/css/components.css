@@ -1,0 +1,851 @@
+/* =========================================================
+   components.css · Botones, pegatinas, ciclo, avisos, diálogos,
+   formularios y transición de tinta
+   ========================================================= */
+
+/* ---------- Botones ----------
+   En escritorio los botones son algo más compactos; en pantallas táctiles
+   (ver el final del archivo) todos mantienen al menos 44 px de alto. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 42px;
+  padding: 0.5rem 1.05rem;
+  border: 3px solid var(--text);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.1;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.5);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease, color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px) rotate(-1deg);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.5);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Deshabilitado: además de más tenue, borde discontinuo (no depende solo del color) */
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.btn__glyph {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.btn--ghost {
+  background: var(--surface);
+}
+
+.btn--solid {
+  background: var(--text);
+  color: var(--text-on-light);
+  border-color: var(--text);
+}
+
+.btn--danger {
+  background: var(--danger-fill);
+  border-color: var(--danger-fill);
+  color: #fff;
+}
+
+.btn--small {
+  min-height: 38px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.93rem;
+}
+
+.btn--icon {
+  width: 42px;
+  padding: 0;
+  flex: none;
+}
+
+.btn--icon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+/* Botón principal: una mancha de tinta del color de la fase */
+.btn--primary {
+  position: relative;
+  min-height: 62px;
+  min-width: 11rem;
+  padding: 0 1.75rem;
+  border: 3px solid rgba(0, 0, 0, 0.35);
+  border-radius: var(--radius-blob);
+  background: var(--phase-ink);
+  color: var(--phase-ink-contrast);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.6rem;
+  letter-spacing: 0.02em;
+  box-shadow: 0 7px 0 rgba(0, 0, 0, 0.55);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-radius 0.5s ease, background-color 0.6s ease;
+}
+
+.btn--primary:hover:not(:disabled) {
+  border-radius: 46% 54% 44% 56% / 60% 42% 58% 40%;
+  transform: translateY(-2px) rotate(-1.5deg);
+  box-shadow: 0 9px 0 rgba(0, 0, 0, 0.55);
+}
+
+/* Gotitas de tinta junto al botón */
+.btn--primary::after {
+  content: '';
+  position: absolute;
+  right: 16%;
+  bottom: -15px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--phase-ink);
+  box-shadow: -38px 7px 0 -3px var(--phase-ink);
+  transition: background-color 0.6s ease, box-shadow 0.6s ease;
+}
+
+.btn--primary .btn__glyph {
+  fill: currentColor;
+  stroke: none;
+  width: 0.9em;
+  height: 0.9em;
+}
+
+.btn--primary[data-action='play'] .btn__glyph--pause,
+.btn--primary[data-action='pause'] .btn__glyph--play {
+  display: none;
+}
+
+.btn--primary:disabled {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  border: 3px dashed var(--text-muted);
+}
+
+.btn--primary:disabled::after {
+  display: none;
+}
+
+/* ---------- Controles ---------- */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.1rem 1.25rem;
+  margin-top: 0.4rem;
+}
+
+.controls__secondary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+/* ---------- Pegatinas ---------- */
+.sticker {
+  display: inline-block;
+  padding: 0.3rem 0.85rem 0.25rem;
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.55);
+}
+
+.sticker--phase {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: var(--phase-ink);
+  color: var(--phase-ink-contrast);
+  transform: rotate(-3deg);
+  transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+.sticker--session {
+  font-weight: 800;
+  background: var(--text);
+  color: var(--text-on-light);
+  transform: rotate(2deg);
+}
+
+/* ---------- Modo demostración ---------- */
+.demo-badge {
+  padding: 0.35rem 0.8rem;
+  border-radius: 8px;
+  background: var(--demo);
+  color: var(--demo-contrast);
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transform: rotate(-3deg);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.55);
+}
+
+.demo-stripe {
+  margin-bottom: 1rem;
+  padding: 0.6rem 0.9rem;
+  border: 2px dashed var(--demo);
+  border-radius: 12px;
+  color: var(--demo);
+  background: repeating-linear-gradient(-45deg, rgba(255, 225, 77, 0.07) 0 12px, transparent 12px 24px);
+  font-size: 0.95rem;
+}
+
+/* ---------- Aviso de sesión caducada ---------- */
+.notice {
+  width: 100%;
+  display: grid;
+  gap: 0.6rem;
+  padding: 1rem 1.1rem;
+  border: 3px dashed var(--phase-ink-text);
+  border-radius: 18px;
+  background: var(--surface-2);
+  text-align: left;
+}
+
+.notice__title {
+  font-size: 1.35rem;
+}
+
+.notice__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+/* ---------- Ciclo ---------- */
+.cycle__summary {
+  font-weight: 700;
+}
+
+.cycle__track {
+  list-style: none;
+  margin: 1.1rem 0 0.9rem;
+  padding: 0.3rem 0.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.5rem;
+}
+
+.step {
+  flex: none;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Gota de concentración */
+.step--focus {
+  width: 24px;
+  height: 24px;
+  margin: 0 3px;
+  border: 3px solid var(--ink-a-text);
+  border-radius: 0 50% 50% 50%;
+  transform: rotate(45deg);
+}
+
+.step--short {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--ink-b-text);
+  border-radius: 50%;
+}
+
+.step--long {
+  width: 34px;
+  height: 16px;
+  border: 2px solid var(--ink-b-text);
+  border-radius: 999px;
+}
+
+/* Pendiente: contorno discontinuo. Hecho: relleno. Actual: anillo blanco. */
+.step--upcoming {
+  border-style: dashed;
+}
+
+.step--done.step--focus {
+  background: var(--ink-a-solid);
+}
+
+.step--passed.step--short,
+.step--passed.step--long {
+  background: var(--ink-b-text);
+}
+
+/* Saltada: contorno gris con una raya que la atraviesa (no cuenta como completada) */
+.step--skipped.step--focus {
+  border-color: var(--text-muted);
+  background: linear-gradient(transparent 40%, var(--text-muted) 40% 60%, transparent 60%);
+}
+
+.step--current {
+  background: var(--phase-ink);
+  border-style: solid;
+  box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px var(--text);
+}
+
+.step--current.step--focus {
+  transform: rotate(45deg) scale(1.15);
+}
+
+.cycle__legend {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.cycle__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.legend-mark {
+  display: inline-block;
+}
+
+.legend-mark--focus {
+  width: 12px;
+  height: 12px;
+  border-radius: 0 50% 50% 50%;
+  transform: rotate(45deg);
+  background: var(--ink-a-solid);
+}
+
+.legend-mark--skipped,
+.legend-mark--upcoming {
+  width: 12px;
+  height: 12px;
+  border-radius: 0 50% 50% 50%;
+  transform: rotate(45deg);
+}
+
+.legend-mark--skipped {
+  border: 2px solid var(--text-muted);
+  background: linear-gradient(transparent 35%, var(--text-muted) 35% 65%, transparent 65%);
+}
+
+.legend-mark--upcoming {
+  border: 2px dashed var(--ink-a-text);
+}
+
+.legend-mark--current {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--phase-ink);
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--text);
+}
+
+.cycle__results {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.legend-mark--short {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ink-b-text);
+}
+
+.legend-mark--long {
+  width: 20px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--ink-b-text);
+}
+
+.cycle__hint {
+  font-size: 0.92rem;
+  margin-bottom: 1rem;
+}
+
+.durations {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0 0 1.1rem;
+}
+
+.durations div {
+  padding: 0.55rem 0.6rem;
+  border-radius: 14px;
+  background: var(--surface-2);
+  text-align: center;
+}
+
+.durations dt {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+.durations dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+}
+
+.explainer {
+  margin-top: 1.1rem;
+  border-top: 2px dashed var(--line);
+  padding-top: 0.9rem;
+}
+
+.explainer summary {
+  cursor: pointer;
+  font-weight: 700;
+  border-radius: 8px;
+}
+
+.explainer ul {
+  margin: 0.7rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.92rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+/* ---------- Diálogos ---------- */
+.dialog {
+  width: min(560px, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 3px solid var(--text);
+  border-radius: 26px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 10px 10px 0 var(--ink-b);
+  overflow: auto;
+}
+
+.dialog[open] {
+  animation: dialog-in 0.22s ease-out;
+}
+
+.dialog::backdrop {
+  background: rgba(8, 7, 12, 0.74);
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) rotate(-1deg) scale(0.97);
+  }
+}
+
+.dialog--confirm {
+  width: min(440px, calc(100vw - 2rem));
+  box-shadow: 10px 10px 0 var(--danger-fill);
+}
+
+.dialog__body {
+  padding: 1.1rem clamp(1rem, 3vw, 1.5rem) 1.1rem;
+}
+
+.dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.dialog__title {
+  font-size: 1.45rem;
+}
+
+.dialog__note {
+  margin-bottom: 1rem;
+  padding: 0.7rem 0.9rem;
+  border-left: 6px solid var(--ink-a);
+  border-radius: 10px;
+  background: var(--surface-2);
+  font-size: 0.95rem;
+}
+
+.dialog__message {
+  margin: 0.8rem 0 0.4rem;
+}
+
+.dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.1rem;
+}
+
+/* ---------- Formularios ---------- */
+.field-group {
+  margin: 0 0 1.1rem;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.field-group legend {
+  padding: 0;
+  margin-bottom: 0.6rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--ink-a-text);
+}
+
+.field-group--demo legend {
+  color: var(--focus-ring);
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 700;
+}
+
+.field input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.4rem 0.75rem;
+  border: 3px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-sunken);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.field input:focus-visible {
+  border-color: var(--ink-a);
+}
+
+.field input[aria-invalid] {
+  border-color: var(--danger);
+  border-style: dashed;
+}
+
+.field-hint {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.field-error {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--danger);
+}
+
+/* Casilla personalizada: el input real sigue ahí (accesible y enfocable) */
+.check {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  cursor: pointer;
+}
+
+.check input {
+  position: absolute;
+  opacity: 0;
+  width: 26px;
+  height: 26px;
+  margin: 0;
+}
+
+.check__box {
+  position: relative;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border: 3px solid var(--text);
+  border-radius: 8px;
+  transition: background-color 0.15s ease;
+}
+
+.check input:checked + .check__box {
+  background: var(--ink-a);
+  border-color: var(--ink-a);
+}
+
+.check input:checked + .check__box::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 1px;
+  width: 7px;
+  height: 13px;
+  border: solid var(--ink-a-contrast);
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.check input:focus-visible + .check__box {
+  outline: 4px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.preset {
+  flex: 1 1 140px;
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.7rem 1rem;
+  border: 3px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface-2);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.preset:hover {
+  border-color: var(--ink-a);
+  transform: rotate(-1deg);
+}
+
+.preset__value {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--ink-a-text);
+}
+
+.preset__hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Transición de tinta ---------- */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none; /* nunca bloquea la interacción */
+}
+
+.splash__blob {
+  position: absolute;
+  width: 160vmax;
+  height: 160vmax;
+  fill: var(--phase-ink);
+  opacity: 0;
+}
+
+.splash__text {
+  position: relative;
+  padding: 1rem;
+  text-align: center;
+  color: var(--phase-ink-contrast);
+  opacity: 0;
+}
+
+.splash__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 9vw, 5.5rem);
+  line-height: 1;
+  transform: rotate(-3deg);
+}
+
+.splash__subtitle {
+  margin-top: 0.6rem;
+  font-weight: 800;
+  font-size: clamp(1rem, 3vw, 1.4rem);
+}
+
+.splash.is-playing .splash__blob {
+  animation: splash-blob 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.splash.is-playing .splash__text {
+  animation: splash-text 1.6s ease forwards;
+}
+
+@keyframes splash-blob {
+  0% {
+    opacity: 1;
+    transform: scale(0) rotate(-40deg);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.06) rotate(6deg);
+  }
+}
+
+@keyframes splash-text {
+  0%,
+  18% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  32% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  42% {
+    transform: scale(1);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Adaptación ---------- */
+@media (max-width: 680px) {
+  /* En móvil el indicador del modo demostración pasa a una franja fija abajo,
+     visible en todas las vistas */
+  .demo-badge {
+    position: fixed;
+    left: 50%;
+    bottom: 0.5rem;
+    z-index: 110;
+    transform: translateX(-50%) rotate(-1deg);
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  .demo-stripe {
+    margin-bottom: 0.75rem;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .sticker--phase {
+    font-size: 1.2rem;
+  }
+
+  .sticker--session {
+    font-size: 0.85rem;
+  }
+
+  .controls {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .btn--primary {
+    width: 100%;
+    max-width: 340px;
+    min-height: 70px;
+  }
+
+  .controls__secondary {
+    justify-content: center;
+  }
+
+  .field-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dialog__footer .btn {
+    flex: 1 1 auto;
+  }
+}
+
+/* Pantallas táctiles: objetivos de toque de al menos 44 px aunque el diseño sea compacto */
+@media (pointer: coarse) {
+  .btn:not(.btn--primary),
+  .btn--small {
+    min-height: 44px;
+  }
+
+  .btn--icon {
+    width: 44px;
+  }
+}
+
+/* ---------- Movimiento reducido ----------
+   :root[data-motion='reduce'] lo pone appearance.js cuando el sistema prefiere
+   movimiento reducido o cuando se activa «Reducir animaciones» en Ajustes. */
+:root[data-motion='reduce'] .btn,
+:root[data-motion='reduce'] .btn--primary,
+:root[data-motion='reduce'] .preset,
+:root[data-motion='reduce'] .step {
+  transition: none;
+}
+
+:root[data-motion='reduce'] .btn:hover:not(:disabled),
+:root[data-motion='reduce'] .btn--primary:hover:not(:disabled),
+:root[data-motion='reduce'] .preset:hover {
+  transform: none;
+}
+
+:root[data-motion='reduce'] .dialog[open] {
+  animation: none;
+}
+
+/* La transición de tinta pasa a ser un simple fundido, sin escalado ni giro */
+:root[data-motion='reduce'] .splash.is-playing .splash__blob {
+  animation: splash-fade 1.6s linear forwards;
+  transform: none;
+}
+
+:root[data-motion='reduce'] .splash.is-playing .splash__text {
+  animation: splash-fade 1.6s linear forwards;
+}
+
+@keyframes splash-fade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  15%,
+  75% {
+    opacity: 0.96;
+  }
+}

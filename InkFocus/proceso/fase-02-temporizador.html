@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fase 2 · Temporizador y tanque · Proceso InkFocus</title>
+  <meta name="description" content="Cambio a Claude Opus 5.5 (Alto) con el prompt inicial completo. Primera versión: tanque, tiempo, fases, ciclo y ajustes.">
+  <meta name="theme-color" content="#16151b">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&amp;family=Rubik:wght@400;500;700&amp;display=swap">
+  <link rel="stylesheet" href="css/proceso.css">
+  <script src="js/proceso.js" defer></script>
+</head>
+<body class="page-phase">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<div class="splats" aria-hidden="true">
+  <svg class="splat splat--1" viewBox="0 0 208 208"><path d="M104 14c11 0 13 22 24 25 12 3 25-15 36-6 10 9-4 27 2 38 6 12 30 8 31 22 1 13-22 14-26 26-4 13 14 28 4 38-10 9-27-6-39 0-12 6-10 31-25 31-14 0-14-23-26-29-12-5-27 10-36 1-9-10 6-25 1-37-5-11-30-11-30-25 0-13 23-13 28-25 4-12-13-26-4-36 10-9 26 5 38-1 11-6 11-22 22-22z"/></svg>
+  <svg class="splat splat--2" viewBox="0 0 208 208"><path d="M104 14c11 0 13 22 24 25 12 3 25-15 36-6 10 9-4 27 2 38 6 12 30 8 31 22 1 13-22 14-26 26-4 13 14 28 4 38-10 9-27-6-39 0-12 6-10 31-25 31-14 0-14-23-26-29-12-5-27 10-36 1-9-10 6-25 1-37-5-11-30-11-30-25 0-13 23-13 28-25 4-12-13-26-4-36 10-9 26 5 38-1 11-6 11-22 22-22z"/></svg>
+  <svg class="splat splat--3" viewBox="0 0 208 208"><path d="M104 14c11 0 13 22 24 25 12 3 25-15 36-6 10 9-4 27 2 38 6 12 30 8 31 22 1 13-22 14-26 26-4 13 14 28 4 38-10 9-27-6-39 0-12 6-10 31-25 31-14 0-14-23-26-29-12-5-27 10-36 1-9-10 6-25 1-37-5-11-30-11-30-25 0-13 23-13 28-25 4-12-13-26-4-36 10-9 26 5 38-1 11-6 11-22 22-22z"/></svg>
+</div>
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="index.html">
+      <svg class="brand__mark" viewBox="0 0 208 208" aria-hidden="true"><path d="M104 14c11 0 13 22 24 25 12 3 25-15 36-6 10 9-4 27 2 38 6 12 30 8 31 22 1 13-22 14-26 26-4 13 14 28 4 38-10 9-27-6-39 0-12 6-10 31-25 31-14 0-14-23-26-29-12-5-27 10-36 1-9-10 6-25 1-37-5-11-30-11-30-25 0-13 23-13 28-25 4-12-13-26-4-36 10-9 26 5 38-1 11-6 11-22 22-22z"/></svg>
+      <span class="brand__text"><span class="brand__name"><span class="brand__ink">Ink</span>Focus</span><span class="brand__sub">Proceso de desarrollo</span></span>
+    </a>
+    <nav class="site-nav" aria-label="Principal">
+      <a class="site-nav__link" href="index.html#fases">Fases</a>
+      <a class="btn btn--app" href="../index.html">Abrir InkFocus</a>
+    </nav>
+  </div>
+</header>
+<main id="contenido" tabindex="-1">
+<section class="phase-hero"><div class="wrap"><nav class="crumbs" aria-label="Ruta"><a href="index.html">Índice</a><span aria-hidden="true">/</span><span aria-current="page">Fase 2</span></nav><p class="kicker">Fase 2 de 7</p><h1 class="phase-hero__title"><span class="phase-hero__num" aria-hidden="true">02</span><span class="phase-hero__text">Temporizador y tanque</span></h1><p class="lead">Cambio a Claude Opus 5.5 (Alto) con el prompt inicial completo. Primera versión: tanque, tiempo, fases, ciclo y ajustes.</p><ul class="chips" aria-label="IAs que intervienen"><li><span class="who who--gpt">GPT-6.1 Sol</span></li><li><span class="who who--claude">Claude Opus 5.5</span></li></ul><nav class="pager" aria-label="Navegación entre fases (arriba)"><a class="pager__link pager__link--prev" href="fase-01-idea.html" rel="prev"><span class="pager__dir"><span aria-hidden="true">←</span> Fase anterior</span><span class="pager__name">01 · Idea y planificación</span></a><a class="pager__link pager__link--index" href="index.html#fases"><span class="pager__dir">Volver al</span><span class="pager__name">Índice de fases</span></a><a class="pager__link pager__link--next" href="fase-03-tareas-territorio.html" rel="next"><span class="pager__dir">Fase siguiente <span aria-hidden="true">→</span></span><span class="pager__name">03 · Tareas y territorio</span></a></nav></div></section><div class="wrap phase-body"><div class="intro-grid"><section class="panel" aria-labelledby="f02-ctx"><h2 id="f02-ctx">Contexto</h2><p>Con el prompt que preparó GPT-6.1 Sol, el desarrollo pasa a Claude. El Word marca el momento con «Cambio a Claude Oppus 5.5 Alto».</p></section><section class="panel" aria-labelledby="f02-obj"><h2 id="f02-obj">Objetivo</h2><p>Según el propio prompt: «La primera versión debe ser funcional y mostrar ya la identidad visual de InkFocus: temporizador, tanque, controles, fases y adaptación básica a móvil.»</p></section><section class="panel" aria-labelledby="f02-ia"><h2 id="f02-ia">IAs y modelos</h2><ul class="ai-list"><li><span class="who who--claude">Claude Opus 5.5</span> <span>Esfuerzo Alto · desarrollo</span></li><li><span class="who who--gpt">GPT-6.1 Sol</span> <span>Redactó el prompt en la fase 1</span></li></ul></section></div><section class="sequence" aria-labelledby="f02-seq"><h2 id="f02-seq">Secuencia</h2><p class="sequence__hint">Cada bloque indica quién escribe y a quién va dirigido. «En resumen» es una síntesis de esta web; el texto del Word se reproduce completo debajo.</p><h3 class="group-title">Prompt inicial y primera versión</h3><ol class="timeline"><li class="step step--gpt"><article class="msg" aria-labelledby="f02-p1-t"><header class="msg__head"><p class="msg__who"><span class="msg__role">Redacta</span> <span class="who who--gpt">GPT-6.1 Sol</span><span class="msg__sep" aria-hidden="true">·</span><span class="msg__role">Envía</span> <span class="who who--yo">Yo</span><span class="msg__sep" aria-hidden="true">·</span><span class="msg__role">Para</span> <span class="who who--claude">Claude Opus 5.5</span></p><h4 class="msg__title" id="f02-p1-t">Prompt inicial enviado a Claude</h4><p class="msg__source"><span>En el Word:</span> «Cambio a Claude Oppus 5.5 Alto:», «Yo:»</p></header><p class="msg__origin"><strong>Origen:</strong> Texto preparado por GPT-6.1 Sol en la <a href="fase-01-idea.html">fase 1</a> («Puedes pegar este prompt en Claude»). El envío está documentado: el Word lo coloca bajo «Cambio a Claude Oppus 5.5 Alto: Yo:».</p><p class="msg__summary"><strong>En resumen:</strong> Describe el proyecto completo en 13 apartados: contexto académico, concepto, dirección visual, temporizador y tanque, tareas y territorio, calendario, objetivos y estadísticas, personalización, guardado, organización de la interfaz, accesibilidad, tecnología y desarrollo por versiones. Pide empezar por la primera versión.</p><div class="msg__tools"><button type="button" class="btn btn--small btn-copy" data-copy="f02-p1-raw">Copiar prompt</button><span class="copy-status" role="status"></span></div><details class="fold"><summary><span class="fold__label">Leer el texto completo</span> <span class="fold__meta">(151 párrafos)</span></summary><div class="doc"><p class="doc__label">Texto completo, tal como aparece en el Word</p><p>Quiero que me ayudes a diseñar y desarrollar una aplicación web Pomodoro llamada <strong>InkFocus</strong>, para la asignatura Desarrollo de Interfaces de 2.º de DAM.</p><p>Busco una aplicación completa, visualmente cuidada, funcional y con personalidad, inspirada en la estética de Splatoon. Necesito poder entender su código, probarla y explicar sus decisiones de interfaz.</p><p>Trabaja conmigo por versiones funcionales. Este mensaje describe el proyecto completo para que mantengas una dirección coherente.</p><p class="md-h"><strong>1. Contexto académico y entrega</strong></p><p>El enunciado pide realizar una aplicación tipo Pomodoro y entregar un PDF con tres enlaces:</p><ul><li>Aplicación web.</li><li>Repositorio de GitHub de esta tarea.</li><li>Página web con el proceso de resolución: prompts e IAs utilizadas en orden, distintas versiones y capturas.</li></ul><p>Por ahora céntrate en la aplicación. <strong>No construyas todavía la página del proceso ni el PDF de entrega.</strong> Yo documentaré el desarrollo en un Word o PDF y, al terminar, te lo proporcionaré para convertirlo en una página web coherente con el diseño de InkFocus.</p><p>No inventes prompts, capturas, pruebas ni versiones. Al terminar cada versión, proporciona un resumen breve de sus cambios y una lista de comprobaciones que pueda realizar y capturar.</p><p class="md-h"><strong>2. Concepto principal</strong></p><p>InkFocus es una estación de concentración inspirada en Splatoon, con dos representaciones diferentes:</p><ul><li><strong>Tanque de tinta:</strong> representa el tiempo restante de la sesión.</li><li><strong>Territorio del día:</strong> representa las tareas completadas de la fecha seleccionada.</li></ul><p>El calendario conecta las fechas con sus tareas, territorio e historial.</p><p>La interfaz estará en español.</p><p class="md-h"><strong>3. Dirección visual</strong></p><p>Quiero una estética urbana, divertida y reconocible como inspirada en Splatoon:</p><ul><li>Fondo carbón con textura sutil.</li><li>Combinación inicial de violeta y verde lima.</li><li>Manchas de tinta, pegatinas, formas orgánicas y algunos paneles ligeramente inclinados.</li><li>Títulos gruesos y expresivos, combinados con texto de lectura sencillo.</li><li>Botones grandes y estados visuales claros.</li><li>Ilustraciones originales mediante SVG y CSS para tanque, tinta y territorio.</li><li>Animaciones fluidas, moderadas y relacionadas con acciones reales.</li></ul><p>Evita una apariencia de plantilla genérica. Quiero que la temática esté integrada en los componentes y en su comportamiento.</p><p>Mantén legibles los números, textos y formularios. Usa los elementos decorativos alrededor del contenido sin dificultar la interacción.</p><p>No dependas de imágenes, música ni archivos oficiales de Nintendo para que la aplicación funcione. No uses iconos o emojis como sustitutos del diseño de los elementos principales.</p><p class="md-h"><strong>4. Temporizador y tanque</strong></p><p>Implementa:</p><ul><li>Concentración, descanso corto y descanso largo.</li><li>Valores iniciales de 25, 5 y 15 minutos.</li><li>Descanso largo después de cuatro sesiones de concentración completadas.</li><li>Iniciar, pausar, continuar, reiniciar y saltar fase.</li><li>Duraciones y número de sesiones configurables.</li><li>Presets 25/5 y 50/10.</li><li>Inicio automático opcional, configurable para descansos y concentración.</li><li>Indicador de sesión dentro del ciclo.</li><li>Hora estimada de finalización de la fase.</li><li>Tiempo restante y fase en el título de la pestaña.</li></ul><p>El tanque debe ser el protagonista:</p><ul><li>Se vacía proporcionalmente durante la concentración.</li><li>En el descanso se recarga de vacío a lleno.</li><li>Al pausar se detienen su progreso y animaciones de actividad.</li><li>El tiempo restante siempre aparece en números grandes y legibles.</li><li>Al terminar una fase aparece una transición breve de tinta.</li><li>El estado también se entiende mediante texto, sin depender solo del color.</li></ul><p>El temporizador debe calcular el tiempo mediante una referencia temporal para evitar acumular errores al cambiar de pestaña. Define el comportamiento al recargar o regresar tras mucho tiempo, sin inventar sesiones de concentración completadas automáticamente.</p><p>Las sesiones saltadas o canceladas no deben contarse como completadas. Impide que un mismo final de sesión se registre dos veces.</p><p>Si se cambian duraciones durante una sesión activa, explica cuándo se aplicarán y evita reinicios inesperados.</p><p class="md-h"><strong>5. Tareas y territorio diario</strong></p><p>Permite:</p><ul><li>Crear, editar, completar, reabrir y eliminar tareas.</li><li>Deshacer una eliminación mediante un aviso temporal.</li><li>Asignar una fecha a cada tarea.</li><li>Añadir título, notas opcionales, categoría o asignatura y prioridad.</li><li>Estimar cuántos pomodoros requiere.</li><li>Ver pomodoros estimados y completados.</li><li>Seleccionar una tarea como activa y mostrarla junto al temporizador.</li><li>Buscar y filtrar por estado o categoría.</li></ul><p>Completar un pomodoro aumenta el contador de la tarea activa, pero no la marca automáticamente como terminada. El usuario decide cuándo está completada.</p><p>El territorio representa las tareas del día:</p><ul><li>Cada tarea ocupa una región identificable de un pequeño mapa original.</li><li>Completarla pinta su región con una animación breve.</li><li>Reabrirla devuelve su región al estado pendiente.</li><li>Muestra también el progreso en texto, por ejemplo «3 de 5 tareas».</li><li>Al seleccionar una región se identifica su tarea.</li><li>Las regiones deben poder usarse con teclado o disponer de un control equivalente accesible.</li><li>El mapa debe mantener una distribución estable mientras no cambie la lista de tareas.</li><li>Si no hay tareas, muestra un estado vacío útil.</li></ul><p>Distingue claramente este progreso del objetivo diario de concentración.</p><p class="md-h"><strong>6. Calendario integrado</strong></p><p>Incluye un calendario mensual con:</p><ul><li>Navegación entre meses y botón «Hoy».</li><li>Fecha seleccionada claramente indicada.</li><li>Distinción visual entre hoy y el día seleccionado.</li><li>Indicadores de tareas pendientes, tareas completadas y actividad de estudio.</li><li>Leyenda breve para entender esos indicadores.</li><li>Selección de una fecha para consultar sus tareas y territorio.</li><li>Creación de tareas para la fecha seleccionada.</li><li>Resumen del día: tareas completadas, sesiones y minutos de concentración.</li><li>Uso cómodo en móvil y mediante teclado.</li></ul><p>Seleccionar un día pasado o futuro cambia la planificación que se consulta, sin alterar el temporizador activo.</p><p>Registra la actividad real en la fecha en la que ocurre, aunque la tarea estuviera planificada para otro día. Usa fechas locales de forma consistente y define cómo se registra una sesión que cruza medianoche.</p><p class="md-h"><strong>7. Objetivos, estadísticas e historial</strong></p><p>Añade:</p><ul><li>Objetivo diario configurable de sesiones de concentración.</li><li>Progreso hacia ese objetivo separado del territorio de tareas.</li><li>Minutos de concentración y sesiones completadas.</li><li>Gráfico sencillo de actividad de los últimos siete días, con alternativa textual.</li><li>Historial con fecha, duración y tarea asociada cuando exista.</li><li>Filtro del historial por fecha o tarea.</li><li>Algunas insignias por hitos acumulativos: primera sesión, diez sesiones o cinco horas de concentración.</li></ul><p>Los descansos no suman tiempo de estudio. Pausas y cancelaciones deben tener un tratamiento coherente y explicado.</p><p>Las recompensas serán discretas y opcionales, sin penalizaciones ni mensajes de culpa.</p><p class="md-h"><strong>8. Personalización y utilidades</strong></p><p>Incluye:</p><ul><li>Varias parejas de colores de tinta.</li><li>Tema claro y oscuro.</li><li>Modo concentración que oculte los paneles secundarios.</li><li>Sonido breve al finalizar una fase, control de volumen y silencio.</li><li>Notificaciones del navegador opcionales, solicitadas cuando el usuario las active.</li><li>Alternativa visual si no hay permiso para notificar.</li><li>Atajos de teclado documentados, desactivados al escribir en campos.</li><li>Ayuda breve sobre la técnica Pomodoro.</li><li>Exportación e importación de datos en JSON, validando el archivo antes de modificar datos.</li><li>Restablecimiento de datos con confirmación.</li><li>Modo demostración con fases de pocos segundos, claramente indicado y sin contaminar las estadísticas reales.</li></ul><p>El sonido debe respetar las restricciones del navegador y activarse a partir de una interacción del usuario.</p><p class="md-h"><strong>9. Guardado y robustez</strong></p><p>Guarda localmente tareas, preferencias, historial y objetivos para conservarlos al recargar.</p><p>Valida duraciones, títulos y archivos importados. Maneja datos guardados ausentes o incorrectos sin dejar la aplicación inutilizable.</p><p>Evita contenido de ejemplo que parezca actividad real. Si incluyes datos de demostración, identifícalos y permite retirarlos.</p><p>No implementes cuentas, backend o sincronización en la nube: el alcance inicial es una aplicación de uso local que pueda publicarse como web estática.</p><p class="md-h"><strong>10. Organización de la interfaz</strong></p><p>En escritorio:</p><ul><li>Cabecera con identidad, personalización y ajustes.</li><li>Temporizador y tanque como foco principal.</li><li>Tareas en un panel lateral.</li><li>Territorio y objetivo diario en otro panel.</li><li>Calendario, estadísticas e historial en vistas o pestañas bien organizadas.</li></ul><p>No muestres todas las funciones a la vez si dificulta usar el temporizador.</p><p>En móvil, prioriza temporizador y controles, reorganizando el resto sin desplazamiento horizontal.</p><p>Cuida estados vacíos, botones deshabilitados, mensajes de validación, avisos y confirmaciones.</p><p class="md-h"><strong>11. Accesibilidad</strong></p><p>Incluye:</p><ul><li>HTML semántico.</li><li>Etiquetas en formularios y nombres accesibles en botones.</li><li>Navegación mediante teclado y foco visible.</li><li>Contraste suficiente.</li><li>Estados identificables sin depender del color.</li><li>Respeto por la preferencia de movimiento reducido.</li><li>Gestión del foco en ventanas de ajustes y confirmaciones.</li><li>Anuncios accesibles para cambios de fase, evitando anunciar cada segundo.</li></ul><p class="md-h"><strong>12. Tecnología y código</strong></p><p>Si no existe ninguna restricción adicional, utiliza HTML, CSS y JavaScript modular, con archivos separados y una estructura comprensible para un estudiante de 2.º de DAM.</p><p>Evita introducir un framework o dependencias sin una ventaja concreta. El resultado debe poder publicarse como sitio estático en GitHub Pages.</p><p>Organiza el código por responsabilidades, con nombres claros y comentarios donde ayuden a entender decisiones importantes. Incluye instrucciones para ejecutarlo y un README.</p><p>Si este entorno permite crear archivos, trabaja directamente en ellos. Si solo permite responder con texto, entrega el código completo de los archivos necesarios para cada versión y explica dónde colocarlos.</p><p class="md-h"><strong>13. Desarrollo por versiones</strong></p><p>Propón un plan breve y comienza directamente con la primera versión sin esperar confirmaciones rutinarias.</p><p>La primera versión debe ser funcional y mostrar ya la identidad visual de InkFocus: temporizador, tanque, controles, fases y adaptación básica a móvil.</p><p>Después iremos incorporando tareas y territorio, calendario, persistencia, estadísticas, personalización y detalles finales. Puedes ajustar el orden si hay dependencias que lo aconsejen.</p><p>Cada versión debe mantener lo que ya funciona y añadir una parte coherente. No intentes generar todas las funciones de golpe.</p><p>Al terminar cada versión:</p><ul><li>Resume lo implementado y lo pendiente.</li><li>Explica las decisiones de interfaz más relevantes.</li><li>Indica cómo probar sus funciones y qué capturas conviene guardar.</li><li>Distingue las comprobaciones ejecutadas de las que debo realizar yo.</li><li>Sugiere un mensaje de commit descriptivo.</li></ul><p>Comienza ahora con el plan breve y la implementación de la primera versión.</p></div></details><template id="f02-p1-raw">Quiero que me ayudes a diseñar y desarrollar una aplicación web Pomodoro llamada **InkFocus**, para la asignatura Desarrollo de Interfaces de 2.º de DAM.
+
+Busco una aplicación completa, visualmente cuidada, funcional y con personalidad, inspirada en la estética de Splatoon. Necesito poder entender su código, probarla y explicar sus decisiones de interfaz.
+
+Trabaja conmigo por versiones funcionales. Este mensaje describe el proyecto completo para que mantengas una dirección coherente.
+
+**1. Contexto académico y entrega**
+
+El enunciado pide realizar una aplicación tipo Pomodoro y entregar un PDF con tres enlaces:
+
+- Aplicación web.
+- Repositorio de GitHub de esta tarea.
+- Página web con el proceso de resolución: prompts e IAs utilizadas en orden, distintas versiones y capturas.
+
+Por ahora céntrate en la aplicación. **No construyas todavía la página del proceso ni el PDF de entrega.** Yo documentaré el desarrollo en un Word o PDF y, al terminar, te lo proporcionaré para convertirlo en una página web coherente con el diseño de InkFocus.
+
+No inventes prompts, capturas, pruebas ni versiones. Al terminar cada versión, proporciona un resumen breve de sus cambios y una lista de comprobaciones que pueda realizar y capturar.
+
+**2. Concepto principal**
+
+InkFocus es una estación de concentración inspirada en Splatoon, con dos representaciones diferentes:
+
+- **Tanque de tinta:** representa el tiempo restante de la sesión.
+- **Territorio del día:** representa las tareas completadas de la fecha seleccionada.
+
+El calendario conecta las fechas con sus tareas, territorio e historial.
+
+La interfaz estará en español.
+
+**3. Dirección visual**
+
+Quiero una estética urbana, divertida y reconocible como inspirada en Splatoon:
+
+- Fondo carbón con textura sutil.
+- Combinación inicial de violeta y verde lima.
+- Manchas de tinta, pegatinas, formas orgánicas y algunos paneles ligeramente inclinados.
+- Títulos gruesos y expresivos, combinados con texto de lectura sencillo.
+- Botones grandes y estados visuales claros.
+- Ilustraciones originales mediante SVG y CSS para tanque, tinta y territorio.
+- Animaciones fluidas, moderadas y relacionadas con acciones reales.
+
+Evita una apariencia de plantilla genérica. Quiero que la temática esté integrada en los componentes y en su comportamiento.
+
+Mantén legibles los números, textos y formularios. Usa los elementos decorativos alrededor del contenido sin dificultar la interacción.
+
+No dependas de imágenes, música ni archivos oficiales de Nintendo para que la aplicación funcione. No uses iconos o emojis como sustitutos del diseño de los elementos principales.
+
+**4. Temporizador y tanque**
+
+Implementa:
+
+- Concentración, descanso corto y descanso largo.
+- Valores iniciales de 25, 5 y 15 minutos.
+- Descanso largo después de cuatro sesiones de concentración completadas.
+- Iniciar, pausar, continuar, reiniciar y saltar fase.
+- Duraciones y número de sesiones configurables.
+- Presets 25/5 y 50/10.
+- Inicio automático opcional, configurable para descansos y concentración.
+- Indicador de sesión dentro del ciclo.
+- Hora estimada de finalización de la fase.
+- Tiempo restante y fase en el título de la pestaña.
+
+El tanque debe ser el protagonista:
+
+- Se vacía proporcionalmente durante la concentración.
+- En el descanso se recarga de vacío a lleno.
+- Al pausar se detienen su progreso y animaciones de actividad.
+- El tiempo restante siempre aparece en números grandes y legibles.
+- Al terminar una fase aparece una transición breve de tinta.
+- El estado también se entiende mediante texto, sin depender solo del color.
+
+El temporizador debe calcular el tiempo mediante una referencia temporal para evitar acumular errores al cambiar de pestaña. Define el comportamiento al recargar o regresar tras mucho tiempo, sin inventar sesiones de concentración completadas automáticamente.
+
+Las sesiones saltadas o canceladas no deben contarse como completadas. Impide que un mismo final de sesión se registre dos veces.
+
+Si se cambian duraciones durante una sesión activa, explica cuándo se aplicarán y evita reinicios inesperados.
+
+**5. Tareas y territorio diario**
+
+Permite:
+
+- Crear, editar, completar, reabrir y eliminar tareas.
+- Deshacer una eliminación mediante un aviso temporal.
+- Asignar una fecha a cada tarea.
+- Añadir título, notas opcionales, categoría o asignatura y prioridad.
+- Estimar cuántos pomodoros requiere.
+- Ver pomodoros estimados y completados.
+- Seleccionar una tarea como activa y mostrarla junto al temporizador.
+- Buscar y filtrar por estado o categoría.
+
+Completar un pomodoro aumenta el contador de la tarea activa, pero no la marca automáticamente como terminada. El usuario decide cuándo está completada.
+
+El territorio representa las tareas del día:
+
+- Cada tarea ocupa una región identificable de un pequeño mapa original.
+- Completarla pinta su región con una animación breve.
+- Reabrirla devuelve su región al estado pendiente.
+- Muestra también el progreso en texto, por ejemplo «3 de 5 tareas».
+- Al seleccionar una región se identifica su tarea.
+- Las regiones deben poder usarse con teclado o disponer de un control equivalente accesible.
+- El mapa debe mantener una distribución estable mientras no cambie la lista de tareas.
+- Si no hay tareas, muestra un estado vacío útil.
+
+Distingue claramente este progreso del objetivo diario de concentración.
+
+**6. Calendario integrado**
+
+Incluye un calendario mensual con:
+
+- Navegación entre meses y botón «Hoy».
+- Fecha seleccionada claramente indicada.
+- Distinción visual entre hoy y el día seleccionado.
+- Indicadores de tareas pendientes, tareas completadas y actividad de estudio.
+- Leyenda breve para entender esos indicadores.
+- Selección de una fecha para consultar sus tareas y territorio.
+- Creación de tareas para la fecha seleccionada.
+- Resumen del día: tareas completadas, sesiones y minutos de concentración.
+- Uso cómodo en móvil y mediante teclado.
+
+Seleccionar un día pasado o futuro cambia la planificación que se consulta, sin alterar el temporizador activo.
+
+Registra la actividad real en la fecha en la que ocurre, aunque la tarea estuviera planificada para otro día. Usa fechas locales de forma consistente y define cómo se registra una sesión que cruza medianoche.
+
+**7. Objetivos, estadísticas e historial**
+
+Añade:
+
+- Objetivo diario configurable de sesiones de concentración.
+- Progreso hacia ese objetivo separado del territorio de tareas.
+- Minutos de concentración y sesiones completadas.
+- Gráfico sencillo de actividad de los últimos siete días, con alternativa textual.
+- Historial con fecha, duración y tarea asociada cuando exista.
+- Filtro del historial por fecha o tarea.
+- Algunas insignias por hitos acumulativos: primera sesión, diez sesiones o cinco horas de concentración.
+
+Los descansos no suman tiempo de estudio. Pausas y cancelaciones deben tener un tratamiento coherente y explicado.
+
+Las recompensas serán discretas y opcionales, sin penalizaciones ni mensajes de culpa.
+
+**8. Personalización y utilidades**
+
+Incluye:
+
+- Varias parejas de colores de tinta.
+- Tema claro y oscuro.
+- Modo concentración que oculte los paneles secundarios.
+- Sonido breve al finalizar una fase, control de volumen y silencio.
+- Notificaciones del navegador opcionales, solicitadas cuando el usuario las active.
+- Alternativa visual si no hay permiso para notificar.
+- Atajos de teclado documentados, desactivados al escribir en campos.
+- Ayuda breve sobre la técnica Pomodoro.
+- Exportación e importación de datos en JSON, validando el archivo antes de modificar datos.
+- Restablecimiento de datos con confirmación.
+- Modo demostración con fases de pocos segundos, claramente indicado y sin contaminar las estadísticas reales.
+
+El sonido debe respetar las restricciones del navegador y activarse a partir de una interacción del usuario.
+
+**9. Guardado y robustez**
+
+Guarda localmente tareas, preferencias, historial y objetivos para conservarlos al recargar.
+
+Valida duraciones, títulos y archivos importados. Maneja datos guardados ausentes o incorrectos sin dejar la aplicación inutilizable.
+
+Evita contenido de ejemplo que parezca actividad real. Si incluyes datos de demostración, identifícalos y permite retirarlos.
+
+No implementes cuentas, backend o sincronización en la nube: el alcance inicial es una aplicación de uso local que pueda publicarse como web estática.
+
+**10. Organización de la interfaz**
+
+En escritorio:
+
+- Cabecera con identidad, personalización y ajustes.
+- Temporizador y tanque como foco principal.
+- Tareas en un panel lateral.
+- Territorio y objetivo diario en otro panel.
+- Calendario, estadísticas e historial en vistas o pestañas bien organizadas.
+
+No muestres todas las funciones a la vez si dificulta usar el temporizador.
+
+En móvil, prioriza temporizador y controles, reorganizando el resto sin desplazamiento horizontal.
+
+Cuida estados vacíos, botones deshabilitados, mensajes de validación, avisos y confirmaciones.
+
+**11. Accesibilidad**
+
+Incluye:
+
+- HTML semántico.
+- Etiquetas en formularios y nombres accesibles en botones.
+- Navegación mediante teclado y foco visible.
+- Contraste suficiente.
+- Estados identificables sin depender del color.
+- Respeto por la preferencia de movimiento reducido.
+- Gestión del foco en ventanas de ajustes y confirmaciones.
+- Anuncios accesibles para cambios de fase, evitando anunciar cada segundo.
+
+**12. Tecnología y código**
+
+Si no existe ninguna restricción adicional, utiliza HTML, CSS y JavaScript modular, con archivos separados y una estructura comprensible para un estudiante de 2.º de DAM.
+
+Evita introducir un framework o dependencias sin una ventaja concreta. El resultado debe poder publicarse como sitio estático en GitHub Pages.
+
+Organiza el código por responsabilidades, con nombres claros y comentarios donde ayuden a entender decisiones importantes. Incluye instrucciones para ejecutarlo y un README.
+
+Si este entorno permite crear archivos, trabaja directamente en ellos. Si solo permite responder con texto, entrega el código completo de los archivos necesarios para cada versión y explica dónde colocarlos.
+
+**13. Desarrollo por versiones**
+
+Propón un plan breve y comienza directamente con la primera versión sin esperar confirmaciones rutinarias.
+
+La primera versión debe ser funcional y mostrar ya la identidad visual de InkFocus: temporizador, tanque, controles, fases y adaptación básica a móvil.
+
+Después iremos incorporando tareas y territorio, calendario, persistencia, estadísticas, personalización y detalles finales. Puedes ajustar el orden si hay dependencias que lo aconsejen.
+
+Cada versión debe mantener lo que ya funciona y añadir una parte coherente. No intentes generar todas las funciones de golpe.
+
+Al terminar cada versión:
+
+- Resume lo implementado y lo pendiente.
+- Explica las decisiones de interfaz más relevantes.
+- Indica cómo probar sus funciones y qué capturas conviene guardar.
+- Distingue las comprobaciones ejecutadas de las que debo realizar yo.
+- Sugiere un mensaje de commit descriptivo.
+
+Comienza ahora con el plan breve y la implementación de la primera versión.</template></article></li><li class="step step--claude step--missing"><article class="msg" aria-labelledby="f02-p2-t"><header class="msg__head"><p class="msg__who"><span class="msg__role">De</span> <span class="who who--claude">Claude Opus 5.5</span></p><h4 class="msg__title" id="f02-p2-t">Respuesta de Claude</h4></header><p class="missing"><span class="missing__tag">No documentado</span> El Word no recoge el texto de la respuesta de Claude. Documenta el resultado con dos capturas.</p></article></li><li class="step step--result"><article class="msg" aria-labelledby="f02-p3-t"><header class="msg__head"><p class="msg__who"><span class="who who--result">Resultado</span></p><h4 class="msg__title" id="f02-p3-t">Resultado documentado</h4><p class="msg__source"><span>En el Word:</span> «Resultado:»</p></header><div class="shots shots--2"><figure class="shot"><button type="button" class="shot__zoom" data-full="img/fase-02-temporizador-en-pausa.png" aria-label="Ampliar la captura 1. Primera versión de InkFocus: tanque de tinta lleno con el sello En pausa, tiempo 24:58 y panel Ciclo actual."><img src="img/fase-02-temporizador-en-pausa.png" width="1679" height="998" alt="Primera versión de InkFocus: tanque de tinta lleno con el sello En pausa, tiempo 24:58 y panel Ciclo actual." loading="lazy" decoding="async"><span class="shot__hint" aria-hidden="true">Ampliar</span></button><figcaption><span class="shot__num">Captura 1.</span> Primera versión en el navegador: tanque lleno con el sello «EN PAUSA», tiempo 24:58, botones «Continuar», «Reiniciar» y «Saltar fase», y panel «Ciclo actual» con 0 de 4 sesiones. En el pie aparece seleccionada la frase sobre la estética inspirada en Splatoon.</figcaption></figure><figure class="shot"><button type="button" class="shot__zoom" data-full="img/fase-02-ajustes-temporizador.png" aria-label="Ampliar la captura 2. Ventana Ajustes del temporizador con presets 25/5 y 50/10, duraciones y opciones de inicio automático."><img src="img/fase-02-ajustes-temporizador.png" width="1679" height="879" alt="Ventana Ajustes del temporizador con presets 25/5 y 50/10, duraciones y opciones de inicio automático." loading="lazy" decoding="async"><span class="shot__hint" aria-hidden="true">Ampliar</span></button><figcaption><span class="shot__num">Captura 2.</span> Ventana «Ajustes del temporizador»: aviso de fase en curso, presets 25/5 y 50/10, duraciones de concentración y descansos, sesiones por ciclo e inicio automático.</figcaption></figure></div></article></li><li class="step step--yo"><article class="msg" aria-labelledby="f02-p4-t"><header class="msg__head"><p class="msg__who"><span class="msg__role">De</span> <span class="who who--yo">Yo</span></p><h4 class="msg__title" id="f02-p4-t">Valoración</h4><p class="msg__source"><span>En el Word:</span> texto tras las capturas</p></header><div class="doc"><p class="doc__label">Texto del Word</p><p>Va muy bien encaminado, solo le he pedido que quite una cosa del pie de página.</p></div></article></li></ol></section><section class="panel" aria-labelledby="f02-dec"><h2 id="f02-dec">Correcciones y decisiones posteriores</h2><ul class="decisions"><li>Retirar una frase del pie de página. La petición exacta se envió al principio del prompt de la <a href="fase-03-tareas-territorio.html">fase 3</a>.</li></ul></section><section class="panel panel--summary" aria-labelledby="f02-sum"><h2 id="f02-sum">Resumen de la fase</h2><p>Claude recibe la descripción completa del proyecto y construye la primera versión: temporizador con tanque, fases, ciclo y ventana de ajustes. Solo se anota un retoque en el pie de página.</p></section><nav class="pager" aria-label="Navegación entre fases (abajo)"><a class="pager__link pager__link--prev" href="fase-01-idea.html" rel="prev"><span class="pager__dir"><span aria-hidden="true">←</span> Fase anterior</span><span class="pager__name">01 · Idea y planificación</span></a><a class="pager__link pager__link--index" href="index.html#fases"><span class="pager__dir">Volver al</span><span class="pager__name">Índice de fases</span></a><a class="pager__link pager__link--next" href="fase-03-tareas-territorio.html" rel="next"><span class="pager__dir">Fase siguiente <span aria-hidden="true">→</span></span><span class="pager__name">03 · Tareas y territorio</span></a></nav></div>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>InkFocus · Proyecto académico de Desarrollo de Interfaces (2.º DAM).</p>
+    <p>Documentación elaborada a partir del Word del proyecto, «DocumentacionIAsInkFocus.docx».</p>
+  </div>
+</footer>
+<dialog class="lightbox" id="lightbox" aria-labelledby="lightbox-caption">
+  <div class="lightbox__bar">
+    <p class="lightbox__caption" id="lightbox-caption"></p>
+    <div class="lightbox__actions">
+      <button type="button" class="btn btn--small" data-lb="prev"><span aria-hidden="true">←</span> Anterior</button>
+      <button type="button" class="btn btn--small" data-lb="next">Siguiente <span aria-hidden="true">→</span></button>
+      <a class="btn btn--small" data-lb="open" href="#" target="_blank" rel="noopener">Abrir original</a>
+      <button type="button" class="btn btn--small btn--close" data-lb="close">Cerrar <kbd>Esc</kbd></button>
+    </div>
+  </div>
+  <div class="lightbox__stage"></div>
+</dialog>
+</body>
+</html>

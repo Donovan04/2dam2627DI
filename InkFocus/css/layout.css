@@ -1,0 +1,332 @@
+/* =========================================================
+   layout.css · Estructura general: cabecera, rejilla, paneles
+   ========================================================= */
+
+/* ---------- Cabecera ---------- */
+.app-header {
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0.7rem clamp(1rem, 3vw, 2rem);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-right: auto;
+}
+
+.brand__mark {
+  width: 42px;
+  height: 42px;
+  fill: var(--ink-b);
+  transform: rotate(-14deg);
+  filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, 0.5));
+}
+
+.brand__name {
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  transform: rotate(-2deg);
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.55);
+}
+
+.brand__ink {
+  color: var(--ink-a-text);
+}
+
+.brand__tagline {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ---------- Zona principal ---------- */
+.app-main {
+  flex: 1;
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0.35rem clamp(1rem, 3vw, 2rem) 2rem;
+  display: grid;
+  /* Escritorio ancho: territorio | temporizador | objetivo y ciclo.
+     En el HTML el temporizador va primero (es lo prioritario en móvil y
+     para lectores de pantalla); la rejilla lo coloca en el centro.
+     La gestión de tareas vive en una ventana (#tasks-dialog). */
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr) minmax(250px, 300px);
+  grid-template-areas: 'territory stage side';
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+  align-items: start;
+}
+
+.app-shell {
+  flex: 1;
+  width: 100%;
+}
+
+.app-main > .stage {
+  grid-area: stage;
+}
+
+.app-main > .territory {
+  grid-area: territory;
+}
+
+/* Columna derecha: objetivo de hoy + ciclo actual */
+.app-main > .app-side {
+  grid-area: side;
+  display: grid;
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+  align-content: start;
+  min-width: 0;
+}
+
+/* ---------- Paneles ---------- */
+.panel {
+  position: relative;
+  background: var(--surface);
+  border: 3px solid var(--line);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-hard);
+  padding: clamp(0.95rem, 1.6vw, 1.35rem);
+}
+
+/* Ligera inclinación en paneles secundarios: estética de pegatina */
+.panel--tilt {
+  transform: rotate(0.8deg);
+}
+
+.panel__title {
+  font-size: 1.4rem;
+  margin-bottom: 0.35rem;
+}
+
+/* ---------- Escenario del temporizador ---------- */
+.stage {
+  padding-top: 2.1rem;
+  /* El temporizador se reorganiza según SU ancho (ver @container más abajo) */
+  container: stage / inline-size;
+}
+
+.stage:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Tinta que gotea por el borde superior, del color de la fase */
+.stage::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 26px;
+  right: 26px;
+  height: 26px;
+  background: var(--phase-ink);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 40' preserveAspectRatio='none'%3E%3Cpath d='M0 0H400V9c-8 0-10 6-12 14s-4 13-8 13-6-5-6-13-2-14-10-14H300c-6 0-8 4-8 10s-2 9-5 9-5-3-5-9-2-10-8-10H172c-8 0-10 8-10 18s-3 16-8 16-8-6-8-16-2-18-10-18H62c-6 0-8 4-8 9s-2 7-4 7-4-2-4-7-2-9-8-9H0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 40' preserveAspectRatio='none'%3E%3Cpath d='M0 0H400V9c-8 0-10 6-12 14s-4 13-8 13-6-5-6-13-2-14-10-14H300c-6 0-8 4-8 10s-2 9-5 9-5-3-5-9-2-10-8-10H172c-8 0-10 8-10 18s-3 16-8 16-8-6-8-16-2-18-10-18H62c-6 0-8 4-8 9s-2 7-4 7-4-2-4-7-2-9-8-9H0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+  transition: background-color 0.6s ease;
+  pointer-events: none;
+}
+
+.stage__labels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.8rem;
+  margin-bottom: 0.9rem;
+}
+
+.stage__grid {
+  display: grid;
+  grid-template-columns: minmax(140px, 215px) minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 2.25rem);
+  align-items: center;
+}
+
+/* ---------- Lectura del tiempo ---------- */
+.readout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.7rem;
+  min-width: 0;
+  /* Contenedor de consulta: el tamaño de los números depende del ancho de esta
+     columna (no de la ventana), así nunca se salen de su sitio. */
+  container-type: inline-size;
+}
+
+.readout__status {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--phase-ink-text);
+}
+
+/* Pequeña gota que acompaña al estado (la información está en el texto) */
+.readout__status::before {
+  content: '';
+  width: 0.8em;
+  height: 0.8em;
+  flex: none;
+  border-radius: 0 50% 50% 50%;
+  transform: rotate(45deg);
+  background: currentColor;
+}
+
+body[data-status='paused'] .readout__status::before,
+body[data-status='idle'] .readout__status::before {
+  background: transparent;
+  border: 2px solid currentColor;
+}
+
+.readout__plate {
+  max-width: 100%;
+  background: var(--surface-sunken);
+  border: 3px solid var(--text);
+  border-radius: 26px;
+  padding: 0.25rem 1.1rem 0.15rem;
+  box-shadow: 8px 8px 0 var(--phase-ink);
+  transform: rotate(-1.2deg);
+  transition: box-shadow 0.6s ease;
+}
+
+body[data-status='paused'] .readout__plate {
+  border-style: dashed;
+}
+
+.time {
+  display: flex;
+  font-family: var(--font-body);
+  font-weight: 800;
+  /* "25:00" ocupa unas 2,9em + márgenes de la placa → 28cqi cabe siempre */
+  font-size: clamp(2.6rem, 26cqi, 6rem);
+  line-height: 1.08;
+  color: var(--text);
+}
+
+/* Ancho fijo por carácter: los dígitos no se desplazan al cambiar */
+.time__char {
+  display: inline-block;
+  width: 0.64em;
+  text-align: center;
+}
+
+.time__char--sep {
+  width: 0.34em;
+  transform: translateY(-0.05em);
+}
+
+.readout__end {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ---------- Pie ---------- */
+.app-footer {
+  padding: 0.75rem clamp(1rem, 3vw, 2rem) 1.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Adaptación ---------- */
+
+/* Temporizador estrecho (móvil o columna central): tanque encima de los números */
+@container stage (max-width: 520px) {
+  .stage__labels {
+    justify-content: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .stage__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .readout {
+    align-items: center;
+    text-align: center;
+    gap: 0.6rem;
+  }
+
+  .time {
+    font-size: clamp(2.6rem, 26cqi, 6rem);
+  }
+
+  .stage .tank__svg {
+    max-height: min(28vh, 240px);
+  }
+}
+
+/* Escritorio medio (≈ 880-1179 px): temporizador arriba; territorio y columna lateral debajo.
+   Desde 1180 px (incluido un portátil de 1366 px) se usan las tres columnas. */
+@media (max-width: 1179px) {
+  .app-main {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      'stage stage'
+      'territory side';
+  }
+}
+
+/* Móvil y tableta vertical: una sola columna */
+@media (max-width: 879px) {
+  .app-main {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'stage'
+      'territory'
+      'side';
+  }
+
+  .panel--tilt {
+    transform: none;
+  }
+}
+
+@media (max-width: 680px) {
+  /* Móvil: prioridad al temporizador y sus controles */
+  .app-header {
+    flex-wrap: nowrap;
+    padding-top: 0.7rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .header-actions .btn {
+    min-height: 44px;
+    padding: 0.45rem 0.9rem;
+  }
+
+  .app-main {
+    padding-top: 0.25rem;
+  }
+
+  .brand__mark {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand__tagline {
+    display: none;
+  }
+
+  .stage {
+    padding-top: 1.9rem;
+  }
+
+  .readout__end {
+    font-size: 0.95rem;
+  }
+}

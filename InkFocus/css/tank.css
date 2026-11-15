@@ -1,0 +1,244 @@
+/* =========================================================
+   tank.css · Tanque de tinta (SVG) y sus animaciones
+   Las animaciones dependen de data-status:
+     running → olas, burbujas y gotas en movimiento
+     paused  → se congelan en su posición (animation-play-state)
+     idle / expired → reposo
+   ========================================================= */
+.tank {
+  position: relative;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.tank__svg {
+  width: 100%;
+  max-width: 215px;
+  height: auto;
+  max-height: min(46vh, 350px);
+  overflow: visible;
+  filter: drop-shadow(6px 8px 0 var(--tank-shadow));
+}
+
+/* ---------- Piezas ---------- */
+.tank__strap {
+  fill: var(--surface-2);
+  stroke: var(--line);
+  stroke-width: 3;
+}
+
+.tank__cap {
+  fill: var(--surface-2);
+  stroke: var(--text);
+  stroke-width: 4;
+}
+
+.tank__cap-line {
+  fill: var(--phase-ink);
+  transition: fill 0.6s ease;
+}
+
+.tank__neck {
+  fill: var(--surface-sunken);
+  stroke: var(--text);
+  stroke-width: 3;
+}
+
+/* Interior del tanque: oscuro en el tema oscuro, blanco en el claro (--tank-bg) */
+.tank__back {
+  fill: var(--tank-bg);
+}
+
+.tank__glass {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 6;
+}
+
+.tank__nozzle {
+  fill: var(--surface-2);
+  stroke: var(--text);
+  stroke-width: 3;
+}
+
+.tank__ticks line {
+  stroke: var(--tank-tick);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.45;
+}
+
+.tank__shine {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+/* ---------- Líquido ---------- */
+.tank__liquid {
+  /* El nivel se fija desde tank.js con transform: translateY(...) */
+  transition: transform 0.45s linear;
+}
+
+.tank__wave {
+  fill: var(--phase-ink);
+  transition: fill 0.6s ease;
+}
+
+.tank__wave--back {
+  opacity: 0.5;
+  transform: translateX(-60px); /* desfasada respecto a la ola delantera */
+}
+
+/* Tema claro: el interior es blanco y una tinta clara (lima, menta…) apenas
+   contrasta con él. Un borde fino y más oscuro en la superficie marca el nivel
+   sin cambiar el color de la tinta. */
+:root[data-theme='light'] .tank__wave--front {
+  stroke: var(--phase-ink-text);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.tank__bubbles circle {
+  fill: rgba(255, 255, 255, 0.6);
+  opacity: 0;
+  transform-box: fill-box;
+}
+
+.tank__drop {
+  fill: var(--phase-ink);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* ---------- Animaciones (solo en marcha o congeladas en pausa) ---------- */
+.tank[data-status='running'] .tank__wave--front,
+.tank[data-status='paused'] .tank__wave--front {
+  animation: tank-wave 2.4s linear infinite;
+}
+
+.tank[data-status='running'] .tank__wave--back,
+.tank[data-status='paused'] .tank__wave--back {
+  animation: tank-wave-back 3.6s linear infinite;
+}
+
+.tank[data-status='running'] .tank__bubbles circle,
+.tank[data-status='paused'] .tank__bubbles circle {
+  animation: tank-bubble 3.2s ease-in infinite;
+}
+
+.tank__bubbles circle:nth-child(2) { animation-delay: 0.9s !important; }
+.tank__bubbles circle:nth-child(3) { animation-delay: 1.7s !important; }
+.tank__bubbles circle:nth-child(4) { animation-delay: 2.4s !important; }
+
+/* Concentración: la tinta sale gota a gota por la boquilla */
+.tank[data-phase='focus'][data-status='running'] .tank__drop--out,
+.tank[data-phase='focus'][data-status='paused'] .tank__drop--out {
+  animation: tank-drop-out 1.6s ease-in infinite;
+}
+
+/* Descanso: cae tinta dentro del tanque (recarga) */
+.tank:not([data-phase='focus'])[data-status='running'] .tank__drop--in,
+.tank:not([data-phase='focus'])[data-status='paused'] .tank__drop--in {
+  animation: tank-drop-in 1.4s ease-in infinite;
+}
+
+/* Pausa: todo se congela donde estaba */
+.tank[data-status='paused'] * {
+  animation-play-state: paused !important;
+}
+
+@keyframes tank-wave {
+  from { transform: translateX(0); }
+  to { transform: translateX(-120px); }
+}
+
+@keyframes tank-wave-back {
+  from { transform: translateX(-180px); }
+  to { transform: translateX(-60px); }
+}
+
+@keyframes tank-bubble {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 0.9; }
+  100% { transform: translateY(-225px); opacity: 0; }
+}
+
+@keyframes tank-drop-out {
+  0% { transform: translateY(-8px) scale(0.5); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: translateY(26px) scale(1); opacity: 0; }
+}
+
+@keyframes tank-drop-in {
+  0% { transform: translateY(-6px) scale(0.6); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(110px) scale(1); opacity: 0; }
+}
+
+/* ---------- Sello y medidor ---------- */
+.tank__stamp {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  padding: 0.2rem 0.8rem 0.1rem;
+  border: 4px solid var(--text);
+  border-radius: 10px;
+  background: var(--surface-sunken);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+.tank[data-status='expired'] .tank__stamp {
+  border-color: var(--phase-ink);
+}
+
+.tank__meter {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.tank__meter strong {
+  margin-left: 0.2rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.25rem;
+  color: var(--text);
+}
+
+/* ---------- Adaptación ---------- */
+@media (max-width: 680px) {
+  .tank {
+    gap: 0.35rem;
+  }
+
+  .stage .tank__svg {
+    max-width: 160px;
+    max-height: 22vh;
+  }
+
+  .tank__stamp {
+    font-size: 1.25rem;
+  }
+}
+
+/* ---------- Movimiento reducido: sin olas, burbujas ni gotas ----------
+   Solo se quitan las animaciones decorativas: el NIVEL de tinta se sigue
+   actualizando (tank.js cambia su posición en cada tick), así el tanque
+   continúa mostrando el progreso. */
+:root[data-motion='reduce'] .tank *,
+:root[data-motion='reduce'] .tank__liquid {
+  animation: none !important;
+  transition: none !important;
+}

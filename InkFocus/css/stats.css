@@ -1,0 +1,564 @@
+/* =========================================================
+   stats.css · Objetivo de hoy, vista Estadísticas e historial
+   ========================================================= */
+
+/* Campo numérico corto (objetivo diario en Ajustes) */
+.field--narrow input {
+  max-width: 120px;
+}
+
+/* ---------- Objetivo de hoy (columna derecha) ---------- */
+.goal {
+  overflow: hidden;
+}
+
+.goal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.goal__header .panel__title {
+  margin: 0;
+}
+
+.goal__count {
+  margin-top: 0.4rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.goal__count strong {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 2rem;
+  color: var(--text);
+}
+
+.goal__progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 6px;
+  margin: 0.5rem 0 0.6rem;
+}
+
+/* Gotas de la meta: contorno = pendiente, relleno = completada */
+.goal-drop {
+  width: 16px;
+  height: 20px;
+  border: 3px solid var(--ink-b-text);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  transition: background-color 0.3s ease;
+}
+
+.goal-drop--done {
+  background: var(--ink-b-text);
+}
+
+.goal__extra {
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  background: var(--ink-b);
+  color: var(--ink-b-contrast);
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.goal__bar {
+  flex: 1;
+  height: 14px;
+  overflow: hidden;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-sunken);
+}
+
+.goal__bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ink-b-text);
+}
+
+.goal__status {
+  font-weight: 700;
+}
+
+.goal[data-state='reached'] .goal__status {
+  color: var(--ink-b-text);
+}
+
+.goal__minutes {
+  margin-top: 0.15rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.goal__note {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 2px dashed var(--line);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Celebración breve: una mancha violeta con «¡Meta!» en la esquina */
+.goal__celebration {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 92px;
+  height: 92px;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.goal__celebration svg {
+  position: absolute;
+  inset: 0;
+  fill: var(--ink-b);
+}
+
+.goal__celebration span {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--ink-b-contrast);
+  transform: rotate(-10deg);
+}
+
+.goal.is-celebrating .goal__celebration {
+  animation: goal-pop 2.4s ease forwards;
+}
+
+.goal.is-celebrating .goal-drop--done {
+  animation: goal-drop 0.6s ease both;
+}
+
+@keyframes goal-pop {
+  0% { opacity: 0; transform: scale(0.2) rotate(-30deg); }
+  20% { opacity: 1; transform: scale(1.1) rotate(4deg); }
+  30% { transform: scale(1) rotate(0deg); }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes goal-drop {
+  50% { transform: translateY(-5px); }
+}
+
+/* ---------- Vista Estadísticas ---------- */
+.stats-view {
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0.35rem clamp(1rem, 3vw, 2rem) 2rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+  align-items: start;
+}
+
+.stats-view__summary {
+  display: grid;
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+  min-width: 0;
+}
+
+@media (max-width: 1023px) {
+  .stats-view {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.panel__title-note {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.stat-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.6rem;
+  margin: 0.6rem 0 0;
+}
+
+.stat-tile {
+  padding: 0.65rem 0.8rem;
+  border-radius: 16px;
+  background: var(--surface-2);
+}
+
+.stat-tile dt {
+  font-size: 0.82rem;
+  line-height: 1.25;
+  color: var(--text-muted);
+}
+
+.stat-tile dd {
+  margin: 0.15rem 0 0;
+}
+
+.stat-tile__value {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+}
+
+.stat-tile__unit {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.stat-tile dd.stat-tile__hint {
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  line-height: 1.3;
+  color: var(--text-muted);
+}
+
+.stats__note {
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Gráfico de 7 días ---------- */
+.chart {
+  margin-top: 1rem;
+  padding: 0.6rem 0.4rem 0.2rem;
+  border: 3px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface-sunken);
+}
+
+.chart__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.chart__grid {
+  stroke: var(--line);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
+}
+
+.chart__baseline {
+  stroke: var(--text-muted);
+  stroke-width: 2;
+}
+
+.chart__axis,
+.chart__unit {
+  fill: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.chart__bar {
+  fill: var(--ink-a-solid);
+  stroke: var(--surface-sunken);
+  stroke-width: 2;
+}
+
+/* Hoy: barra violeta con borde claro y etiqueta «Hoy» (no depende solo del color) */
+.chart__day--today .chart__bar {
+  fill: var(--ink-b-text);
+  stroke: var(--text);
+}
+
+.chart__value {
+  fill: var(--text);
+  font-family: var(--font-display);
+  font-size: 14px;
+}
+
+.chart__label {
+  fill: var(--text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.chart__label--date {
+  fill: var(--text-muted);
+  font-weight: 500;
+}
+
+.chart__day--today .chart__label {
+  fill: var(--ink-b-text);
+}
+
+.chart__sessions {
+  fill: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 12px;
+}
+
+.chart__svg--animated .chart__bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: bar-grow 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
+}
+
+@keyframes bar-grow {
+  from { transform: scaleY(0); }
+}
+
+.chart-table {
+  margin-top: 0.8rem;
+}
+
+.chart-table summary {
+  cursor: pointer;
+  font-weight: 700;
+  border-radius: 8px;
+}
+
+.data-table {
+  width: 100%;
+  margin-top: 0.6rem;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.data-table td {
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table thead th {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.data-table tr.is-today th {
+  color: var(--ink-b-text);
+}
+
+/* ---------- Historial ---------- */
+.history__filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(0, 1.4fr) auto;
+  align-items: end;
+  gap: 0.6rem;
+  margin: 0.75rem 0 0.5rem;
+}
+
+.history__error {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.history__count {
+  margin-bottom: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.history-list {
+  list-style: none;
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+}
+
+.history-item {
+  display: grid;
+  grid-template-columns: minmax(150px, auto) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.3rem 0.9rem;
+  padding: 0.55rem 0.8rem;
+  border-left: 5px solid var(--ink-b);
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.history-item:focus {
+  outline: none;
+}
+
+.history-item:focus-visible {
+  outline: 4px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.history-item p {
+  margin: 0;
+}
+
+.history-item__when {
+  display: grid;
+  line-height: 1.25;
+}
+
+.history-item__date {
+  font-weight: 800;
+}
+
+.history-item__time {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.history-item__what {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.history-item__task {
+  font-weight: 700;
+}
+
+.history-item__note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.history-item__minutes {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.history-item__minutes strong {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.25rem;
+  color: var(--ink-b-text);
+}
+
+.history__more {
+  margin-top: 0.8rem;
+}
+
+@media (max-width: 680px) {
+  .history__filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .history__task-field,
+  .history__reset {
+    grid-column: 1 / -1;
+  }
+
+  .history-item {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .history-item__what {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* ---------- Insignias ---------- */
+.badge-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.6rem;
+  margin: 0.6rem 0 0;
+  padding: 0;
+}
+
+.badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.65rem 0.75rem;
+  border: 3px dashed var(--line);
+  border-radius: 16px;
+}
+
+/* Conseguida: borde continuo y mancha rellena; pendiente: contorno discontinuo */
+.badge--earned {
+  border-style: solid;
+  border-color: var(--ink-b-text);
+  background: var(--surface-2);
+}
+
+.badge__art {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 10;
+  stroke-dasharray: 18 14;
+}
+
+.badge--earned .badge__art {
+  fill: var(--ink-b-text);
+  stroke: none;
+  transform: rotate(-12deg);
+}
+
+.badge__name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.15;
+}
+
+.badge__description,
+.badge__status {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.badge__state {
+  font-weight: 800;
+  color: var(--text);
+}
+
+.badge.is-new .badge__art {
+  animation: badge-pop 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+}
+
+@keyframes badge-pop {
+  from { transform: scale(0.2) rotate(-60deg); }
+}
+
+/* ---------- Movimiento reducido (sistema o Ajustes) ---------- */
+:root[data-motion='reduce'] .badge.is-new .badge__art {
+  animation: none;
+}
+
+:root[data-motion='reduce'] .goal-drop {
+  transition: none;
+}
+
+:root[data-motion='reduce'] .goal.is-celebrating .goal-drop--done,
+:root[data-motion='reduce'] .chart__svg--animated .chart__bar {
+  animation: none;
+}
+
+/* La celebración se muestra sin movimiento y se desvanece sin escalar */
+:root[data-motion='reduce'] .goal.is-celebrating .goal__celebration {
+  animation: goal-fade 2.4s linear forwards;
+}
+
+@keyframes goal-fade {
+  0%, 85% { opacity: 1; }
+  100% { opacity: 0; }
+}
