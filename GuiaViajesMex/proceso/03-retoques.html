@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Revisión de la población, la cronología, el presupuesto y la cuadrícula de Lugares.">
+  <title>Retoques de contenido y diseño · Proceso de México de cerca</title>
+  <link rel="icon" href="marca.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="index.html" aria-label="Portada del proceso de México de cerca">
+        <img src="marca.svg" alt="" width="32" height="32">
+        <span>México <em>de cerca</em></span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <a href="index.html">Proceso</a>
+        <a href="../index.html">Guía turística</a>
+      </nav>
+    </div>
+  </header>
+  <main id="contenido" class="shell" tabindex="-1">
+<article class="phase">
+  <header class="phase-heading">
+    <p class="eyebrow">Fase 3 de 3</p>
+    <h1>Retoques de contenido y diseño</h1>
+    <p class="lede">Tras revisar la primera versión, pedí pequeños cambios de lectura y una distribución más compacta de Lugares en escritorio.</p>
+    <a href="#capturas">Ir a las capturas del resultado</a>
+  </header>
+  
+<section aria-labelledby="revision">
+  <h2 id="revision">Pedir los retoques</h2>
+  <div class="exchange">
+  <p class="role">Yo · Consulta a ChatGPT</p>
+  <pre class="prompt">vale me gusta bastante la pagina, cambiaria que la poblacion del pais el formaato sea 126.014.024 y no 126 014 024.
+
+en México a través del tiempo, pong en los años &quot;año&quot;, porque asi de primeras puede despistar y si ves 1325  tienes que leer el contexto para saber que se refiere a año. Y en presupuesto diario igual, que ponga MXN al lado de las cifras.
+
+y esta muy bien en movil la web, pero en pc el apartado de Lugares se despliegan verticalmente los lugares y quiero que se despliguen asi, com en la foto sabes?? el ejemplo es para que lo queiro de ese formtato visual  con el mapa un poco mas pegado a la derecha y pelin mas pequeño y se distribuyan bien</pre>
+</div>
+  <div class="exchange">
+  <p class="role">ChatGPT (GPT Sol 6.2) · Resumen</p>
+  <p>Convirtió la revisión en cuatro cambios para Codex. Concretó los separadores de miles en español, el prefijo de los años y la unidad del presupuesto en ambos idiomas. Para Lugares propuso una cuadrícula de fichas con el mapa a la derecha y pidió conservar los controles de móvil.</p>
+</div>
+  <details class="exchange">
+  <summary><span class="role">ChatGPT · Prompt para Codex</span>Leer el encargo original</summary>
+  <pre class="prompt">Aplica estos retoques a la guía «México de cerca» en la carpeta del proyecto abierta. La web ya me gusta y en móvil se ve bien. Trabaja sobre la versión actual y haz cambios puntuales.
+
+1. Inicio → Población del país
+   En español, muestra «126.014.024» con puntos como separadores de miles. En inglés, conserva «126,014,024».
+
+2. Inicio → México a través del tiempo
+   Añade «Año» delante de cada fecha de la cronología, por ejemplo «Año 1325». En inglés, usa «Year 1325». Conserva las fechas y descripciones actuales.
+
+3. Planifica → Presupuesto diario
+   Añade «MXN» justo después de cada rango de precios, también en la fila de totales. Ejemplo: «450–700 MXN». Hazlo en ambos idiomas y comprueba que la tabla siga siendo legible a 320 px sin provocar desplazamiento horizontal en la página.
+
+4. Lugares → Distribución en PC
+   Ahora las fichas salen en una sola columna vertical en escritorio. Quiero que se distribuyan en filas, con el mismo ritmo visual que las tarjetas de Gastronomía: tres columnas cuando haya espacio para que se lean cómodamente y dos en escritorios más estrechos. Usa la captura adjunta o la propia página de Gastronomía como referencia de separación y alineación.
+   Mantén las fichas a la izquierda y desplaza el mapa hacia el borde derecho del área de contenido. Hazlo un poco más estrecho y bajo para dar más espacio a las tarjetas. Puedes poner los filtros encima de la cuadrícula si así encajan mejor. Conserva en móvil el diseño actual, incluido el selector «Lista / Mapa» y el botón «Filtrar».
+
+Comprueba Lugares a 1440, 1280 y 390 px. Verifica que los filtros siguen actualizando tanto las fichas como los marcadores y que «Ver en el mapa» abre el lugar correcto. Revisa también el formato de los textos en ambos idiomas y el presupuesto a 320 px.
+
+Aplica los cambios directamente en los archivos del proyecto. Al terminar, dime qué archivos modificaste y qué pruebas pudiste ejecutar.</pre>
+</details>
+</section>
+<section class="result" aria-labelledby="resultado">
+  <h2 id="resultado">Resultado de los cambios</h2>
+  <p>Las capturas muestran la población como 126.014.024, las fechas precedidas de «Año», los importes con MXN y tres fichas en la primera fila de Lugares, con el mapa a la derecha.</p>
+</section>
+<section id="capturas" aria-labelledby="capturas-titulo">
+  <h2 id="capturas-titulo">Capturas del resultado</h2>
+  <div class="gallery">
+    <figure class="capture">
+  <a href="capturas/poblacion-revisada.png" aria-label="Abrir a tamaño completo. Población nacional con puntos como separadores de miles en español.">
+    <img src="capturas/poblacion-revisada.png" width="1237" height="201" alt="Población nacional con puntos como separadores de miles en español." loading="lazy">
+  </a>
+  <figcaption>Población nacional con puntos como separadores de miles en español. <a href="capturas/poblacion-revisada.png">Ver a tamaño completo</a></figcaption>
+</figure>
+<figure class="capture">
+  <a href="capturas/lugares-revisado.png" aria-label="Abrir a tamaño completo. Lugares en escritorio con tres fichas por fila, filtros arriba y mapa a la derecha.">
+    <img src="capturas/lugares-revisado.png" width="1404" height="851" alt="Lugares en escritorio con tres fichas por fila, filtros arriba y mapa a la derecha." loading="lazy">
+  </a>
+  <figcaption>Lugares en escritorio con tres fichas por fila, filtros arriba y mapa a la derecha. <a href="capturas/lugares-revisado.png">Ver a tamaño completo</a></figcaption>
+</figure>
+<figure class="capture">
+  <a href="capturas/presupuesto-revisado.png" aria-label="Abrir a tamaño completo. Presupuesto diario con MXN al lado de los rangos y de los totales.">
+    <img src="capturas/presupuesto-revisado.png" width="895" height="432" alt="Presupuesto diario con MXN al lado de los rangos y de los totales." loading="lazy">
+  </a>
+  <figcaption>Presupuesto diario con MXN al lado de los rangos y de los totales. <a href="capturas/presupuesto-revisado.png">Ver a tamaño completo</a></figcaption>
+</figure>
+<figure class="capture">
+  <a href="capturas/cronologia-revisada.png" aria-label="Abrir a tamaño completo. Cronología de Inicio con «Año» delante de las fechas.">
+    <img src="capturas/cronologia-revisada.png" width="1306" height="396" alt="Cronología de Inicio con «Año» delante de las fechas." loading="lazy">
+  </a>
+  <figcaption>Cronología de Inicio con «Año» delante de las fechas. <a href="capturas/cronologia-revisada.png">Ver a tamaño completo</a></figcaption>
+</figure>
+  </div>
+</section>
+<div class="closing">
+  <div class="exchange">
+  <p class="role">Yo · Valoración del resultado</p>
+  <pre class="prompt">Me gusta bastante el resultado.</pre>
+</div>
+</div>
+  <nav class="phase-nav" aria-label="Navegación entre fases">
+  <a rel="prev" href="02-primera-version.html">Anterior · Primera versión</a>
+  <a href="index.html">Volver a la portada</a>
+  
+</nav>
+</article>
+  </main>
+  <footer class="site-footer">
+    <p class="shell">Desarrollo de Interfaces · 2.º de DAM</p>
+  </footer>
+</body>
+</html>

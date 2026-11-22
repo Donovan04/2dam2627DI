@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Del enunciado a una propuesta de cinco páginas, con un mapa y un diseño adaptable.">
+  <title>Definición de la guía · Proceso de México de cerca</title>
+  <link rel="icon" href="marca.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="index.html" aria-label="Portada del proceso de México de cerca">
+        <img src="marca.svg" alt="" width="32" height="32">
+        <span>México <em>de cerca</em></span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <a href="index.html">Proceso</a>
+        <a href="../index.html">Guía turística</a>
+      </nav>
+    </div>
+  </header>
+  <main id="contenido" class="shell" tabindex="-1">
+<article class="phase">
+  <header class="phase-heading">
+    <p class="eyebrow">Fase 1 de 3</p>
+    <h1>Definición de la guía</h1>
+    <p class="lede">Antes de desarrollar la web, usé ChatGPT para interpretar el enunciado y concretar el contenido, el diseño y el comportamiento adaptable de la guía.</p>
+    
+  </header>
+  
+<section aria-labelledby="preparar">
+  <h2 id="preparar">Preparar la consulta</h2>
+  <div class="exchange">
+  <p class="role">Yo · Consulta a ChatGPT</p>
+  <pre class="prompt">me das el prompt para el codex?, como es en otro chat pues adaptamos el chat de gpt para ese proyecto en concreto y le meto el prompt adaptado y le digo lo que quiero en la web y el tema y ya despues me hago el codex. no???</pre>
+</div>
+  <div class="exchange">
+  <p class="role">ChatGPT (GPT Sol 6.2) · Resumen</p>
+  <p>Propuso abrir un chat nuevo para trabajar el enunciado, el estilo y las funciones de la guía. Dejó un prompt para ese chat y planteó pasar el encargo final a Codex cuando estuviera definido el alcance.</p>
+</div>
+</section>
+<section aria-labelledby="propuesta">
+  <h2 id="propuesta">Definir la propuesta</h2>
+  <p>Pegué en el nuevo chat el prompt preparado por ChatGPT, con México como destino y mis ideas para el contenido. El prompt menciona una foto del enunciado que no aparece en la documentación.</p>
+  <details class="exchange">
+  <summary><span class="role">Yo · Prompt a ChatGPT</span>Leer el prompt original</summary>
+  <pre class="prompt">Estoy en 2.º de DAM, en Desarrollo de Interfaces. Tengo que crear una aplicación web que sirva como guía de viajes sobre mi pueblo. Quiero usar este chat para analizar el enunciado, decidir qué incluir y preparar el encargo de implementación. Después usaré Codex en una carpeta local para desarrollar la web.
+
+Lee primero el enunciado que te dejo al final y ten en cuenta mis ideas de contenido, funciones y estilo. Dime qué es obligatorio, qué decisiones quedan abiertas y qué extras aportarían algo a la guía. Si falta algún dato que cambie la propuesta, reúne las preguntas importantes en un solo mensaje. Quiero una propuesta concreta que podamos ajustar antes de redactar el prompt final para Codex.
+
+**Diseño responsive y multiplataforma**
+
+El profesor quiere que la interfaz cambie de distribución y de comportamiento según el ancho de pantalla. Por ejemplo, si en escritorio hay filtros en un panel lateral, en móvil deben poder abrirse con un botón «Filtrar». Si la navegación ocupa mucho espacio, puede pasar a un menú compacto. Propón adaptaciones que tengan sentido para las funciones de esta guía y especifica cómo comprobarlas al redimensionar la ventana.
+
+La web debe ser cómoda en escritorio, tablet y móvil, con controles utilizables con teclado y pantalla táctil, textos legibles y sin desplazamiento horizontal de toda la página.
+
+**Contenido y tecnología**
+
+La guía debe usar información real del pueblo. Si hacen falta horarios, precios, ubicaciones u otros datos turísticos, compruébalos con fuentes fiables o identifica qué queda por confirmar. Usa imágenes que pueda publicar y conserva sus créditos cuando correspondan.
+
+Respeta cualquier tecnología exigida por el profesor. Si puedo elegir, propón una solución fácil de entender y mantener, que pueda publicar en GitHub Pages. Quiero poder explicar las decisiones de interfaz y cómo está organizada la aplicación.
+
+**Desarrollo con Codex**
+
+Cuando hayamos definido la propuesta, redacta un prompt autónomo y listo para pegar en Codex. Incluye el enunciado, el nombre del pueblo, el alcance acordado, la dirección visual, las fuentes o materiales disponibles y criterios de prueba concretos. Codex debe poder empezar aunque no tenga acceso a este chat.
+
+Quiero que construya una primera versión funcional en la carpeta del proyecto y que indique cómo ejecutarla, qué ha comprobado y qué conviene probar manualmente. Después revisaré la web y reuniré los retoques que hagan falta. Ya no tengo un límite de tres horas.
+
+**Formato de entrega**
+
+El PDF final lo haré yo y contendrá tres enlaces:
+
+- La aplicación web publicada.
+- El repositorio de GitHub de la práctica.
+- Una web con el proceso de resolución.
+
+Durante el trabajo guardaré en un Word los prompts, las respuestas relevantes, las IAs que he utilizado y las capturas. La web del proceso se preparará después con ese material. Quiero una portada que enlace a páginas de cada fase, con contexto, prompts, respuestas y resultados en el orden en que ocurrieron. Si una consulta a ChatGPT y un encargo a Codex forman parte del mismo cambio, deben aparecer juntos, con su autoría clara.
+
+**Datos de la práctica**
+
+- Pueblo y provincia: Mexico.
+- Enunciado completo: En la foto.
+- Qué quiero que los visitantes puedan hacer: 
+  -La primera pagina de inicio que sea para descubrir el pais, con la presentacion de este, historia y datos curiosos, la capital con su poblacion e idioma, su moneda y bandera, el clima que suele tener y las mejores epocas para visitarlo.
+
+\- Otra pagina con lugares turisticos, playas, montañas, museos, monumentos famosos y ciudades.
+
+\- Otra de la gastronomia
+
+\- Otra de la cultura
+
+\- Y una ultima para planificar tu viaje, saber que llevar, presupuestos etc.
+
+\- De alguna forma me gustaria que hubiese un mapa interactivo del pais para ver restaurantes y sitios turisticos.
+
+- Tema visual, colores o referencias: Algo que visualmente lo veas y sepas que esta ambientado en Mexico.</pre>
+</details>
+  <div class="exchange">
+  <p class="role">ChatGPT (GPT Sol 6.2) · Resumen</p>
+  <p>Propuso una guía general para organizar un primer viaje por México. Planteó cinco páginas, 12 lugares turísticos y cuatro sitios para comer, con filtros por tipo y región y un mapa integrado en Lugares. Identificó el modo claro y oscuro como requisito del enunciado y propuso HTML, CSS y JavaScript con Leaflet si había libertad tecnológica.</p><p>Sugirió una estética de revista de viajes con fotografías reales, crema, terracota y verde agave. Especificó pruebas en escritorio, tableta y móvil, incluido el cambio de distribución sin perder los filtros y el uso con teclado y pantalla táctil. Dejó por decidir la tecnología y el público de la guía.</p>
+</div>
+</section>
+<section class="result" aria-labelledby="resultado">
+  <h2 id="resultado">Resultado</h2>
+  <p>Quedó definida una propuesta con Inicio, Lugares, Gastronomía, Cultura y Planifica, y con el mapa en Lugares. Las dos decisiones pendientes pasaron a la conversación que preparó el encargo de implementación.</p>
+</section>
+  <nav class="phase-nav" aria-label="Navegación entre fases">
+  
+  <a href="index.html">Volver a la portada</a>
+  <a rel="next" href="02-primera-version.html">Siguiente · Primera versión</a>
+</nav>
+</article>
+  </main>
+  <footer class="site-footer">
+    <p class="shell">Desarrollo de Interfaces · 2.º de DAM</p>
+  </footer>
+</body>
+</html>
